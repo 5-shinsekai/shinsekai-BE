@@ -69,7 +69,8 @@ jobs:
             docker stop shinsekai-server || true
             docker rm shinsekai-server || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/shinsekai-server:latest
-            docker run -d --name shinsekai-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/shinsekai-server:latest
-
-
-
+            docker run -d --name shinsekai-server -p 8080:8080 \
+            -e MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
+            -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
+            -e MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+            ${{ steps.login-ecr.outputs.registry }}/shinsekai-server:latest
