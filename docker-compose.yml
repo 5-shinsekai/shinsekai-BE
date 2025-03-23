@@ -22,10 +22,8 @@ services:
       - mysql
     ports:
       - "8080:8080"
-    environment:
-      MYSQL_HOST: mysql
-      MYSQL_USER: shinsekai_user
-      MYSQL_PASSWORD: 1234
+    env_file:
+      - .env
     volumes:
       - db_data:/var/lib/mysql
 
