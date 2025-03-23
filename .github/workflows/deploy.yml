@@ -29,7 +29,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: "${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}"
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -66,11 +66,10 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            docker stop shinsekai-server || true
-            docker rm shinsekai-server || true
+            echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" > .env
+            echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+            echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+            
             docker pull ${{ steps.login-ecr.outputs.registry }}/shinsekai-server:latest
-            docker run -d --name shinsekai-server -p 8080:8080 \
-            -e MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
-            -e MYSQL_USER=${{ secrets.MYSQL_USER }} \
-            -e MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
-            ${{ steps.login-ecr.outputs.registry }}/shinsekai-server:latest
+            docker-compose down
+            docker-compose up -d --remove-orphans
