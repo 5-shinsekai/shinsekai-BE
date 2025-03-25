@@ -1,13 +1,16 @@
 package com.example.shinsekai.product.entity;
 
+import com.example.shinsekai.product.entity.category.ProductAndCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "PRODUCT")
+@Table(name = "product")
 public class Product {
 
     @Id
@@ -15,18 +18,18 @@ public class Product {
     @Column(name = "PRODUCT_PK")
     private Long id;
 
-    @Column(name = "PRODUCT_CODE", nullable = false, length = 255)
-    private String productCode; // 상품코드
+    @Column(name = "PRODUCT_CODE", nullable = false, length = 255, unique = true)
+    private String productCode;
 
     @Column(name = "PRODUCT_PRICE")
-    private int productPrice; // 상품가격
+    private int productPrice;
 
     @Column(name = "PRODUCT_NAME", nullable = false, length = 255)
-    private String productName; // 상품명
+    private String productName;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "PRODUCT_STATUS", nullable = false)
-    private ProductStatus productStatus; // 상품상태
+    private ProductStatus productStatus; // SELLING, HIDDEN, DELETED
 
     @Column(name = "PRODUCT_SUMMARY", nullable = false, length = 255)
     private String productSummary; // 제품요약
@@ -35,7 +38,7 @@ public class Product {
     private String productDescriptionPath; // 제품설명 이미지 경로
 
     @Column(name = "VIEW_COUNT", nullable = false)
-    private int viewCount; // 조회수
+    private int viewCount;
 
     @Column(name = "PRODUCT_IMAGE_PATH", nullable = false, columnDefinition = "TEXT")
     private String productImagePath; // 썸네일 이미지 경로
@@ -50,14 +53,17 @@ public class Product {
     private Boolean symbolChecked; // 각인기능여부
 
     @Column(name = "CREATED_AT", nullable = false)
-    private LocalDateTime createdAt; // 등록일시
+    private LocalDateTime createdAt;
 
     @Column(name = "UPDATED_AT", nullable = false)
-    private LocalDateTime updatedAt; // 수정일시
+    private LocalDateTime updatedAt;
 
     @Column(name = "DISCOUNT_RATE", nullable = false)
-    private int discountRate; // 할인율
+    private int discountRate;
 
     @Column(name = "MIN_STOCK_COUNT", nullable = false)
     private int minStockCount; // 최소고개수
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductAndCategory> productAndCategories = new ArrayList<>();
 }
