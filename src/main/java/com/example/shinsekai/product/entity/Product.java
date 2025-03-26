@@ -1,17 +1,17 @@
 package com.example.shinsekai.product.entity;
 
+import com.example.shinsekai.common.entity.BaseEntity;
 import com.example.shinsekai.product.entity.category.ProductAndCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Table(name = "product")
-public class Product {
+public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,12 +51,6 @@ public class Product {
 
     @Column(name = "SYMBOL_CHECKED")
     private Boolean symbolChecked; // 각인기능여부
-
-    @Column(name = "CREATED_AT", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "UPDATED_AT", nullable = false)
-    private LocalDateTime updatedAt;
 
     @Column(name = "DISCOUNT_RATE", nullable = false)
     private int discountRate;
