@@ -1,5 +1,6 @@
 package com.example.shinsekai.cart.entity;
 
+import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.Date;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Cart {
+public class Cart extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartPk;
