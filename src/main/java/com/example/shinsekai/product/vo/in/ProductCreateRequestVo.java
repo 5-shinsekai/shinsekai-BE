@@ -8,13 +8,13 @@ public class ProductCreateRequestVo {
 
     private String productCode;
     private String productName;
-    private int productPrice;
+    private double productPrice;
     private ProductStatus productStatus;
     private String productSummary;
     private String contentImages;
     private String thumbnailUrl;
     private int userPurchaseLimit;
-    private boolean isFrozen;
-    private boolean isEngraving;
+    private boolean frozen;
+    private boolean engraving;
     private int discountRate;
 }

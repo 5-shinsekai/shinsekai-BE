@@ -7,10 +7,7 @@ import com.example.shinsekai.product.dto.out.ProductCreateResponseDto;
 import com.example.shinsekai.product.vo.in.ProductCreateRequestVo;
 import com.example.shinsekai.product.vo.out.ProductCreateResponseVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/product")
 @RestController
@@ -19,7 +16,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public BaseResponseEntity<ProductCreateResponseVo> createProduct(
             @RequestBody ProductCreateRequestVo productCreateRequestVo
     ) {

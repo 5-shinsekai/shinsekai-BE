@@ -13,7 +13,7 @@ public class ProductCreateRequestDto {
 
     private String productCode;
     private String productName;
-    private int productPrice;
+    private double productPrice;
     private ProductStatus productStatus;
     private String productSummary;
     private String contentImages;
@@ -26,7 +26,7 @@ public class ProductCreateRequestDto {
     @Builder
     public ProductCreateRequestDto(String productCode,
                                    String productName,
-                                   int productPrice,
+                                   double productPrice,
                                    ProductStatus productStatus,
                                    String productSummary,
                                    String contentImages,
