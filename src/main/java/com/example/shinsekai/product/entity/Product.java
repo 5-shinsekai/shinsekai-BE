@@ -1,16 +1,17 @@
 package com.example.shinsekai.product.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
-import com.example.shinsekai.product.entity.category.ProductAndCategory;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Table(name = "product")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseEntity {
 
     @Id
@@ -21,11 +22,11 @@ public class Product extends BaseEntity {
     @Column(name = "PRODUCT_CODE", nullable = false, length = 255, unique = true)
     private String productCode;
 
+    @Column(name = "PRODUCT_NAME", nullable = false, length = 100)
+    private String productName;
+
     @Column(name = "PRODUCT_PRICE")
     private int productPrice;
-
-    @Column(name = "PRODUCT_NAME", nullable = false, length = 255)
-    private String productName;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "PRODUCT_STATUS", nullable = false)
@@ -34,30 +35,56 @@ public class Product extends BaseEntity {
     @Column(name = "PRODUCT_SUMMARY", nullable = false, length = 255)
     private String productSummary; // 제품요약
 
-    @Column(name = "PRODUCT_DESCRIPTION_PATH", nullable = false, length = 255)
-    private String productDescriptionPath; // 제품설명 이미지 경로
+    @Lob
+    @Column(name = "content_images", nullable = false)
+    private String contentImages; // 제품설명 이미지 경로
 
-    @Column(name = "VIEW_COUNT", nullable = false)
-    private int viewCount;
+    /*    @Column(name = "VIEW_COUNT", nullable = false)
+        private int viewCount;*/ // 집계 테이블에 넣어서 관리
+    @Lob
+    @Column(name = "thumbnail_url", nullable = false)
+    private String thumbnailUrl;
 
-    @Column(name = "PRODUCT_IMAGE_PATH", nullable = false, columnDefinition = "TEXT")
-    private String productImagePath; // 썸네일 이미지 경로
+    @Column(name = "user_purchase_limit")
+    private int userPurchaseLimit;
 
-    @Column(name = "LIMIT_COUNT")
-    private int limitCount; // 회원당 구매 가능 제한개수
+    @Column(name = "is_frozen", nullable = false)
+    private boolean isFrozen;
 
-    @Column(name = "FREEZED_CHECKED", nullable = false)
-    private Boolean freezedChecked; // 냉동보관여부
+    @Column(name = "is_engraving")
+    private boolean isEngraving;
 
-    @Column(name = "SYMBOL_CHECKED")
-    private Boolean symbolChecked; // 각인기능여부
-
-    @Column(name = "DISCOUNT_RATE", nullable = false)
+    @Column(name = "discount_Rate", nullable = false)
     private int discountRate;
 
-    @Column(name = "MIN_STOCK_COUNT", nullable = false)
-    private int minStockCount; // 최소고개수
+    /*@Column(name = "MIN_STOCK_COUNT", nullable = false)
+    private int minStockCount; // 최소 재고개수 // 옵션에 ㄱㄱ*/
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductAndCategory> productAndCategories = new ArrayList<>();
+    @Builder
+    public Product(Long id,
+                   String productCode,
+                   String productName,
+                   int productPrice,
+                   ProductStatus productStatus,
+                   String productSummary,
+                   String contentImages,
+                   String thumbnailUrl,
+                   int userPurchaseLimit,
+                   boolean isFrozen,
+                   boolean isEngraving,
+                   int discountRate) {
+
+        this.id = id;
+        this.productCode = productCode;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productStatus = productStatus;
+        this.productSummary = productSummary;
+        this.contentImages = contentImages;
+        this.thumbnailUrl = thumbnailUrl;
+        this.userPurchaseLimit = userPurchaseLimit;
+        this.isFrozen = isFrozen;
+        this.isEngraving = isEngraving;
+        this.discountRate = discountRate;
+    }
 }
