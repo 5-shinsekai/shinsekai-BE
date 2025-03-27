@@ -27,4 +27,13 @@ public class ProductServiceImpl implements ProductService {
         return ProductCreateResponseDto.from(productRepository.save(productCreateRequestDto.toEntity()));
     }
 
+    @Override
+    @Transactional
+    public ProductCreateResponseDto updateProduct(String productCode, ProductCreateRequestDto productCreateRequestDto) {
+        Product product = productRepository.findByProductCode(productCode)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
+
+        product.updateFromDto(productCreateRequestDto);
+        return ProductCreateResponseDto.from(productRepository.save(product));
+    }
 }
