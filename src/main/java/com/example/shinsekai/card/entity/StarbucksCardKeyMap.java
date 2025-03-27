@@ -10,22 +10,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StarbucksCardKeyMap {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String cardNumber;
+
+    @Column(nullable = false)
     private String pinNumber;
-    private int amount;
+
+    private int amount = 0;
+
+    private boolean isRegistered = false;
 
     @Builder
-    public StarbucksCardKeyMap(String cardNumber, String pinNumber, int amount) {
+    public StarbucksCardKeyMap(Long id, String cardNumber, String pinNumber, int amount, boolean isRegistered) {
+        this.id = id;
         this.cardNumber = cardNumber;
         this.pinNumber = pinNumber;
         this.amount = amount;
+        this.isRegistered = isRegistered;
     }
 
-    //변경
-    public boolean matchStarbucksCardAndPin(String pinNumber) {
-        if(this.pinNumber.equals(pinNumber)) {
-            return true;
-        }
-        return false;
-    }
 }
