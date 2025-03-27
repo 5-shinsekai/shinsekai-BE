@@ -15,6 +15,7 @@ import java.util.UUID;
 @Getter
 public class ProductCreateRequestDto {
 
+    private String productCode;
     private String productName;
     private double productPrice;
     private ProductStatus productStatus;
@@ -28,16 +29,18 @@ public class ProductCreateRequestDto {
 
     @Builder
     public ProductCreateRequestDto(
-                                   String productName,
-                                   double productPrice,
-                                   ProductStatus productStatus,
-                                   String productSummary,
-                                   String contentImages,
-                                   String thumbnailUrl,
-                                   int userPurchaseLimit,
-                                   boolean isFrozen,
-                                   boolean isEngraving,
-                                   int discountRate) {
+            String productCode,
+            String productName,
+            double productPrice,
+            ProductStatus productStatus,
+            String productSummary,
+            String contentImages,
+            String thumbnailUrl,
+            int userPurchaseLimit,
+            boolean isFrozen,
+            boolean isEngraving,
+            int discountRate) {
+        this.productCode = productCode;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productStatus = productStatus;
@@ -84,7 +87,7 @@ public class ProductCreateRequestDto {
     public static String generateProductCode() {
         String prefix = "P";
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String uuidPart = UUID.randomUUID().toString().substring(0, 8); // or nanoId()
+        String uuidPart = UUID.randomUUID().toString().substring(0, 8);
 
         return prefix + date + "-" + uuidPart;
     }
