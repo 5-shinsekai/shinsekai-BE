@@ -7,11 +7,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 @NoArgsConstructor
 @Getter
 public class ProductCreateRequestDto {
 
-    private String productCode;
     private String productName;
     private double productPrice;
     private ProductStatus productStatus;
@@ -24,7 +27,7 @@ public class ProductCreateRequestDto {
     private int discountRate;
 
     @Builder
-    public ProductCreateRequestDto(String productCode,
+    public ProductCreateRequestDto(
                                    String productName,
                                    double productPrice,
                                    ProductStatus productStatus,
@@ -35,7 +38,6 @@ public class ProductCreateRequestDto {
                                    boolean isFrozen,
                                    boolean isEngraving,
                                    int discountRate) {
-        this.productCode = productCode;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productStatus = productStatus;
@@ -50,7 +52,7 @@ public class ProductCreateRequestDto {
 
     public Product toEntity() {
         return Product.builder()
-                .productCode(this.productCode)
+                .productCode(generateProductCode())
                 .productName(this.productName)
                 .productPrice(this.productPrice)
                 .productStatus(this.productStatus)
@@ -66,7 +68,6 @@ public class ProductCreateRequestDto {
 
     public static ProductCreateRequestDto from(ProductCreateRequestVo productCreateRequestVo) {
         return ProductCreateRequestDto.builder()
-                .productCode(productCreateRequestVo.getProductCode())
                 .productName(productCreateRequestVo.getProductName())
                 .productPrice(productCreateRequestVo.getProductPrice())
                 .productStatus(productCreateRequestVo.getProductStatus())
@@ -78,6 +79,14 @@ public class ProductCreateRequestDto {
                 .isEngraving(productCreateRequestVo.isEngraving())
                 .discountRate(productCreateRequestVo.getDiscountRate())
                 .build();
+    }
+
+    public static String generateProductCode() {
+        String prefix = "P";
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String uuidPart = UUID.randomUUID().toString().substring(0, 8); // or nanoId()
+
+        return prefix + date + "-" + uuidPart;
     }
 
 }

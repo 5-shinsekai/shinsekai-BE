@@ -24,13 +24,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductCreateResponseDto createProduct(ProductCreateRequestDto productCreateRequestDto) {
-
-        boolean exists = productRepository.findByProductCode(productCreateRequestDto.getProductCode()).isPresent();
-
-        if (exists) {
-            throw new BaseException(BaseResponseStatus.DUPLICATED_PRODUCT);
-        }
-
         return ProductCreateResponseDto.from(productRepository.save(productCreateRequestDto.toEntity()));
     }
 

@@ -17,11 +17,8 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping()
-    public BaseResponseEntity<ProductCreateResponseVo> createProduct(
-            @RequestBody ProductCreateRequestVo productCreateRequestVo
-    ) {
-        return new BaseResponseEntity<>(
-                productService.createProduct(ProductCreateRequestDto.from(productCreateRequestVo)).toVo()
-        );
+    public BaseResponseEntity<Void> createProduct(@RequestBody ProductCreateRequestVo productCreateRequestVo) {
+        productService.createProduct(ProductCreateRequestDto.from(productCreateRequestVo));
+        return new BaseResponseEntity<>();
     }
 }
