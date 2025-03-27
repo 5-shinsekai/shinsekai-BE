@@ -26,7 +26,7 @@ public class Product extends BaseEntity {
     private String productName;
 
     @Column(name = "PRODUCT_PRICE")
-    private int productPrice;
+    private double productPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "PRODUCT_STATUS", nullable = false)
@@ -64,7 +64,7 @@ public class Product extends BaseEntity {
     public Product(Long id,
                    String productCode,
                    String productName,
-                   int productPrice,
+                   double productPrice,
                    ProductStatus productStatus,
                    String productSummary,
                    String contentImages,
