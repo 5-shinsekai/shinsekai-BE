@@ -3,6 +3,7 @@ package com.example.shinsekai.product.presentation;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.product.application.ProductService;
 import com.example.shinsekai.product.dto.in.ProductCreateRequestDto;
+import com.example.shinsekai.product.entity.Product;
 import com.example.shinsekai.product.vo.in.ProductCreateRequestVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,12 @@ public class ProductController {
             @PathVariable String productCode,
             @RequestBody ProductCreateRequestVo productCreateRequestVo) {
         productService.updateProduct(productCode, ProductCreateRequestDto.from(productCreateRequestVo));
+        return new BaseResponseEntity<>();
+    }
+
+    @DeleteMapping("/{productCode}")
+    public BaseResponseEntity<Void> deleteProduct(@PathVariable String productCode) {
+        productService.deleteProduct(productCode);
         return new BaseResponseEntity<>();
     }
 }

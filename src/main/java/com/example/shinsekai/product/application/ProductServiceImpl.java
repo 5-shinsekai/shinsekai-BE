@@ -36,4 +36,13 @@ public class ProductServiceImpl implements ProductService {
         product.updateFromDto(productCreateRequestDto);
         return ProductCreateResponseDto.from(productRepository.save(product));
     }
+
+    @Override
+    @Transactional
+    public void deleteProduct(String productCode) {
+        Product product = productRepository.findByProductCode(productCode)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
+        productRepository.delete(product);
+    }
+
 }

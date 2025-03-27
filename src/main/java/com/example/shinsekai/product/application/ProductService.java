@@ -9,4 +9,6 @@ public interface ProductService {
 
     ProductCreateResponseDto updateProduct(String productCode ,ProductCreateRequestDto productCreateRequestDto);
 
+    void deleteProduct(String productCode);
+
 }
