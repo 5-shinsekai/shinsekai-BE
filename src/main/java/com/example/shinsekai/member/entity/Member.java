@@ -45,7 +45,7 @@ public class Member extends BaseEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private GenderEnum gender;
+    private Gender gender;
 
     @Column(nullable = false, length = 10)
     private String name;
@@ -62,7 +62,7 @@ public class Member extends BaseEntity implements UserDetails {
             , String nickName
             , boolean isActive
             , String phone
-            , GenderEnum gender
+            , Gender gender
             , String name
             , LocalDate birth) {
         this.id = id;
