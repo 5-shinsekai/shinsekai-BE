@@ -1,7 +1,7 @@
 package com.example.shinsekai.product.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
-import com.example.shinsekai.product.dto.in.ProductCreateRequestDto;
+import com.example.shinsekai.product.dto.in.ProductRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -89,7 +89,7 @@ public class Product extends BaseEntity {
         this.discountRate = discountRate;
     }
 
-    public void updateFromDto(ProductCreateRequestDto dto) {
+    public void updateFromDto(ProductRequestDto dto) {
         this.productName = dto.getProductName();
         this.productPrice = dto.getProductPrice();
         this.productStatus = dto.getProductStatus();
