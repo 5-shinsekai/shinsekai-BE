@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
-public class ProductCreateRequestDto {
+public class ProductRequestDto {
 
     private String productCode;
     private String productName;
@@ -28,7 +28,7 @@ public class ProductCreateRequestDto {
     private int discountRate;
 
     @Builder
-    public ProductCreateRequestDto(
+    public ProductRequestDto(
             String productCode,
             String productName,
             double productPrice,
@@ -69,8 +69,8 @@ public class ProductCreateRequestDto {
                 .build();
     }
 
-    public static ProductCreateRequestDto from(ProductCreateRequestVo productCreateRequestVo) {
-        return ProductCreateRequestDto.builder()
+    public static ProductRequestDto from(ProductCreateRequestVo productCreateRequestVo) {
+        return ProductRequestDto.builder()
                 .productName(productCreateRequestVo.getProductName())
                 .productPrice(productCreateRequestVo.getProductPrice())
                 .productStatus(productCreateRequestVo.getProductStatus())
