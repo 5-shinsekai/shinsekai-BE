@@ -2,7 +2,7 @@ package com.example.shinsekai.product.dto.out;
 
 import com.example.shinsekai.product.entity.Product;
 import com.example.shinsekai.product.entity.ProductStatus;
-import com.example.shinsekai.product.vo.out.ProductCreateResponseVo;
+import com.example.shinsekai.product.vo.out.ProductResponseVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductCreateResponseDto {
+public class ProductResponseDto {
 
     private String productCode;
     private String productName;
-    private int productPrice;
+    private double productPrice;
     private ProductStatus productStatus;
     private String productSummary;
     private String contentImages;
@@ -26,8 +26,9 @@ public class ProductCreateResponseDto {
     private boolean isEngraving;
     private int discountRate;
 
-    public static ProductCreateResponseDto from(Product product) {
-        return ProductCreateResponseDto.builder()
+
+    public static ProductResponseDto from(Product product) {
+        return ProductResponseDto.builder()
                 .productCode(product.getProductCode())
                 .productName(product.getProductName())
                 .productPrice(product.getProductPrice())
@@ -42,19 +43,9 @@ public class ProductCreateResponseDto {
                 .build();
     }
 
-    public ProductCreateResponseVo toVo() {
-        return ProductCreateResponseVo.builder()
+    public ProductResponseVo toVo() {
+        return ProductResponseVo.builder()
                 .productCode(productCode)
-                .productName(productName)
-                .productPrice(productPrice)
-                .productStatus(productStatus)
-                .productSummary(productSummary)
-                .contentImages(contentImages)
-                .thumbnailUrl(thumbnailUrl)
-                .userPurchaseLimit(userPurchaseLimit)
-                .isFrozen(isFrozen)
-                .isEngraving(isEngraving)
-                .discountRate(discountRate)
                 .build();
     }
 }

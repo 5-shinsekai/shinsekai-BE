@@ -90,7 +90,18 @@ public enum BaseResponseStatus {
      * 6000: gpt-api error
      */
     // Media
-    NO_EXIST_MEDIA(HttpStatus.NOT_FOUND, false, 6001, "존재하지 않는 미디어입니다");
+    NO_EXIST_MEDIA(HttpStatus.NOT_FOUND, false, 6001, "존재하지 않는 미디어입니다"),
+
+
+    /**
+     * 결제관련 ERROR
+     *  10000 ~
+     * */
+    //StarbucksCard
+    DUPLICATED_STARBUCKS_CARD(HttpStatus.CONFLICT, false, 10001, "이미 등록된 카드 정보입니다."),
+    NO_EXIST_STARBUCKS_CARD(HttpStatus.NOT_FOUND, false, 10002, "카드 정보가 존재하지 않습니다."),
+    INVALID_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10003, "카드 정보가 일치하지 않습니다."),
+    NO_CREATION_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10004, "카드 생성 중 오류가 발생했습니다.");
 
     private final HttpStatusCode httpStatusCode;
     private final boolean isSuccess;

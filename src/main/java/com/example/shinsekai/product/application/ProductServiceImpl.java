@@ -2,34 +2,51 @@ package com.example.shinsekai.product.application;
 
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
-import com.example.shinsekai.product.dto.in.ProductCreateRequestDto;
-import com.example.shinsekai.product.dto.out.ProductCreateResponseDto;
+import com.example.shinsekai.product.dto.in.ProductRequestDto;
+import com.example.shinsekai.product.dto.out.ProductResponseDto;
 import com.example.shinsekai.product.entity.Product;
 import com.example.shinsekai.product.infrastructure.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
     @Override
     @Transactional
-    public ProductCreateResponseDto createProduct(ProductCreateRequestDto productCreateRequestDto) {
+    public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
+        return ProductResponseDto.from(productRepository.save(productRequestDto.toEntity()));
+    }
 
-        boolean exists = productRepository.findByProductCode(productCreateRequestDto.getProductCode()).isPresent();
+    @Override
+    public ProductResponseDto getProduct(String productCode) {
+        Product product = productRepository.findByProductCode(productCode)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
+        return ProductResponseDto.from(product);
+    }
 
-        if (exists) {
-            throw new BaseException(BaseResponseStatus.DUPLICATED_PRODUCT);
-        }
+    @Override
+    @Transactional
+    public ProductResponseDto updateProduct(String productCode, ProductRequestDto productRequestDto) {
+        Product product = productRepository.findByProductCode(productCode)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
-        return ProductCreateResponseDto.from(productRepository.save(productCreateRequestDto.toEntity()));
+        product.updateFromDto(productRequestDto);
+        return ProductResponseDto.from(productRepository.save(product));
+    }
+
+    @Override
+    @Transactional
+    public void deleteProduct(String productCode) {
+        Product product = productRepository.findByProductCode(productCode)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
+        productRepository.delete(product);
     }
 
 }

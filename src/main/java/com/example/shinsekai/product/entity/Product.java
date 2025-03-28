@@ -1,6 +1,7 @@
 package com.example.shinsekai.product.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
+import com.example.shinsekai.product.dto.in.ProductRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,14 +20,14 @@ public class Product extends BaseEntity {
     @Column(name = "PRODUCT_PK")
     private Long id;
 
-    @Column(name = "PRODUCT_CODE", nullable = false, length = 255, unique = true)
+    @Column(name = "PRODUCT_CODE", nullable = false, length = 255, unique = true, updatable = false)
     private String productCode;
 
     @Column(name = "PRODUCT_NAME", nullable = false, length = 100)
     private String productName;
 
-    @Column(name = "PRODUCT_PRICE")
-    private int productPrice;
+    @Column(name = "PRODUCT_PRICE", nullable = false, length = 100)
+    private double productPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "PRODUCT_STATUS", nullable = false)
@@ -64,7 +65,7 @@ public class Product extends BaseEntity {
     public Product(Long id,
                    String productCode,
                    String productName,
-                   int productPrice,
+                   double productPrice,
                    ProductStatus productStatus,
                    String productSummary,
                    String contentImages,
@@ -86,5 +87,18 @@ public class Product extends BaseEntity {
         this.isFrozen = isFrozen;
         this.isEngraving = isEngraving;
         this.discountRate = discountRate;
+    }
+
+    public void updateFromDto(ProductRequestDto dto) {
+        this.productName = dto.getProductName();
+        this.productPrice = dto.getProductPrice();
+        this.productStatus = dto.getProductStatus();
+        this.productSummary = dto.getProductSummary();
+        this.contentImages = dto.getContentImages();
+        this.thumbnailUrl = dto.getThumbnailUrl();
+        this.userPurchaseLimit = dto.getUserPurchaseLimit();
+        this.isFrozen = dto.isFrozen();
+        this.isEngraving = dto.isEngraving();
+        this.discountRate = dto.getDiscountRate();
     }
 }
