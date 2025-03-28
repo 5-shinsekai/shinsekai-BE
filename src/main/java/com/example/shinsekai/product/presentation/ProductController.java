@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/api/v1/product")
 @RestController
 @RequiredArgsConstructor
@@ -40,5 +42,10 @@ public class ProductController {
     @GetMapping("/{productCode}")
     public BaseResponseEntity<ProductResponseDto> getProduct(@PathVariable String productCode) {
         return new BaseResponseEntity<>(productService.getProduct(productCode));
+    }
+
+    @GetMapping()
+    public BaseResponseEntity<List<ProductResponseDto>> getAllProducts() {
+        return new BaseResponseEntity<>(productService.getAllProducts());
     }
 }

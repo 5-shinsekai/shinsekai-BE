@@ -2,16 +2,19 @@ package com.example.shinsekai.product.application;
 
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
 import com.example.shinsekai.product.dto.out.ProductResponseDto;
-import com.example.shinsekai.product.entity.Product;
+
+import java.util.List;
 
 public interface ProductService {
 
-    ProductResponseDto createProduct(ProductRequestDto productRequestDto);
+    void createProduct(ProductRequestDto productRequestDto);
 
     ProductResponseDto getProduct(String productCode);
 
-    ProductResponseDto updateProduct(String productCode, ProductRequestDto productRequestDto);
+    void updateProduct(String productCode, ProductRequestDto productRequestDto);
 
     void deleteProduct(String productCode);
+
+    List<ProductResponseDto> getAllProducts();
 
 }
