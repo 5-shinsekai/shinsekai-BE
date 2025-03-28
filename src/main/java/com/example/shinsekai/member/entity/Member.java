@@ -1,7 +1,6 @@
 package com.example.shinsekai.member.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
-import com.nimbusds.openid.connect.sdk.claims.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

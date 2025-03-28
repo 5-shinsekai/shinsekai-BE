@@ -23,7 +23,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final AuthenticationProvider oAuthAuthenticationProvider;
+    //private final AuthenticationProvider oAuthAuthenticationProvider;
     private final AuthenticationProvider daoAuthenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -71,7 +71,7 @@ public class SecurityConfig {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(daoAuthenticationProvider)
-                .authenticationProvider(oAuthAuthenticationProvider)
+                //.authenticationProvider(oAuthAuthenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilter(corsFilter());
         return http.build();
