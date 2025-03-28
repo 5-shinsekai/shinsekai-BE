@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -20,8 +23,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
-        return ProductResponseDto.from(productRepository.save(productRequestDto.toEntity()));
+    public void createProduct(ProductRequestDto productRequestDto) {
+        ProductResponseDto.from(productRepository.save(productRequestDto.toEntity()));
     }
 
     @Override
@@ -32,13 +35,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductResponseDto> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(ProductResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
-    public ProductResponseDto updateProduct(String productCode, ProductRequestDto productRequestDto) {
+    public void updateProduct(String productCode, ProductRequestDto productRequestDto) {
         Product product = productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
         product.updateFromDto(productRequestDto);
-        return ProductResponseDto.from(productRepository.save(product));
+        ProductResponseDto.from(productRepository.save(product));
     }
 
     @Override
