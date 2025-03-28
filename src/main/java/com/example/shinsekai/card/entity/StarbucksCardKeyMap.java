@@ -19,12 +19,12 @@ public class StarbucksCardKeyMap {
     @Column(nullable = false)
     private String pinNumber;
 
-    private int amount = 0;
+    private double amount = 0;
 
     private boolean isRegistered = false;
 
     @Builder
-    public StarbucksCardKeyMap(Long id, String cardNumber, String pinNumber, int amount, boolean isRegistered) {
+    public StarbucksCardKeyMap(Long id, String cardNumber, String pinNumber, double amount, boolean isRegistered) {
         this.id = id;
         this.cardNumber = cardNumber;
         this.pinNumber = pinNumber;

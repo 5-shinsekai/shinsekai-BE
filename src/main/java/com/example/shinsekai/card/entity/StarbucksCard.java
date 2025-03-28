@@ -31,7 +31,7 @@ public class StarbucksCard extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String cardImageUrl;//섬네일 이미지
     private String cardDescription;
-    private int remainAmount;
+    private double remainAmount;
 
     @Builder
     public StarbucksCard(
@@ -42,7 +42,7 @@ public class StarbucksCard extends BaseEntity {
             String cardNumber,
             String cardImageUrl,
             String cardDescription,
-            int remainAmount) {
+            double remainAmount) {
 
         this.id = id;
         this.cardUuid = cardUuid;
