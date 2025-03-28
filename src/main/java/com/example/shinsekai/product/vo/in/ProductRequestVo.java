@@ -2,9 +2,11 @@ package com.example.shinsekai.product.vo.in;
 
 import com.example.shinsekai.product.entity.ProductStatus;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
-public class ProductCreateRequestVo {
+public class ProductRequestVo {
 
     private String productCode;
     private String productName;
@@ -14,7 +16,15 @@ public class ProductCreateRequestVo {
     private String contentImages;
     private String thumbnailUrl;
     private int userPurchaseLimit;
-    private boolean frozen;
-    private boolean engraving;
+    private boolean isFrozen;
+    private boolean isEngraving;
     private int discountRate;
+
+    public boolean getIsFrozen() {
+        return isFrozen;
+    }
+
+    public boolean getIsEngraving() {
+        return isEngraving;
+    }
 }

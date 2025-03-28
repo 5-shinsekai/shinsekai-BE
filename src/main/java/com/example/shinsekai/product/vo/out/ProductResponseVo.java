@@ -1,18 +1,17 @@
 package com.example.shinsekai.product.vo.out;
 
-import com.example.shinsekai.product.entity.ProductStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class ProductCreateResponseVo {
+public class ProductResponseVo {
 
     private String productCode;
 
     @Builder
-    public ProductCreateResponseVo(String productCode) {
+    public ProductResponseVo(String productCode) {
         this.productCode = productCode;
     }
 }

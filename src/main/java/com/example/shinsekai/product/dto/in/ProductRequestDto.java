@@ -2,10 +2,11 @@ package com.example.shinsekai.product.dto.in;
 
 import com.example.shinsekai.product.entity.Product;
 import com.example.shinsekai.product.entity.ProductStatus;
-import com.example.shinsekai.product.vo.in.ProductCreateRequestVo;
+import com.example.shinsekai.product.vo.in.ProductRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
+@ToString
 public class ProductRequestDto {
 
     private String productCode;
@@ -69,18 +71,18 @@ public class ProductRequestDto {
                 .build();
     }
 
-    public static ProductRequestDto from(ProductCreateRequestVo productCreateRequestVo) {
+    public static ProductRequestDto from(ProductRequestVo productRequestVo) {
         return ProductRequestDto.builder()
-                .productName(productCreateRequestVo.getProductName())
-                .productPrice(productCreateRequestVo.getProductPrice())
-                .productStatus(productCreateRequestVo.getProductStatus())
-                .productSummary(productCreateRequestVo.getProductSummary())
-                .contentImages(productCreateRequestVo.getContentImages())
-                .thumbnailUrl(productCreateRequestVo.getThumbnailUrl())
-                .userPurchaseLimit(productCreateRequestVo.getUserPurchaseLimit())
-                .isFrozen(productCreateRequestVo.isFrozen())
-                .isEngraving(productCreateRequestVo.isEngraving())
-                .discountRate(productCreateRequestVo.getDiscountRate())
+                .productName(productRequestVo.getProductName())
+                .productPrice(productRequestVo.getProductPrice())
+                .productStatus(productRequestVo.getProductStatus())
+                .productSummary(productRequestVo.getProductSummary())
+                .contentImages(productRequestVo.getContentImages())
+                .thumbnailUrl(productRequestVo.getThumbnailUrl())
+                .userPurchaseLimit(productRequestVo.getUserPurchaseLimit())
+                .isFrozen(productRequestVo.getIsFrozen())
+                .isEngraving(productRequestVo.getIsEngraving())
+                .discountRate(productRequestVo.getDiscountRate())
                 .build();
     }
 

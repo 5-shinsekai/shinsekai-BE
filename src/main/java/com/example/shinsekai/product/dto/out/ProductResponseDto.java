@@ -2,7 +2,7 @@ package com.example.shinsekai.product.dto.out;
 
 import com.example.shinsekai.product.entity.Product;
 import com.example.shinsekai.product.entity.ProductStatus;
-import com.example.shinsekai.product.vo.out.ProductCreateResponseVo;
+import com.example.shinsekai.product.vo.out.ProductResponseVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,8 +43,8 @@ public class ProductResponseDto {
                 .build();
     }
 
-    public ProductCreateResponseVo toVo() {
-        return ProductCreateResponseVo.builder()
+    public ProductResponseVo toVo() {
+        return ProductResponseVo.builder()
                 .productCode(productCode)
                 .build();
     }
