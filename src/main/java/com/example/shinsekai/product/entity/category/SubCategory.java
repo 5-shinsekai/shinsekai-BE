@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
-@Table(name = "sub_category")
 @Getter
 public class SubCategory {
 
@@ -12,10 +11,9 @@ public class SubCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sub_category_pk", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "main_category_pk")
-    private MainCategory mainCategory;
+    @Column(nullable = false)
+    private Long mainCategoryId;
 }
