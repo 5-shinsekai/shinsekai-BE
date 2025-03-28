@@ -20,13 +20,13 @@ public class Product extends BaseEntity {
     @Column(name = "PRODUCT_PK")
     private Long id;
 
-    @Column(name = "PRODUCT_CODE", nullable = false, length = 255, unique = true)
+    @Column(name = "PRODUCT_CODE", nullable = false, length = 255, unique = true, updatable = false)
     private String productCode;
 
     @Column(name = "PRODUCT_NAME", nullable = false, length = 100)
     private String productName;
 
-    @Column(name = "PRODUCT_PRICE")
+    @Column(name = "PRODUCT_PRICE", nullable = false, length = 100)
     private double productPrice;
 
     @Enumerated(EnumType.STRING)
