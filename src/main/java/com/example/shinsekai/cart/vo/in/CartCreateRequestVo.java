@@ -14,5 +14,9 @@ public class CartCreateRequestVo {
             message = "각인 문구는 영문 대문자 최대 10자 또는 한글 최대 5자만 입력할 수 있으며, 특수문자는 사용할 수 없습니다."
     )
     private String engravingMessage;
-    private boolean frozen;
+    private boolean isFrozen;
+
+    public boolean getIsFrozen() {
+        return isFrozen;
+    }
 }

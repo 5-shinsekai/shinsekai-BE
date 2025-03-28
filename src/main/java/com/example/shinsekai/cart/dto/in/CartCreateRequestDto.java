@@ -33,7 +33,7 @@ public class CartCreateRequestDto {
                 .productCode(cartCreateRequestVo.getProductCode())
                 .quantity(cartCreateRequestVo.getQuantity())
                 .engravingMessage(cartCreateRequestVo.getEngravingMessage())
-                .isFrozen(cartCreateRequestVo.isFrozen())
+                .isFrozen(cartCreateRequestVo.getIsFrozen())
                 .build();
     }
 
