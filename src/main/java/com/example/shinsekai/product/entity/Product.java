@@ -17,7 +17,6 @@ public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PRODUCT_PK")
     private Long id;
 
     @Column(name = "PRODUCT_CODE", nullable = false, length = 255, unique = true, updatable = false)
@@ -38,7 +37,7 @@ public class Product extends BaseEntity {
 
     @Lob
     @Column(name = "content_images", nullable = false)
-    private String contentImages; // 제품설명 이미지 경로
+    private String contentImages; // 제품설명 이미지
 
     /*    @Column(name = "VIEW_COUNT", nullable = false)
         private int viewCount;*/ // 집계 테이블에 넣어서 관리
