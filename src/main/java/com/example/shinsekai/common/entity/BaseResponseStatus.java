@@ -29,6 +29,7 @@ public enum BaseResponseStatus {
      */
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 900, "Internal server error"),
     SSE_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 901, "알림 전송에 실패하였습니다."),
+    INVALID_INPUT(HttpStatus.BAD_REQUEST, false, 902, "유효하지 입력입니다"),
 
     /**
      * 2000: users service error

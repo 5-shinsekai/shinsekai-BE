@@ -5,6 +5,7 @@ import com.example.shinsekai.common.entity.BaseResponseStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -43,6 +44,14 @@ public class BaseExceptionHandler {
         for (StackTraceElement s : e.getStackTrace()) {
             System.out.println(s);
         }
+        return new ResponseEntity<>(response, response.httpStatus());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<BaseResponseEntity<Void>> handleValidationException(MethodArgumentNotValidException e) {
+        log.warn("ValidationException: {}", e.getMessage());
+
+        BaseResponseEntity<Void> response = new BaseResponseEntity<>(BaseResponseStatus.INVALID_INPUT);
         return new ResponseEntity<>(response, response.httpStatus());
     }
 
