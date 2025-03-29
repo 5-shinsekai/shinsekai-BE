@@ -1,6 +1,9 @@
 package com.example.shinsekai.common.config;
 
 import com.example.shinsekai.common.jwt.JwtAuthenticationFilter;
+import com.example.shinsekai.common.jwt.JwtUtil;
+import com.example.shinsekai.common.jwt.LoginFilter;
+import com.example.shinsekai.member.application.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

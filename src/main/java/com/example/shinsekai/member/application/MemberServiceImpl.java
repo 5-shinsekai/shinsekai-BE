@@ -1,5 +1,7 @@
 package com.example.shinsekai.member.application;
 
+import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.member.dto.in.MemberAddDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
@@ -12,6 +14,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -23,19 +27,20 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void addMember(MemberAddDto memberAddDto) {
-        memberRepository.save(memberAddDto.toEntity(UUID.randomUUID().toString()));
+//        memberRepository.save(memberAddDto.toEntity(UUID.randomUUID().toString()));
     }
 
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
-//        try {
-//            memberRepository.save(signUpRequestDto.toEntity(UUID.randomUUID().toString()));
-//        } catch (Exception e) {
-//            throw new BaseException(BaseResponseStatus.FAILED_TO_RESTORE);
-//        }
+        try {
+            memberRepository.save(signUpRequestDto.toEntity(new BCryptPasswordEncoder()));
+        } catch (Exception e) {
+            throw new BaseException(BaseResponseStatus.FAILED_TO_RESTORE);
+        }
     }
 
     @Override
