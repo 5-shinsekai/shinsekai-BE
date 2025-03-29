@@ -1,69 +1,76 @@
 package com.example.shinsekai.member.dto.in;
 
+import com.example.shinsekai.member.entity.Gender;
+import com.example.shinsekai.member.entity.Member;
+import com.example.shinsekai.member.vo.SignUpRequestVo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.Builder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 @ToString
 public class SignUpRequestDto {
 
-//    private String email;
-//    private String password;
-//    private String name;
-//    private String phoneNumber;
-//    private String nickname;
-//    private Date birth;
-//    private String address;
-//    private Gender gender;
-//
-//    public Member toEntity(PasswordEncoder passwordEncoder) {
-//
-//        return Member.builder()
-//                .email(email)
-//                .password(passwordEncoder.encode(password))
-//                .uuid(UUID.randomUUID().toString())
-//                .name(name)
-//                .phone(phoneNumber)
-//                .nickname(nickname)
-//                .birth(birth)
-//                .gender(gender)
-//                .address(address)
-//                .build();
-//    }
-//
-//    @Builder
-//    public SignUpRequestDto(
-//            String email,
-//            String password,
-//            String name,
-//            String phoneNumber,
-//            String nickname,
-//            Date birth,
-//            String address,
-//            Gender gender
-//    ) {
-//        this.email = email;
-//        this.password = password;
-//        this.name = name;
-//        this.phoneNumber = phoneNumber;
-//        this.nickname = nickname;
-//        this.birth = birth;
-//        this.address = address;
-//        this.gender = gender;
-//    }
-//
-//    public static SignUpRequestDto from(SignUpRequestVo signUpRequestVo) {
-//        return SignUpRequestDto.builder()
-//                .email(signUpRequestVo.getEmail())
-//                .password(signUpRequestVo.getPassword())
-//                .name(signUpRequestVo.getName())
-//                .phoneNumber(signUpRequestVo.getPhoneNumber())
-//                .nickname(signUpRequestVo.getNickname())
-//                .birth(signUpRequestVo.getBirth())
-//                .address(signUpRequestVo.getAddress())
-//                .gender(signUpRequestVo.getGender())
-//                .build();
-//    }
+    private String loginId;
+    private String email;
+    private String password;
+    private String nickName;
+    private String phone;
+    private Gender gender;
+    private String name;
+    private LocalDate birth;
+
+    public Member toEntity(PasswordEncoder passwordEncoder) {
+        return Member.builder()
+                .memberUuid(UUID.randomUUID().toString())
+                .loginId(this.loginId)
+                .email(this.email)
+                .password(passwordEncoder.encode(password))
+                .nickName(this.nickName)
+                .phone(this.phone)
+                .gender(gender)
+                .name(name)
+                .birth(birth)
+                .build();
+    }
+
+    @Builder
+    public SignUpRequestDto(
+                String loginId,
+                String email,
+                String password,
+                String nickName,
+                String phone,
+                Gender gender,
+                String name,
+                LocalDate birth
+    ) {
+        this.loginId = loginId;
+        this.email = email;
+        this.password = password;
+        this.nickName = nickName;
+        this.phone = phone;
+        this.gender = gender;
+        this.name = name;
+        this.birth = birth;
+    }
+
+    public static SignUpRequestDto from(SignUpRequestVo signUpRequestVo) {
+        return SignUpRequestDto.builder()
+                .loginId(signUpRequestVo.getLoginId())
+                .email(signUpRequestVo.getEmail())
+                .password(signUpRequestVo.getPassword())
+                .nickName(signUpRequestVo.getNickName())
+                .phone(signUpRequestVo.getPhone())
+                .gender(signUpRequestVo.getGender())
+                .name(signUpRequestVo.getName())
+                .birth(signUpRequestVo.getBirth())
+                .build();
+    }
 }

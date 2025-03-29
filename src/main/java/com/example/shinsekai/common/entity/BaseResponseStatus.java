@@ -5,6 +5,8 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 @Getter
 @AllArgsConstructor
 public enum BaseResponseStatus {
