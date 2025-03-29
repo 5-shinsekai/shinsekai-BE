@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 @Getter
 public class SignInRequestDto {
 
-    private String email;
+    private String loginId;
     private String password;
 
     @Builder
-    public SignInRequestDto(String email, String password) {
-        this.email = email;
+    public SignInRequestDto(String loginId, String password) {
+        this.loginId = loginId;
         this.password = password;
     }
 
     public static SignInRequestDto from(SignInRequestVo signInRequestVo) {
         return SignInRequestDto.builder()
-                .email(signInRequestVo.getEmail())
+                .loginId(signInRequestVo.getLoginId())
                 .password(signInRequestVo.getPassword())
                 .build();
     }
