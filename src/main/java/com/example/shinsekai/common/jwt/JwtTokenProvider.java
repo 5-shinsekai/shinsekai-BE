@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtTokenProvider {
 
-   // private final Environment env;
+    private final Environment env;
 
     /**
      * TokenProvider
@@ -29,9 +29,8 @@ public class JwtTokenProvider {
      * 5. refresh 토큰 생성
      */
 
-    // application.yml에서 정의한 secret 값을 읽어옴
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
     /**
      * 1. 토큰에서 uuid 가져오기
@@ -80,18 +79,28 @@ public class JwtTokenProvider {
 
         Claims claims = Jwts.claims().subject(authentication.getName()).build();
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + 3600000);  // 예시: 토큰 만료 시간 1시간
+        Date expiration = new Date(now.getTime() + 1000000000);// + env.getProperty("JWT.token.access-expire-time", Long.class));
 
-        return Jwts.builder()
+        System.out.println("expiration = " + expiration);
+
+        String strKey = Jwts.builder()
                 .signWith(getSignKey())
                 .claim("uuid", claims.getSubject())
                 .issuedAt(expiration)
                 .compact();
+
+        System.out.println("strKey = " + strKey);
+        
+        return strKey;
     }
 
 
     public Key getSignKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        System.out.println("secretKey = " + secretKey);
+
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        System.out.println("key = " + key);
+        return key;
     }
 
 }

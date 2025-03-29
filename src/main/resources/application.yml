@@ -4,8 +4,6 @@ spring:
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
-  jwt:
-    secret: "Q9uvg4o0QfZyVID+eLd2Zexh1p8a4ecQZVvraXfykdw="
 
   jpa:
     hibernate:
@@ -21,3 +19,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
+
+jwt:
+  secret-key: "Q9uvg4o0QfZyVID+eLd2Zexh1p8a4ecQZVvraXfykdw="
+  token:
+    access-expire-time: 10000000000
