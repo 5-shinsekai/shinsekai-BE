@@ -5,7 +5,7 @@ spring:
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jwt:
-    secret: "Q9uvg4o0QfZyVID+eLd2Zexh1p8a4ecQZVvraXfykdw="
+    secret:
 
   jpa:
     hibernate:
