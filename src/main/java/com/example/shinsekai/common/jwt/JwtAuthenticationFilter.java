@@ -31,22 +31,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        System.out.println("in doFilterInternal!!");
-
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String uuid;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("authHeader = " + authHeader);
-            System.out.println("✅ doFilter before: " + SecurityContextHolder.getContext().getAuthentication());
             filterChain.doFilter(request, response);
-            System.out.println("✅ doFilter after: " + SecurityContextHolder.getContext().getAuthentication());
             return;
         }
-
-        System.out.println("Are U here??");
-
 
         jwt = authHeader.substring(7);
 //        uuid = Jwts.parser().verifyWith((SecretKey) jwtTokenProvider.getSignKey())
