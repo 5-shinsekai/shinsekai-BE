@@ -1,9 +1,6 @@
 package com.example.shinsekai.common.config;
 
 import com.example.shinsekai.common.jwt.JwtAuthenticationFilter;
-import com.example.shinsekai.common.jwt.JwtUtil;
-import com.example.shinsekai.common.jwt.LoginFilter;
-import com.example.shinsekai.member.application.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(
+                                        "/api/v1/member/sign-in",
                                         "/api/v1/member/**",
                                         "/api/v1/size/**",
                                         "/api/v1/color/**",
