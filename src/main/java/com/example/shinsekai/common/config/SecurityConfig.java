@@ -49,23 +49,23 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers("/**"
-//                                        "/api/v1/member/**",
-//                                        "/api/v1/size/**",
-//                                        "/api/v1/color/**",
-//                                        "/api/v1/product/**",
-//                                        "/api/v1/category/**",
-//                                        "/api/v1/vendor/**",
-//                                        "/swagger-ui/**",
-//                                        "/v3/api-docs/**",
-//                                        "/error"
+                                .requestMatchers(
+                                        "/api/v1/member/**",
+                                        "/api/v1/size/**",
+                                        "/api/v1/color/**",
+                                        "/api/v1/product/**",
+                                        "/api/v1/category/**",
+                                        "/api/v1/vendor/**",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/error"
                                 )
                                 .permitAll()
-//                               .requestMatchers("/api/v1/review/**").permitAll()
-//                                .requestMatchers(HttpMethod.GET, "/api/v1/review/**").permitAll()  // GET 요청 허용
-//                               .requestMatchers(HttpMethod.POST, "/api/v1/review/**").denyAll()   // POST 요청 차단
-//                               .requestMatchers(HttpMethod.PUT, "/api/v1/review/**").denyAll()    // PUT 요청 차단
-//                               .requestMatchers(HttpMethod.DELETE, "/api/v1/review/**").denyAll() // DELETE 요청 차단
+                               .requestMatchers("/api/v1/review/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/review/**").permitAll()  // GET 요청 허용
+                               .requestMatchers(HttpMethod.POST, "/api/v1/review/**").denyAll()   // POST 요청 차단
+                               .requestMatchers(HttpMethod.PUT, "/api/v1/review/**").denyAll()    // PUT 요청 차단
+                               .requestMatchers(HttpMethod.DELETE, "/api/v1/review/**").denyAll() // DELETE 요청 차단
                                 .anyRequest()
                                 .authenticated()
                 )

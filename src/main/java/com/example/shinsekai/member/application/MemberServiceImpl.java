@@ -46,18 +46,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
 
-//        Member member = memberRepository.findByEmail(signInRequestDto.getEmail()).orElseThrow(
-//                () -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN)
-//        );
-//
-//        try {
-//            return SignInResponseDto.from(member, createToken(authenticate(member, signInRequestDto.getPassword())));
-//
-//        } catch (Exception e) {
-//            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
-//        }
+        Member member = memberRepository.findByLoginId(signInRequestDto.getLoginId()).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN)
+        );
 
-        return null;
+        try {
+            return SignInResponseDto.from(member, createToken(authenticate(member, signInRequestDto.getPassword())));
+
+        } catch (Exception e) {
+            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
+        }
     }
 
     @Override
