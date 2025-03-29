@@ -25,6 +25,7 @@ public class SignUpRequestDto {
     private Gender gender;
     private String name;
     private LocalDate birth;
+    private boolean isActive;
 
     public Member toEntity(PasswordEncoder passwordEncoder) {
         return Member.builder()
@@ -37,6 +38,7 @@ public class SignUpRequestDto {
                 .gender(gender)
                 .name(name)
                 .birth(birth)
+                .isActive(true)
                 .build();
     }
 

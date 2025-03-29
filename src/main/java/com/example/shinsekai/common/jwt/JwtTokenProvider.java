@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtTokenProvider {
 
-    private final Environment env;
+   // private final Environment env;
 
     /**
      * TokenProvider
@@ -27,6 +28,10 @@ public class JwtTokenProvider {
      * 4. 액세스 토큰 생성
      * 5. refresh 토큰 생성
      */
+
+    // application.yml에서 정의한 secret 값을 읽어옴
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     /**
      * 1. 토큰에서 uuid 가져오기
@@ -75,7 +80,7 @@ public class JwtTokenProvider {
 
         Claims claims = Jwts.claims().subject(authentication.getName()).build();
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + env.getProperty("JWT.token.access-expire-time", Long.class));
+        Date expiration = new Date(now.getTime() + 3600000);  // 예시: 토큰 만료 시간 1시간
 
         return Jwts.builder()
                 .signWith(getSignKey())
@@ -84,8 +89,9 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+
     public Key getSignKey() {
-        return Keys.hmacShaKeyFor(env.getProperty("JWT.secret-key").getBytes());
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
 }
