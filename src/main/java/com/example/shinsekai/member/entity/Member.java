@@ -79,6 +79,23 @@ public class Member extends BaseEntity implements UserDetails {
     }
 
     @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", memberUuid='" + memberUuid + '\'' +
+                ", loginId='" + loginId + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", isActive=" + isActive +
+                ", phone='" + phone + '\'' +
+                ", gender=" + gender +
+                ", name='" + name + '\'' +
+                ", birth=" + birth +
+                '}';
+    }
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {    // 사용자의 권한(역할)을 반환
         return List.of();
     }
