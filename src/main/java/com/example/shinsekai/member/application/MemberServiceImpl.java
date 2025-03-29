@@ -79,7 +79,9 @@ public class MemberServiceImpl implements MemberService {
     private String createToken(Authentication authentication) {
         System.out.println("create!!");
         System.out.println("authentication.getPrincipal() = " + authentication.getPrincipal());
-        return jwtTokenProvider.generateAccessToken(authentication);
+        String strKey = jwtTokenProvider.generateAccessToken(authentication);
+        System.out.println("strKey = " + strKey);
+        return strKey;
     }
 
 //    private Authentication authenticate(Member member, String inputPassword) {
