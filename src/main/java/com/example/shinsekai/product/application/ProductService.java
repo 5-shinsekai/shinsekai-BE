@@ -9,12 +9,20 @@ public interface ProductService {
 
     void createProduct(ProductRequestDto productRequestDto);
 
-    ProductResponseDto getProduct(String productCode);
+    ProductResponseDto getSellingProduct(String productCode);
+
+    List<ProductResponseDto> getAllSellingProducts();
 
     void updateProduct(String productCode, ProductRequestDto productRequestDto);
 
-    void deleteProduct(String productCode);
+    void hideProduct(String productCode);
 
-    List<ProductResponseDto> getAllProducts();
+    void showProduct(String productCode);
+
+    void hardDeleteProduct(String productCode);
+
+    void softDeleteProduct(String productCode);
+
+    void restoreProduct(String productCode);
 
 }

@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -57,6 +59,12 @@ public class Product extends BaseEntity {
     @Column(name = "discount_Rate", nullable = false)
     private int discountRate;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     /*@Column(name = "MIN_STOCK_COUNT", nullable = false)
     private int minStockCount; // 최소 재고개수 // 옵션에 ㄱㄱ*/
 
@@ -99,5 +107,22 @@ public class Product extends BaseEntity {
         this.isFrozen = dto.isFrozen();
         this.isEngraving = dto.isEngraving();
         this.discountRate = dto.getDiscountRate();
+    }
+
+    // 상품 상태 변경
+    public void changeStatus(ProductStatus productStatus) {
+        this.productStatus = productStatus;
+    }
+
+    //  소프트 딜리트
+    public void setDeleted() {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    //  상품 복구
+    public void restore() {
+        this.isDeleted = false;
+        this.deletedAt = null;
     }
 }
