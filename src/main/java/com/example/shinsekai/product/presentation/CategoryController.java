@@ -19,8 +19,7 @@ public class CategoryController {
 
     @GetMapping
     public BaseResponseEntity<List<MainCategorysGetResponseVo>> getMainCategorysName() {
-        categoryService.getMainCategorysName();
-        return null;
+        return new BaseResponseEntity<>(categoryService.getMainCategorysName());
     }
 
 }

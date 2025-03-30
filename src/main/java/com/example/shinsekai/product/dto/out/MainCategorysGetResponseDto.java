@@ -28,7 +28,11 @@ public class MainCategorysGetResponseDto {
                 .build();
     }
 
-//    public static List<MainCategorysGetResponseVo> toVo(List<MainCategorysGetResponseDto> dtoList){
-//
-//    }
+    public static MainCategorysGetResponseVo toVo(MainCategorysGetResponseDto dto){
+        return MainCategorysGetResponseVo.builder()
+                .categoryId(dto.getId())
+                .categoryName(dto.getName())
+                .categoryImage(dto.getCategoryImage())
+                .build();
+    }
 }

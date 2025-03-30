@@ -3,10 +3,12 @@ package com.example.shinsekai.product.entity.category;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class MainCategory {
 
     @Id
