@@ -37,7 +37,7 @@ public class Member extends BaseEntity implements UserDetails {
     private String password;
 
     @Column(unique = true, nullable = false, length = 50)
-    private String nickName;
+    private String nickname;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
     private boolean isActive;
@@ -61,7 +61,7 @@ public class Member extends BaseEntity implements UserDetails {
             , String loginId
             , String email
             , String password
-            , String nickName
+            , String nickname
             , boolean isActive
             , String phone
             , Gender gender
@@ -72,7 +72,7 @@ public class Member extends BaseEntity implements UserDetails {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.isActive = isActive;
         this.phone = phone;
         this.gender = gender;
@@ -88,7 +88,7 @@ public class Member extends BaseEntity implements UserDetails {
                 ", loginId='" + loginId + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", nickName='" + nickName + '\'' +
+                ", nickname='" + nickname + '\'' +
                 ", isActive=" + isActive +
                 ", phone='" + phone + '\'' +
                 ", gender=" + gender +

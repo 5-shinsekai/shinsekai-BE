@@ -1,6 +1,5 @@
 package com.example.shinsekai.member.application;
 
-import com.example.shinsekai.member.dto.in.MemberAddDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
