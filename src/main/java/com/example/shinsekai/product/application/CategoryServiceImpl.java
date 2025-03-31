@@ -14,22 +14,20 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryServiceImpl implements  CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     private final MainCategoryRepository mainCategoryRepository;
 
     @Override
     public List<MainCategorysGetResponseVo> getMainCategorysName() {
-        List<MainCategory> mainCategoryList =  mainCategoryRepository.findAll(Sort.by(Sort.Order.asc("id")));
+        List<MainCategory> mainCategoryList = mainCategoryRepository.findAll(Sort.by(Sort.Order.asc("id")));
 
-        if(mainCategoryList.isEmpty()){
+        if (mainCategoryList.isEmpty()) {
             throw new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY);
         }
-        List<MainCategorysGetResponseDto> dtoList = mainCategoryList.stream()
-                .map(MainCategorysGetResponseDto::from)
-                .toList();
 
-        return dtoList.stream()
+        return mainCategoryList.stream()
+                .map(MainCategorysGetResponseDto::from)
                 .map(MainCategorysGetResponseDto::toVo)
                 .toList();
 
