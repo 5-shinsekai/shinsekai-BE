@@ -1,18 +1,14 @@
 spring:
   datasource:
-    url: jdbc:mysql://{}:3306/shinsekai_db
-    username:
-    password:
+    url: jdbc:mysql://${MYSQL_HOST}:3306/shinsekai_db
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
       format_sql: true
-      type:
-        descriptor:
-          sql:
-            BasicBinder: trace
     show-sql: true
 
     properties:
@@ -21,7 +17,9 @@ spring:
         format_sql: true
 
 jwt:
-  secret-key:
+  secret-key: ${SECRET_KEY}
   token:
-    access-expire-time: 10000000000
-    refresh-expire-time: 10000000000
+    access-expire-time: ((0 * 24 + 0) * 60 + 30) * 60 * 1000  # 0일 0시간 30분 (30분)
+    refresh-expire-time: ((14 * 24 + 0) * 60 + 0) * 60 * 1000  # 14일 0시간 0분 (14일)
+
+
