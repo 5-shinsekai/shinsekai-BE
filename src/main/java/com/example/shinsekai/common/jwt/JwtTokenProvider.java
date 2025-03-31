@@ -33,6 +33,9 @@ public class JwtTokenProvider {
     @Value("${jwt.token.access-expire-time}")
     private long expireTime;
 
+    @Value("${jwt.token.refresh-expire-time}")
+    private long refreshExpireTime;
+
     /**
      * 1. 토큰에서 uuid 가져오기
      * @param token
@@ -86,6 +89,21 @@ public class JwtTokenProvider {
                 .signWith(getSignKey())
                 .claim("uuid", claims.getSubject())
                 .issuedAt(expiration)
+                .compact();
+    }
+
+    /**
+     * 5. 리프레시 토큰 생성
+     * @return 리프레시 토큰
+     */
+    public String generateRefreshToken() {
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + refreshExpireTime);
+
+        return Jwts.builder()
+                .signWith(getSignKey())
+                .issuedAt(now)
+                .expiration(expiration)
                 .compact();
     }
 

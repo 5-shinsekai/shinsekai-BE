@@ -20,7 +20,7 @@ public class SignUpRequestDto {
     private String loginId;
     private String email;
     private String password;
-    private String nickName;
+    private String nickname;
     private String phone;
     private Gender gender;
     private String name;
@@ -33,7 +33,7 @@ public class SignUpRequestDto {
                 .loginId(this.loginId)
                 .email(this.email)
                 .password(passwordEncoder.encode(password))
-                .nickName(this.nickName)
+                .nickname(this.nickname)
                 .phone(this.phone)
                 .gender(gender)
                 .name(name)
@@ -56,7 +56,7 @@ public class SignUpRequestDto {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
-        this.nickName = nickName;
+        this.nickname = nickName;
         this.phone = phone;
         this.gender = gender;
         this.name = name;

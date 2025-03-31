@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/shinsekai_db
-    username: root
-    password: 1234
+    url: jdbc:mysql://{}:3306/shinsekai_db
+    username:
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -21,6 +21,7 @@ spring:
         format_sql: true
 
 jwt:
-  secret-key: "Q9uvg4o0QfZyVID+eLd2Zexh1p8a4ecQZVvraXfykdw="
+  secret-key:
   token:
     access-expire-time: 10000000000
+    refresh-expire-time: 10000000000
