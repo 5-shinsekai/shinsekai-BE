@@ -26,6 +26,10 @@ public interface MemberService {
      */
     SignInResponseDto signIn(SignInRequestDto signInRequestDto);
 
+    public void logout(String accessToken, long expirationTime);
+
+    public boolean isTokenBlacklisted(String accessToken);
+
     /**
      * @param memberUuid
      * @return UserDetails

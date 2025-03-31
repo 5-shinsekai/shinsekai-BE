@@ -2,10 +2,11 @@ package com.example.shinsekai.common.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +19,7 @@ import java.util.function.Function;
 @Service
 public class JwtTokenProvider {
 
-    /**
-     * TokenProvider
-     * 1. 토큰에서 uuid 가져오기
-     * 2. Claim's 원하는 claim 값 추출 ( - JWT version 업데이트로 사용하지 않음)
-     * 3. 토큰에서 모든 claims 추출 ( - JWT version 업데이트로 사용하지 않음)
-     * 4. 액세스 토큰 생성
-     * 5. refresh 토큰 생성
-     */
+    private final StringRedisTemplate redisTemplate;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -37,7 +31,7 @@ public class JwtTokenProvider {
     private long refreshExpireTime;
 
     /**
-     * 1. 토큰에서 uuid 가져오기
+     * 토큰에서 uuid 가져오기
      * @param token
      * @return jwt토큰에서 추출한 사용자 UUID 반환
      * @throws IllegalArgumentException
@@ -51,7 +45,7 @@ public class JwtTokenProvider {
     }
 
     /**
-     * 2. Claims에서 원하는 claim 값 추출
+     * Claims에서 원하는 claim 값 추출
      * @param token
      * @param claimsResolver jwt토큰에서 추출한 정보를 어떻게 처리할지 결정하는 함수
      * @return jwt토큰에서 모든 클레임(클레임은 토큰에 담긴 정보 의미 ) 추출한 다음 claimsResolver함수를 처리해 결과 반환
@@ -62,7 +56,7 @@ public class JwtTokenProvider {
     }
 
     /**
-     * 3. 토큰에서 모든 claims 추출
+     * 토큰에서 모든 claims 추출
      * @param token
      * @return jwt토큰에서 모든 클레임 추출
      */
@@ -74,8 +68,9 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
+
     /**
-     * 4. 액세스 토큰 생성
+     * 액세스 토큰 생성
      * @param authentication
      * @return 액세스 토큰
      */
@@ -93,7 +88,7 @@ public class JwtTokenProvider {
     }
 
     /**
-     * 5. 리프레시 토큰 생성
+     * 리프레시 토큰 생성
      * @return 리프레시 토큰
      */
     public String generateRefreshToken() {
@@ -105,6 +100,36 @@ public class JwtTokenProvider {
                 .issuedAt(now)
                 .expiration(expiration)
                 .compact();
+    }
+
+    public void logout(String token) {
+        // Redis에서 해당 Access Token을 삭제
+        redisTemplate.delete(token);
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(getSignKey()) // SecretKey 사용
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public String getUserUuidFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(getSignKey()) // SecretKey 사용
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public long getRefreshTokenExpireTime() {
+        return this.refreshExpireTime;
     }
 
 
