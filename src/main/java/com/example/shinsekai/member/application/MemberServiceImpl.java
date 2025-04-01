@@ -51,9 +51,8 @@ public class MemberServiceImpl implements MemberService {
 
     // 로그아웃된 Access Token을 Redis에 저장 (블랙리스트 처리)
     @Override
-    public void logout(String authHeader) {
+    public void logout(String accessToken) {
 
-        String accessToken = authHeader.replace("Bearer ", "");
         boolean deleteAccessTokenSuccess = jwtTokenProvider.deleteToken(accessToken, TokenEnum.ACCESS);
         boolean deleteRefreshTokenSuccess = jwtTokenProvider.deleteToken(accessToken, TokenEnum.REFRESH);
         if(!deleteAccessTokenSuccess || !deleteRefreshTokenSuccess)

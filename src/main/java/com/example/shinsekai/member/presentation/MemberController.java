@@ -2,12 +2,12 @@ package com.example.shinsekai.member.presentation;
 
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
-import com.example.shinsekai.common.jwt.JwtAuthenticationFilter;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.member.application.MemberService;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
+import com.example.shinsekai.member.vo.RefreshRequestVo;
 import com.example.shinsekai.member.vo.SignInRequestVo;
 import com.example.shinsekai.member.vo.SignInResponseVo;
 import com.example.shinsekai.member.vo.SignUpRequestVo;
@@ -41,7 +41,15 @@ public class MemberController {
 
     @PostMapping("/logout")
     public BaseResponseEntity<Void> logout(HttpServletRequest request) {
-        memberService.logout(request.getHeader("Authorization"));
+        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+        memberService.logout(accessToken);
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    // Access + Refresh Token 모두 갱신
+    @PostMapping("/refresh")
+    public BaseResponseEntity<SignInResponseDto> createRefreshTokens(@RequestBody RefreshRequestVo refreshRequestVo) {
+        SignInResponseDto response = jwtTokenProvider.refreshTokens(refreshRequestVo);
+        return new BaseResponseEntity<>(response);
     }
 }

@@ -5,10 +5,14 @@ import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
 import com.example.shinsekai.member.entity.Member;
+import com.example.shinsekai.member.infrastructure.MemberRepository;
+import com.example.shinsekai.member.vo.RefreshRequestVo;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +38,7 @@ public class JwtTokenProvider {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final StringRedisTemplate redisTemplate;
+    private final MemberRepository memberRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -159,25 +164,27 @@ public class JwtTokenProvider {
     }
 
     public SignInResponseDto createToken(Authentication authentication, Member member, SignInRequestDto signInRequestDto) {
+        // 토큰 생성
         String accessToken = generateAccessToken(authentication, member);
         String refreshToken = generateRefreshToken();
 
-        // Redis에 Access Token 저장 (Key: "ACCESS:" + loginId, Value: accessToken)
-        redisTemplate.opsForValue().set(
-                "ACCESS:" + signInRequestDto.getLoginId(),
-                accessToken,
-                getExpirationMillis(accessToken, TokenEnum.ACCESS),
-                TimeUnit.MILLISECONDS
-        );
+        // redis 저장
+        setRedisTemplate(signInRequestDto.getLoginId(), accessToken, TokenEnum.ACCESS);
+        setRedisTemplate(signInRequestDto.getLoginId(), refreshToken, TokenEnum.REFRESH);
 
-        // Redis에 Refresh Token 저장 (key: loginId, value: refreshToken)
+        return SignInResponseDto.from(member, accessToken, refreshToken);
+    }
+
+    @Transactional
+    public void setRedisTemplate(String loginId, String token, TokenEnum tokenType) {
+        String key = "ACCESS".equals(tokenType.toString()) ? "ACCESS:" + loginId : loginId;
+
         redisTemplate.opsForValue().set(
-                signInRequestDto.getLoginId(),
-                refreshToken,
-                getExpirationMillis(refreshToken, TokenEnum.REFRESH),
+                key,
+                token,
+                getExpirationMillis(token, tokenType),
                 TimeUnit.MILLISECONDS
         );
-        return SignInResponseDto.from(member, accessToken, refreshToken);
     }
 
     public Authentication authenticate(Member member, String inputPassword) {
@@ -223,6 +230,59 @@ public class JwtTokenProvider {
         String storedToken = getTokenFromRedis(claims.getSubject(), TokenEnum.ACCESS);
 
         return storedToken != null && storedToken.equals(accessToken);
+    }
+
+    /**
+     * Access Token 갱신 (Refresh Token 검증 후 재발급)
+     * @param refreshRequestVo (loginId)
+     * @return SignInResponseDto
+     */
+    @Transactional
+    public SignInResponseDto refreshTokens(RefreshRequestVo refreshRequestVo) {
+
+        String refreshToken = getTokenFromRedis(refreshRequestVo.getLoginId(), TokenEnum.REFRESH);
+        String storedRefreshToken = getTokenFromRedis(refreshRequestVo.getLoginId(), TokenEnum.REFRESH);
+
+        if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
+            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
+        }
+
+        if (isTokenExpired(refreshToken, TokenEnum.REFRESH)) {
+            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
+        }
+
+        // 새 Access Token 생성
+        Member member = memberRepository.findByLoginId(refreshRequestVo.getLoginId())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(refreshRequestVo.getLoginId(), null, member.getAuthorities());
+        String newAccessToken = generateAccessToken(authentication, member);
+        String newRefreshToken = generateRefreshToken();
+
+        // redis에 저장
+        setRedisTemplate(refreshRequestVo.getLoginId(), newAccessToken, TokenEnum.ACCESS);
+
+        setRedisTemplate(refreshRequestVo.getLoginId(), newRefreshToken, TokenEnum.REFRESH);
+
+        return SignInResponseDto.from(member, newAccessToken, refreshToken);
+    }
+
+    /**
+     * 토큰이 만료되었는지 확인
+     * @param token, tokenType
+     * @return 만료되었으면 true, 유효하면 false
+     */
+    public boolean isTokenExpired(String token, TokenEnum tokenType) {
+        try {
+            Claims claims = Jwts.parser()           // JWT를 파싱할 수 있는 파서를 생성하는 메서드
+                    .setSigningKey(getSignKey())    // JWT의 서명을 검증하기 위해 사용되는 키를 설정하는 메서드
+                    .build()                        // Jwts.parser()로 생성한 파서 객체를 설정한 후에, 실제로 파서를 생성하고 사용할 준비를 완료
+                    .parseClaimsJws(token)          // 실제로 JWT 토큰을 파싱하는 메서드
+                    .getBody();                     // JWT에서 실제 데이터인 클레임(Claims)을 추출
+
+            return claims.getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     public Key getSignKey() {
