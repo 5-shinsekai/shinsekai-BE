@@ -260,10 +260,9 @@ public class JwtTokenProvider {
 
         // redis에 저장
         setRedisTemplate(refreshRequestVo.getLoginId(), newAccessToken, TokenEnum.ACCESS);
-
         setRedisTemplate(refreshRequestVo.getLoginId(), newRefreshToken, TokenEnum.REFRESH);
 
-        return SignInResponseDto.from(member, newAccessToken, refreshToken);
+        return SignInResponseDto.from(member, newAccessToken, newRefreshToken);
     }
 
     /**
