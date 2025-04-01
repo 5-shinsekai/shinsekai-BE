@@ -15,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @ToString
+@Builder(toBuilder = true)
 public class ProductRequestDto {
 
     private String productCode;

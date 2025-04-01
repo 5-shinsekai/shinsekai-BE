@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -17,7 +19,6 @@ public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PRODUCT_PK")
     private Long id;
 
     @Column(name = "PRODUCT_CODE", nullable = false, length = 255, unique = true, updatable = false)
@@ -38,7 +39,7 @@ public class Product extends BaseEntity {
 
     @Lob
     @Column(name = "content_images", nullable = false)
-    private String contentImages; // 제품설명 이미지 경로
+    private String contentImages; // 제품설명 이미지
 
     /*    @Column(name = "VIEW_COUNT", nullable = false)
         private int viewCount;*/ // 집계 테이블에 넣어서 관리
@@ -57,6 +58,12 @@ public class Product extends BaseEntity {
 
     @Column(name = "discount_Rate", nullable = false)
     private int discountRate;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     /*@Column(name = "MIN_STOCK_COUNT", nullable = false)
     private int minStockCount; // 최소 재고개수 // 옵션에 ㄱㄱ*/
@@ -89,7 +96,7 @@ public class Product extends BaseEntity {
         this.discountRate = discountRate;
     }
 
-    public void updateFromDto(ProductRequestDto dto) {
+    public void update(ProductRequestDto dto) {
         this.productName = dto.getProductName();
         this.productPrice = dto.getProductPrice();
         this.productStatus = dto.getProductStatus();
@@ -101,4 +108,16 @@ public class Product extends BaseEntity {
         this.isEngraving = dto.isEngraving();
         this.discountRate = dto.getDiscountRate();
     }
+
+    // 상품 상태 변경
+    public void changeStatus(ProductStatus productStatus) {
+        this.productStatus = productStatus;
+    }
+
+    //  소프트 딜리트
+    public void setDeleted() {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
+
 }

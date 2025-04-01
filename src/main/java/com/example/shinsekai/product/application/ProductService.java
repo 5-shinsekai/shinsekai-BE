@@ -2,16 +2,26 @@ package com.example.shinsekai.product.application;
 
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
 import com.example.shinsekai.product.dto.out.ProductResponseDto;
-import com.example.shinsekai.product.entity.Product;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public interface ProductService {
 
-    ProductResponseDto createProduct(ProductRequestDto productRequestDto);
+    void createProduct(ProductRequestDto productRequestDto);
+//    void createProduct(ProductRequestDto productRequestDto, MultipartFile thumbnailFile, MultipartFile contentImageFile);
 
-    ProductResponseDto getProduct(String productCode);
+    ProductResponseDto getSellingProduct(String productCode);
 
-    ProductResponseDto updateProduct(String productCode, ProductRequestDto productRequestDto);
+    List<ProductResponseDto> getAllSellingProducts();
 
-    void deleteProduct(String productCode);
+    void updateProduct(String productCode, ProductRequestDto productRequestDto);
+
+    void toggleProductStatus(String productCode);
+
+    void hardDeleteProduct(String productCode);
+
+    void softDeleteProduct(String productCode);
+
 
 }
