@@ -1,24 +1,38 @@
 package com.example.shinsekai.common.jwt;
 
+import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.exception.BaseException;
+import com.example.shinsekai.member.dto.in.SignInRequestDto;
+import com.example.shinsekai.member.dto.out.SignInResponseDto;
+import com.example.shinsekai.member.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class JwtTokenProvider {
 
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
     private final StringRedisTemplate redisTemplate;
 
     @Value("${jwt.secret-key}")
@@ -38,11 +52,22 @@ public class JwtTokenProvider {
      */
     public String validateAndGetUserUuid(String token) throws IllegalArgumentException {
         try {
-            return extractClaim(token, Claims::getSubject);
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("토큰에 담긴 유저 정보가 없습니다");
+
+            if(isBlacklisted(token)) {
+                throw new IllegalArgumentException("로그아웃된 계정입니다.");
+            }
+
+            String uuid = extractAllClaims(token).get("uuid", String.class);
+            if (uuid == null) {
+                throw new IllegalArgumentException("토큰에 담긴 유저 정보가 없습니다.");
+            }
+            return uuid;
+        } catch (JwtException | IllegalArgumentException e) {
+            // JWT 파싱이나 서명 오류시 처리
+            throw new IllegalArgumentException("잘못된 토큰입니다. 오류: " + e.getMessage());
         }
     }
+
 
     /**
      * Claims에서 원하는 claim 값 추출
@@ -61,6 +86,7 @@ public class JwtTokenProvider {
      * @return jwt토큰에서 모든 클레임 추출
      */
     public Claims extractAllClaims(String token) {
+
         return Jwts.parser()
                 .verifyWith((SecretKey) getSignKey())
                 .build()
@@ -74,16 +100,21 @@ public class JwtTokenProvider {
      * @param authentication
      * @return 액세스 토큰
      */
-    public String generateAccessToken(Authentication authentication) {
+    public String generateAccessToken(Authentication authentication, Member member) {
 
-        Claims claims = Jwts.claims().subject(authentication.getName()).build();
+        String memberUuid = member.getMemberUuid(); // UUID 가져오기
+        String loginId = authentication.getName(); // 로그인 아이디 가져오기
+
+        Claims claims = Jwts.claims().subject(loginId).build(); // "sub"에 로그인 아이디 저장
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + expireTime);// + env.getProperty("JWT.token.access-expire-time", Long.class));
-        
+        Date expiration = new Date(now.getTime() + expireTime);
+
         return Jwts.builder()
                 .signWith(getSignKey())
-                .claim("uuid", claims.getSubject())
-                .issuedAt(expiration)
+                .claim("uuid", memberUuid)  // "uuid" 키에 UUID 저장
+                .claim("username", loginId) // "username" 키에 로그인 아이디 저장
+                .issuedAt(now)                 // 토큰 발급 시간 설정
+                .expiration(expiration)        // 토큰 만료 시간
                 .compact();
     }
 
@@ -102,36 +133,60 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public void logout(String token) {
-        // Redis에서 해당 Access Token을 삭제
-        redisTemplate.delete(token);
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser()
-                    .setSigningKey(getSignKey()) // SecretKey 사용
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
-    }
-
-    public String getUserUuidFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSignKey()) // SecretKey 사용
+    public long getExpirationMillis(String token) {
+        Date expiration = Jwts.parser()
+                .setSigningKey(getSignKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getExpiration();
+
+        return expiration.getTime() - System.currentTimeMillis(); // 남은 시간 (밀리초)
     }
 
-    public long getRefreshTokenExpireTime() {
-        return this.refreshExpireTime;
+    public SignInResponseDto createToken(Authentication authentication, Member member, SignInRequestDto signInRequestDto) {
+        String accessToken = generateAccessToken(authentication, member);
+        String refreshToken = generateRefreshToken();
+
+        // 기존 Refresh Token 삭제
+        boolean deleteSuccess = redisTemplate.delete(signInRequestDto.getLoginId());
+
+        if(!deleteSuccess) {
+            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
+        }else {
+            // Redis에 Refresh Token 저장 (key: loginId, value: refreshToken)
+            redisTemplate.opsForValue().set(
+                    signInRequestDto.getLoginId(),
+                    refreshToken,
+                    getExpirationMillis(refreshToken),
+                    TimeUnit.MILLISECONDS
+            );
+            return SignInResponseDto.from(member, accessToken, refreshToken);
+        }
+
     }
 
+    public Authentication authenticate(Member member, String inputPassword) {
+        if (!passwordEncoder.matches(inputPassword, member.getPassword())) {
+            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
+        }
+        return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                member.getLoginId(),
+                inputPassword
+        ));
+    }
+
+    public void addBlackList (String accessToken, Long expirationTime) {
+        redisTemplate.opsForValue().set("blacklist:" + accessToken
+                                        , "true"
+                                        , expirationTime
+                                        , TimeUnit.MILLISECONDS);
+    }
+
+    // 토큰이 블랙리스트에 있는지 확인
+    public boolean isBlacklisted(String token) {
+        return redisTemplate.hasKey("blacklist:" + token);
+    }
 
     public Key getSignKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());

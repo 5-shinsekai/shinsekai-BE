@@ -1,12 +1,14 @@
 package com.example.shinsekai.common.jwt;
 
 import com.example.shinsekai.member.application.MemberService;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +19,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.crypto.SecretKey;
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
+    private final StringRedisTemplate redisTemplate; // ✅ Redis 추가
 
     @Override
     protected void doFilterInternal(
@@ -40,10 +44,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        jwt = authHeader.substring(7);
-//        uuid = Jwts.parser().verifyWith((SecretKey) jwtTokenProvider.getSignKey())
-//                .build().parseSignedClaims(jwt).getPayload().get("uuid", String.class);
+        jwt = authHeader.replace("Bearer ", "");
+        
         uuid = jwtTokenProvider.validateAndGetUserUuid(jwt);
+
+        // Redis에서 블랙리스트 확인 (로그아웃된 토큰인지 검사)
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String isLoggedOut = valueOperations.get(jwt);
+
+        if (isLoggedOut != null) {
+            // 로그아웃된 토큰 -> 요청 차단
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("This token has been logged out.");
+            return;
+        }
 
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.memberService.loadUserByUsername(uuid);
