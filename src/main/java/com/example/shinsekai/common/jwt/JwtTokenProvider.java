@@ -129,15 +129,33 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public long getExpirationMillis(String token) {
-        Date expiration = Jwts.parser()
+    public long getExpirationMillis(String token, TokenEnum tokenType) {
+        // 만료 시간을 명확히 설정해야 하므로 토큰이 전달되면 만료 시간을 구하는 로직을 명시적으로 작성합니다.
+        long expirationTime = 0L;
+
+        if ("ACCESS".equals(tokenType.toString())) {
+            expirationTime = expireTime;  // 액세스 토큰의 만료 시간 (예: 1시간)
+        } else {
+            expirationTime = refreshExpireTime;  // 리프레시 토큰의 만료 시간 (예: 7일)
+        }
+
+        return expirationTime;
+    }
+
+    public long getRemainExpirationMillis(String token, String tokenType) {
+        Claims claims = Jwts.parser()
                 .setSigningKey(getSignKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getExpiration();
+                .getBody();
 
-        return expiration.getTime() - System.currentTimeMillis(); // 남은 시간 (밀리초)
+        String loginId = claims.getSubject();
+
+        // Redis에서 저장된 만료 시간 조회 (초 단위)
+        String redisKey = tokenType + loginId;
+        Long expirationTime = redisTemplate.getExpire(redisKey, TimeUnit.MILLISECONDS);
+
+        return expirationTime - System.currentTimeMillis(); // 남은 시간 (밀리초)
     }
 
     public SignInResponseDto createToken(Authentication authentication, Member member, SignInRequestDto signInRequestDto) {
@@ -148,7 +166,7 @@ public class JwtTokenProvider {
         redisTemplate.opsForValue().set(
                 "ACCESS:" + signInRequestDto.getLoginId(),
                 accessToken,
-                getExpirationMillis(accessToken),
+                getExpirationMillis(accessToken, TokenEnum.ACCESS),
                 TimeUnit.MILLISECONDS
         );
 
@@ -156,7 +174,7 @@ public class JwtTokenProvider {
         redisTemplate.opsForValue().set(
                 signInRequestDto.getLoginId(),
                 refreshToken,
-                getExpirationMillis(refreshToken),
+                getExpirationMillis(refreshToken, TokenEnum.REFRESH),
                 TimeUnit.MILLISECONDS
         );
         return SignInResponseDto.from(member, accessToken, refreshToken);
@@ -172,34 +190,21 @@ public class JwtTokenProvider {
         ));
     }
 
-    public boolean deleteAccessToken(String accessToken) {
+    public boolean deleteToken(String accessToken, TokenEnum tokenType) {
         Claims claims = Jwts.parser()
                 .setSigningKey(getSignKey())
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody();
 
-        return redisTemplate.delete("ACCESS:" + claims.getSubject());
+        String type = "ACCESS".equals(tokenType.toString())  ? "ACCESS:" : "";
+
+        return redisTemplate.delete(type + claims.getSubject());
     }
 
-    public boolean deleteRefreshToken(String accessToken) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(getSignKey())
-                .build()
-                .parseClaimsJws(accessToken)
-                .getBody();
-
-        return redisTemplate.delete(claims.getSubject());
-    }
-
-    public String getAccessTokenFromRedis(String loginId) {
-        // "ACCESS:" + 로그인 ID로 저장된 Access Token 가져오기
-        return redisTemplate.opsForValue().get("ACCESS:" + loginId);
-    }
-
-    public String getRefreshTokenFromRedis(String loginId) {
-        // 로그인 ID를 키로 저장된 Refresh Token 가져오기
-        return redisTemplate.opsForValue().get(loginId);
+    public String getTokenFromRedis(String loginId, TokenEnum tokenType) {
+        String type = "ACCESS".equals(tokenType.toString())  ? "ACCESS:" : "";
+        return redisTemplate.opsForValue().get(type + loginId);
     }
 
     /**
@@ -215,11 +220,10 @@ public class JwtTokenProvider {
                 .getBody();
 
         // Redis에서 저장된 Access Token 가져오기
-        String storedToken = getAccessTokenFromRedis(claims.getSubject());
+        String storedToken = getTokenFromRedis(claims.getSubject(), TokenEnum.ACCESS);
 
         return storedToken != null && storedToken.equals(accessToken);
     }
-
 
     public Key getSignKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());

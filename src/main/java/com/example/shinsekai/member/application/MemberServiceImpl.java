@@ -3,6 +3,7 @@ package com.example.shinsekai.member.application;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
+import com.example.shinsekai.common.jwt.TokenEnum;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
@@ -26,6 +27,9 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final String ACCESS = "ACCESS";
+    private final String REFRESH = "REFRESH";
 
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
@@ -53,8 +57,8 @@ public class MemberServiceImpl implements MemberService {
     public void logout(String authHeader) {
 
         String accessToken = authHeader.replace("Bearer ", "");
-        boolean deleteAccessTokenSuccess = jwtTokenProvider.deleteAccessToken(accessToken);
-        boolean deleteRefreshTokenSuccess = jwtTokenProvider.deleteRefreshToken(accessToken);
+        boolean deleteAccessTokenSuccess = jwtTokenProvider.deleteToken(accessToken, TokenEnum.ACCESS);
+        boolean deleteRefreshTokenSuccess = jwtTokenProvider.deleteToken(accessToken, TokenEnum.REFRESH);
         if(!deleteAccessTokenSuccess || !deleteRefreshTokenSuccess)
             throw new BaseException(BaseResponseStatus.FAILED_TO_RESTORE);
     }
