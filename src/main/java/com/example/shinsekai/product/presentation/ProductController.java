@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,6 +30,20 @@ public class ProductController {
         productService.createProduct(ProductRequestDto.from(productRequestVo));
         return new BaseResponseEntity<>();
     }
+
+    /*
+    @Operation(summary = "상품 생성")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BaseResponseEntity<Void> createProduct(
+            @RequestPart("product") ProductRequestVo productVo,
+            @RequestPart("thumbnail") MultipartFile thumbnailFile,
+            @RequestPart("contentImage") MultipartFile contentImageFile) {
+
+        ProductRequestDto dto = ProductRequestDto.from(productVo);
+        productService.createProduct(dto, thumbnailFile, contentImageFile);
+        return new BaseResponseEntity<>();
+    }
+    */
 
     @Operation(summary = "상품 수정")
     @PutMapping("/{productCode}")
@@ -54,7 +70,7 @@ public class ProductController {
 
     @Operation(summary = "상품 상태 토글 (SELLING ↔ HIDDEN) ")
     @PatchMapping("/toggle-productStatus/{productCode}")
-    public  BaseResponseEntity<Void> toggleProductStatus(@PathVariable String productCode) {
+    public BaseResponseEntity<Void> toggleProductStatus(@PathVariable String productCode) {
         productService.toggleProductStatus(productCode);
         return new BaseResponseEntity<>();
     }
