@@ -10,6 +10,8 @@ services:
       MYSQL_DATABASE: shinsekai_db
       MYSQL_USER: shinsekai_user
       MYSQL_PASSWORD: 1234
+    env_file:
+      - .env
     ports:
       - "3306:3306"
     volumes:
