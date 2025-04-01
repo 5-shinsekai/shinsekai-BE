@@ -15,9 +15,7 @@ public interface ProductService {
 
     void updateProduct(String productCode, ProductRequestDto productRequestDto);
 
-    void hideProduct(String productCode);
-
-    void showProduct(String productCode);
+    void toggleProductStatus(String productCode);
 
     void hardDeleteProduct(String productCode);
 
