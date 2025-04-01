@@ -1,6 +1,7 @@
 package com.example.shinsekai.member.presentation;
 
 import com.example.shinsekai.common.entity.BaseResponseEntity;
+import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.jwt.JwtAuthenticationFilter;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.member.application.MemberService;
@@ -29,7 +30,7 @@ public class MemberController {
     @PostMapping("/sign-up")
     public BaseResponseEntity<Void> signUp(@RequestBody SignUpRequestVo signUpRequestVo) {
         memberService.signUp(SignUpRequestDto.from(signUpRequestVo));
-        return new BaseResponseEntity<>();
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @PostMapping("/sign-in")
@@ -41,6 +42,6 @@ public class MemberController {
     @PostMapping("/logout")
     public BaseResponseEntity<Void> logout(HttpServletRequest request) {
         memberService.logout(request.getHeader("Authorization"));
-        return new BaseResponseEntity<>();
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }

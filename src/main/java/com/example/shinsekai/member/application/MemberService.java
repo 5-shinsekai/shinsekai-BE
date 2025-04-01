@@ -9,7 +9,6 @@ public interface MemberService {
 
     /**
      * Member service interface
-     * - addMember
      * - signUp
      * - signIn
      * - loadUserByUsername

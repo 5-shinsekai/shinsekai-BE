@@ -28,9 +28,6 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final String ACCESS = "ACCESS";
-    private final String REFRESH = "REFRESH";
-
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
         try {
