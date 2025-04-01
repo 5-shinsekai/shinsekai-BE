@@ -62,25 +62,21 @@ public class ProductServiceImpl implements ProductService {
         ProductResponseDto.from(productRepository.save(product));
     }
 
-    //  상품 상태 HIDDEN 으로 변경
+    //  상품 상태 변경 (SELLING ↔ HIDDEN)
     @Override
     @Transactional
-    public void hideProduct(String productCode) {
+    public void toggleProductStatus(String productCode) {
         Product product = productRepository.findByProductCodeAndIsDeletedFalse(productCode)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
-        product.changeStatus(ProductStatus.HIDDEN);
+        if (product.getProductStatus() == ProductStatus.SELLING) {
+            product.changeStatus(ProductStatus.HIDDEN);
+        } else if (product.getProductStatus() == ProductStatus.HIDDEN) {
+            product.changeStatus(ProductStatus.SELLING);
+        } else {
+            throw new BaseException(BaseResponseStatus.INVALID_INPUT);
+        }
     }
-
-    //  상품 상태 SELLING 으로 변경
-    @Override
-    @Transactional
-    public void showProduct(String productCode) {
-        Product product = productRepository.findByProductCodeAndIsDeletedFalse(productCode)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
-
-        product.changeStatus(ProductStatus.SELLING);
-    }// 토클 방식으로 show hide 변경
 
     //  하드 딜리트
     @Override
@@ -91,6 +87,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(product);
     }
 
+    //  소프트 딜리트
     @Override
     @Transactional
     public void softDeleteProduct(String productCode) {

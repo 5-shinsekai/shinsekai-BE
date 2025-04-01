@@ -52,17 +52,10 @@ public class ProductController {
         return new BaseResponseEntity<>();
     }
 
-    @Operation(summary = "상품 숨기기 상태로 전환 (상태:SELLING → HIDDEN)")
-    @PatchMapping("/hide/{productCode}")
-    public BaseResponseEntity<Void> hideProduct(@PathVariable String productCode) {
-        productService.hideProduct(productCode);
-        return new BaseResponseEntity<>();
-    }
-
-    @Operation(summary = "상품 판매 상태로 전환 (HIDDEN → SELLING)")
-    @PatchMapping("/show/{productCode}")
-    public BaseResponseEntity<Void> showProduct(@PathVariable String productCode) {
-        productService.showProduct(productCode);
+    @Operation(summary = "상품 상태 토글 (SELLING ↔ HIDDEN) ")
+    @PatchMapping("/toggle-productStatus/{productCode}")
+    public  BaseResponseEntity<Void> toggleProductStatus(@PathVariable String productCode) {
+        productService.toggleProductStatus(productCode);
         return new BaseResponseEntity<>();
     }
 
