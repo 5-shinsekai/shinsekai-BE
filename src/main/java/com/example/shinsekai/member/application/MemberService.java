@@ -26,7 +26,7 @@ public interface MemberService {
      */
     SignInResponseDto signIn(SignInRequestDto signInRequestDto);
 
-    void logout(String accessToken, long expirationTime);
+    void logout(String authHeader);
 
     /**
      * @param memberUuid

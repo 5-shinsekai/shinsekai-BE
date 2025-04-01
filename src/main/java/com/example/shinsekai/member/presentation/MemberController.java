@@ -33,23 +33,14 @@ public class MemberController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<SignInResponseVo> signIn(@RequestBody SignInRequestVo signInRequestVo) {
+    public BaseResponseEntity<SignInResponseVo> signIn(@RequestBody SignInRequestVo signInRequestVo) {
         SignInResponseVo response = memberService.signIn(SignInRequestDto.from(signInRequestVo)).toVo();
-        return ResponseEntity.ok(response);
+        return new BaseResponseEntity<>(response);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().body("Invalid token.");
-        }
-
-        String token = authHeader.replace("Bearer ", "");
-        long expirationMillis = jwtTokenProvider.getExpirationMillis(token); // 토큰 만료 시간 가져오기
-
-        memberService.logout(token, expirationMillis);
-        return ResponseEntity.ok("Successfully logged out.");
+    public BaseResponseEntity<Void> logout(HttpServletRequest request) {
+        memberService.logout(request.getHeader("Authorization"));
+        return new BaseResponseEntity<>();
     }
 }

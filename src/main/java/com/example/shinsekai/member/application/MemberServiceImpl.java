@@ -11,6 +11,7 @@ import com.example.shinsekai.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,7 +42,6 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
         try {
             Authentication authentication = jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
-
             return jwtTokenProvider.createToken(authentication, member, signInRequestDto);
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
@@ -50,8 +50,13 @@ public class MemberServiceImpl implements MemberService {
 
     // 로그아웃된 Access Token을 Redis에 저장 (블랙리스트 처리)
     @Override
-    public void logout(String accessToken, long expirationTime) {
-        jwtTokenProvider.addBlackList(accessToken, expirationTime);
+    public void logout(String authHeader) {
+
+        String accessToken = authHeader.replace("Bearer ", "");
+        boolean deleteAccessTokenSuccess = jwtTokenProvider.deleteAccessToken(accessToken);
+        boolean deleteRefreshTokenSuccess = jwtTokenProvider.deleteRefreshToken(accessToken);
+        if(!deleteAccessTokenSuccess || !deleteRefreshTokenSuccess)
+            throw new BaseException(BaseResponseStatus.FAILED_TO_RESTORE);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.example.shinsekai.common.jwt;
 
+import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.member.application.MemberService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
+        final String accessToken;
         final String uuid;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -44,20 +46,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        jwt = authHeader.replace("Bearer ", "");
-        
-        uuid = jwtTokenProvider.validateAndGetUserUuid(jwt);
-
-        // Redis에서 블랙리스트 확인 (로그아웃된 토큰인지 검사)
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        String isLoggedOut = valueOperations.get(jwt);
-
-        if (isLoggedOut != null) {
-            // 로그아웃된 토큰 -> 요청 차단
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("This token has been logged out.");
-            return;
-        }
+        accessToken = authHeader.replace("Bearer ", "");
+        uuid = jwtTokenProvider.validateAndGetUserUuid(accessToken);
 
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.memberService.loadUserByUsername(uuid);
