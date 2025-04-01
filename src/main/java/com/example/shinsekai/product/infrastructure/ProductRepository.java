@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Integer> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByProductCode(String productCode);
     boolean existsByProductCode(String productCode);
 
@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     Optional<Product> findByProductCodeAndIsDeletedTrue(String productCode);
 
-    List<Product> findAllByIsDeletedFalse();
+    List<Product> findAllByIsDeletedFalse(); //find all 주의 (pageable)
 
     List<Product> findAllByIsDeletedFalseAndProductStatus(ProductStatus status);
 
