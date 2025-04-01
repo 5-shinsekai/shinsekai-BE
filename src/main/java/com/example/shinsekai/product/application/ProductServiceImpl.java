@@ -35,14 +35,14 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findByProductCodeAndIsDeletedFalse(productCode)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
-        if (product.getProductStatus() == ProductStatus.HIDDEN) {
+        if (product.getProductStatus() == ProductStatus.HIDDEN) {  //필요 없음
             throw new BaseException(BaseResponseStatus.NO_ACCESS_AUTHORITY);
         }
 
         return ProductResponseDto.from(product);
     }
 
-    //  판매 중인 상품 전체 조회
+    //  판매 중인 상품 전체 조회 `findAll` 은 쓰면안댐
     @Override
     public List<ProductResponseDto> getAllSellingProducts() {
         return productRepository.findAllByIsDeletedFalseAndProductStatus(ProductStatus.SELLING)
@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
-        product.updateFromDto(productRequestDto);
+        product.updateFromDto(productRequestDto); // dto 변경
         ProductResponseDto.from(productRepository.save(product));
     }
 
@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
         product.changeStatus(ProductStatus.SELLING);
-    }
+    }// 토클 방식으로 show hide 변경
 
     //  하드 딜리트
     @Override
@@ -100,18 +100,5 @@ public class ProductServiceImpl implements ProductService {
         product.setDeleted();
     }
 
-    // 상품 복구
-    @Override
-    @Transactional
-    public void restoreProduct(String productCode) {
-        Product product = productRepository.findByProductCode(productCode)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
-
-        if (!product.isDeleted()) {
-            throw new BaseException(BaseResponseStatus.INVALID_INPUT);
-        }
-
-        product.restore();
-    }
 
 }

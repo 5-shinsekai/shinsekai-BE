@@ -52,13 +52,6 @@ public class ProductController {
         return new BaseResponseEntity<>();
     }
 
-    @Operation(summary = "상품 소프트 삭제에서 복구")
-    @PatchMapping("/restore/{productCode}")
-    public BaseResponseEntity<Void> restoreProduct(@PathVariable String productCode) {
-        productService.restoreProduct(productCode);
-        return new BaseResponseEntity<>();
-    }
-
     @Operation(summary = "상품 숨기기 상태로 전환 (상태:SELLING → HIDDEN)")
     @PatchMapping("/hide/{productCode}")
     public BaseResponseEntity<Void> hideProduct(@PathVariable String productCode) {

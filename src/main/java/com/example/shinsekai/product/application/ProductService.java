@@ -23,6 +23,5 @@ public interface ProductService {
 
     void softDeleteProduct(String productCode);
 
-    void restoreProduct(String productCode);
 
 }
