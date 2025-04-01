@@ -96,7 +96,7 @@ public class Product extends BaseEntity {
         this.discountRate = discountRate;
     }
 
-    public void updateFromDto(ProductRequestDto dto) {
+    public void update(ProductRequestDto dto) {
         this.productName = dto.getProductName();
         this.productPrice = dto.getProductPrice();
         this.productStatus = dto.getProductStatus();
@@ -120,9 +120,4 @@ public class Product extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
-    //  상품 복구
-    public void restore() {
-        this.isDeleted = false;
-        this.deletedAt = null;
-    }
 }

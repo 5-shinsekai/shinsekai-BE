@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
-        product.updateFromDto(productRequestDto); // dto 변경
+        product.update(productRequestDto);
         ProductResponseDto.from(productRepository.save(product));
     }
 
