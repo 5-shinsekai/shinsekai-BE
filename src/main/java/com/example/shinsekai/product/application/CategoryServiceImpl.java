@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public List<MainCategoryResponseDto> getAllMainCategory() {
-        return mainCategoryRepository.findAll(Sort.by(Sort.Order.asc("name")))
+        return mainCategoryRepository.findAllByIsDeletedFalse(Sort.by(Sort.Order.asc("name")))
                 .stream()
                 .map(MainCategoryResponseDto::from)
                 .toList();
