@@ -68,7 +68,7 @@ public class SignUpRequestDto {
                 .loginId(signUpRequestVo.getLoginId())
                 .email(signUpRequestVo.getEmail())
                 .password(signUpRequestVo.getPassword())
-                .nickName(signUpRequestVo.getNickName())
+                .nickName(signUpRequestVo.getNickname())
                 .phone(signUpRequestVo.getPhone())
                 .gender(signUpRequestVo.getGender())
                 .name(signUpRequestVo.getName())

@@ -11,7 +11,7 @@ public class SignUpRequestVo {
     private String loginId;
     private String email;
     private String password;
-    private String nickName;
+    private String nickname;
     private boolean isActive;
     private String phone;
     private Gender gender;

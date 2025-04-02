@@ -8,14 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface MemberService {
 
     /**
-     * Member service interface
-     * - addMember
-     * - signUp
-     * - signIn
-     * - loadUserByUsername
-     */
-
-    /**
      * @param signUpRequestDto
      */
     void signUp(SignUpRequestDto signUpRequestDto);
@@ -25,6 +17,11 @@ public interface MemberService {
      * @return SignInResponseDto
      */
     SignInResponseDto signIn(SignInRequestDto signInRequestDto);
+
+    /**
+     * @param accessToken
+     */
+    void logout(String accessToken);
 
     /**
      * @param memberUuid

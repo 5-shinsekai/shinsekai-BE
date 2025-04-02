@@ -2,10 +2,7 @@ package com.example.shinsekai.member.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
+@ToString
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,7 +30,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(unique = true, nullable = false, length = 255)
     private String email;
 
-    @Column(unique = true, nullable = false, length = 100, updatable = false)
+    @Column(nullable = false, length = 100, updatable = false)
     private String password;
 
     @Column(unique = true, nullable = false, length = 50)
@@ -42,7 +39,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
     private boolean isActive;
 
-    @Column(unique = true, length = 11)
+    @Column(unique = true, length = 20)
     private String phone;
 
     @Enumerated(EnumType.STRING)
@@ -78,23 +75,6 @@ public class Member extends BaseEntity implements UserDetails {
         this.gender = gender;
         this.name = name;
         this.birth = birth;
-    }
-
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", memberUuid='" + memberUuid + '\'' +
-                ", loginId='" + loginId + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", isActive=" + isActive +
-                ", phone='" + phone + '\'' +
-                ", gender=" + gender +
-                ", name='" + name + '\'' +
-                ", birth=" + birth +
-                '}';
     }
 
     @Override
