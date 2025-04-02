@@ -11,7 +11,6 @@ public class ProductOptionList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_option_pk")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -95,6 +95,11 @@ public enum BaseResponseStatus {
     // Media
     NO_EXIST_MEDIA(HttpStatus.NOT_FOUND, false, 6001, "존재하지 않는 미디어입니다"),
 
+    /**
+     * 6000: gpt-api error
+     */
+    // S3
+    S3_UPLOAD_FAIL(HttpStatus.BAD_REQUEST,false,7001,"파일 업로드에 실패하였습니다."),
 
     /**
      * 결제관련 ERROR
