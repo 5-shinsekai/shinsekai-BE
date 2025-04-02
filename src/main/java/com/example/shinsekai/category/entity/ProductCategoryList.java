@@ -1,6 +1,5 @@
-package com.example.shinsekai.product.entity.category;
+package com.example.shinsekai.category.entity;
 
-import com.example.shinsekai.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 

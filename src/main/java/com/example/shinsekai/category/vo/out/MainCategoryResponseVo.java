@@ -1,4 +1,4 @@
-package com.example.shinsekai.product.vo.out;
+package com.example.shinsekai.category.vo.out;
 
 import lombok.Builder;
 import lombok.Getter;

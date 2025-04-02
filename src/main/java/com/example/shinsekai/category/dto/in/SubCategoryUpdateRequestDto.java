@@ -1,7 +1,7 @@
-package com.example.shinsekai.product.dto.in;
+package com.example.shinsekai.category.dto.in;
 
-import com.example.shinsekai.product.entity.category.SubCategory;
-import com.example.shinsekai.product.vo.in.SubCategoryUpdateRequestVo;
+import com.example.shinsekai.category.entity.SubCategory;
+import com.example.shinsekai.category.vo.in.SubCategoryUpdateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 

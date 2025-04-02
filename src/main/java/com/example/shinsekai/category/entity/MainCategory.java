@@ -1,8 +1,6 @@
-package com.example.shinsekai.product.entity.category;
+package com.example.shinsekai.category.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
-import com.example.shinsekai.common.entity.BaseResponseStatus;
-import com.example.shinsekai.common.exception.BaseException;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.example.shinsekai.product.entity.category;
+package com.example.shinsekai.category.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
