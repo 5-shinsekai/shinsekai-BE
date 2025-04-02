@@ -1,20 +1,35 @@
-package com.example.shinsekai.product.application;
+package com.example.shinsekai.category.application;
 
+import com.example.shinsekai.category.dto.in.MainCategoryCreateRequestDto;
+import com.example.shinsekai.category.dto.in.MainCategoryUpdateRequestDto;
+import com.example.shinsekai.category.dto.in.SubCategoryCreateRequestDto;
+import com.example.shinsekai.category.dto.in.SubCategoryUpdateRequestDto;
+import com.example.shinsekai.category.dto.out.CommonFilterItemDto;
+import com.example.shinsekai.common.config.CategoryFilterConfig;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.enums.ColorType;
+import com.example.shinsekai.common.enums.FilterType;
+import com.example.shinsekai.common.enums.PriceRangeType;
+import com.example.shinsekai.common.enums.SizeType;
 import com.example.shinsekai.common.exception.BaseException;
-import com.example.shinsekai.product.dto.in.*;
-import com.example.shinsekai.product.dto.out.MainCategoryResponseDto;
-import com.example.shinsekai.product.entity.category.MainCategory;
-import com.example.shinsekai.product.entity.category.SubCategory;
-import com.example.shinsekai.product.infrastructure.MainCategoryRepository;
-import com.example.shinsekai.product.infrastructure.SubCategoryRepository;
+import com.example.shinsekai.category.dto.out.CategoryFilterResponseDto;
+import com.example.shinsekai.category.dto.out.SubCategoryResponseDto;
+import com.example.shinsekai.category.dto.out.MainCategoryResponseDto;
+import com.example.shinsekai.category.entity.MainCategory;
+import com.example.shinsekai.category.entity.SubCategory;
+import com.example.shinsekai.category.infrastructure.MainCategoryRepository;
+import com.example.shinsekai.category.infrastructure.SubCategoryRepository;
+import com.example.shinsekai.season.infrastructure.SeasonRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +38,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final MainCategoryRepository mainCategoryRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final SeasonRepository seasonRepository;
+
+    private final CategoryFilterConfig categoryFilterConfig;
 
     @Override
     @Transactional
@@ -70,9 +88,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public List<CategoryResponseDto> getAllSubCategory(Long categoryId) {
+    public List<SubCategoryResponseDto> getAllSubCategory(Long categoryId) {
         return subCategoryRepository.findAllByMainCategoryIdAndIsDeletedFalse(categoryId, Sort.by(Sort.Order.asc("name")))
-                .stream().map(CategoryResponseDto::from).toList();
+                .stream().map(SubCategoryResponseDto::from).toList();
     }
 
     @Override
@@ -115,5 +133,38 @@ public class CategoryServiceImpl implements CategoryService {
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.INVALID_INPUT);
         }
+    }
+
+    @Override
+    @Transactional
+    public CategoryFilterResponseDto getCategoryFilter(Long mainCategoryId) {
+
+        Set<FilterType> filterTypes = categoryFilterConfig.getFilterTypesForCategory(mainCategoryId);
+
+        List<SubCategoryResponseDto> subCategories = subCategoryRepository.findAllByMainCategoryIdAndIsDeletedFalse(mainCategoryId, Sort.by(Sort.Order.asc("name")))
+                .stream().map(SubCategoryResponseDto::from).toList();
+
+        List<CommonFilterItemDto> seasons = seasonRepository.findByEndDateAfter(LocalDate.now())
+                .stream().map(CommonFilterItemDto::from).toList();
+
+        List<CommonFilterItemDto> sizes = filterTypes.contains(FilterType.SIZE)
+                ? Arrays.stream(SizeType.values()).map(CommonFilterItemDto::from).toList()
+                : List.of();
+
+        List<CommonFilterItemDto> colors = filterTypes.contains(FilterType.COLOR)
+                ? Arrays.stream(ColorType.values()).map(CommonFilterItemDto::from).toList()
+                : List.of();
+
+        List<CommonFilterItemDto> priceRange = Arrays.stream(PriceRangeType.values())
+                .map(CommonFilterItemDto::from)
+                .toList();
+
+        return CategoryFilterResponseDto.builder()
+                .subCategories(subCategories)
+                .seasons(seasons)
+                .sizes(sizes)
+                .colors(colors)
+                .priceRanges(priceRange)
+                .build();
     }
 }

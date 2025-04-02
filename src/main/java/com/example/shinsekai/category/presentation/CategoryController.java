@@ -1,15 +1,20 @@
-package com.example.shinsekai.product.presentation;
+package com.example.shinsekai.category.presentation;
 
+import com.example.shinsekai.category.dto.in.MainCategoryCreateRequestDto;
+import com.example.shinsekai.category.dto.in.MainCategoryUpdateRequestDto;
+import com.example.shinsekai.category.dto.in.SubCategoryCreateRequestDto;
+import com.example.shinsekai.category.dto.in.SubCategoryUpdateRequestDto;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
-import com.example.shinsekai.product.application.CategoryServiceImpl;
-import com.example.shinsekai.product.dto.in.*;
-import com.example.shinsekai.product.dto.out.MainCategoryResponseDto;
-import com.example.shinsekai.product.vo.in.MainCategoryCreateRequestVo;
-import com.example.shinsekai.product.vo.in.MainCategoryUpdateRequestVo;
-import com.example.shinsekai.product.vo.in.SubCategoryCreateRequestVo;
-import com.example.shinsekai.product.vo.in.SubCategoryUpdateRequestVo;
-import com.example.shinsekai.product.vo.out.CategoryResponseVo;
-import com.example.shinsekai.product.vo.out.MainCategoryResponseVo;
+import com.example.shinsekai.category.application.CategoryServiceImpl;
+import com.example.shinsekai.category.dto.out.SubCategoryResponseDto;
+import com.example.shinsekai.category.dto.out.MainCategoryResponseDto;
+import com.example.shinsekai.category.vo.in.MainCategoryCreateRequestVo;
+import com.example.shinsekai.category.vo.in.MainCategoryUpdateRequestVo;
+import com.example.shinsekai.category.vo.in.SubCategoryCreateRequestVo;
+import com.example.shinsekai.category.vo.in.SubCategoryUpdateRequestVo;
+import com.example.shinsekai.category.vo.out.CategoryFilterResponseVo;
+import com.example.shinsekai.category.vo.out.SubCategoryResponseVo;
+import com.example.shinsekai.category.vo.out.MainCategoryResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,11 +57,11 @@ public class CategoryController {
     }
 
     @GetMapping("/sub/{categoryId}")
-    public BaseResponseEntity<List<CategoryResponseVo>> getAllSubCategory(@PathVariable Long categoryId) {
+    public BaseResponseEntity<List<SubCategoryResponseVo>> getAllSubCategory(@PathVariable Long categoryId) {
         return new BaseResponseEntity<>(
                 categoryService.getAllSubCategory(categoryId)
                         .stream()
-                        .map(CategoryResponseDto::toVo)
+                        .map(SubCategoryResponseDto::toVo)
                         .toList());
     }
 
@@ -78,6 +83,11 @@ public class CategoryController {
             @RequestBody SubCategoryUpdateRequestVo subCategoryUpdateRequestVo){
         categoryService.updateSubCategory(SubCategoryUpdateRequestDto.from(subCategoryUpdateRequestVo));
         return new BaseResponseEntity<>(true);
-
     }
+
+    @GetMapping("/{mainCategoryId}/filter")
+    public BaseResponseEntity<CategoryFilterResponseVo> getCategoryFilter(@PathVariable Long mainCategoryId){
+        return new BaseResponseEntity<>(categoryService.getCategoryFilter(mainCategoryId).toVo());
+    }
+
 }

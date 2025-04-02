@@ -1,15 +1,15 @@
-package com.example.shinsekai.product.vo.out;
+package com.example.shinsekai.category.vo.out;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CategoryResponseVo {
+public class SubCategoryResponseVo {
     private Long code;
     private String name;
 
     @Builder
-    public CategoryResponseVo(Long code, String name) {
+    public SubCategoryResponseVo(Long code, String name) {
         this.code = code;
         this.name = name;
     }

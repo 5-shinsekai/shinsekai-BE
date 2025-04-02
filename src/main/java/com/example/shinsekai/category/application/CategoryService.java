@@ -1,7 +1,12 @@
-package com.example.shinsekai.product.application;
+package com.example.shinsekai.category.application;
 
-import com.example.shinsekai.product.dto.in.*;
-import com.example.shinsekai.product.dto.out.MainCategoryResponseDto;
+import com.example.shinsekai.category.dto.in.MainCategoryCreateRequestDto;
+import com.example.shinsekai.category.dto.in.MainCategoryUpdateRequestDto;
+import com.example.shinsekai.category.dto.in.SubCategoryCreateRequestDto;
+import com.example.shinsekai.category.dto.in.SubCategoryUpdateRequestDto;
+import com.example.shinsekai.category.dto.out.CategoryFilterResponseDto;
+import com.example.shinsekai.category.dto.out.SubCategoryResponseDto;
+import com.example.shinsekai.category.dto.out.MainCategoryResponseDto;
 
 import java.util.List;
 
@@ -13,7 +18,7 @@ public interface CategoryService {
     void updateMainCategory(MainCategoryUpdateRequestDto mainCategoryUpdateRequestDto);
 
     //SubCategory
-    List<CategoryResponseDto> getAllSubCategory(Long categoryId);
+    List<SubCategoryResponseDto> getAllSubCategory(Long categoryId);
     void createSubCategory(SubCategoryCreateRequestDto subCategoryCreateRequestDto);
     void softDeleteSubCategory(Long categoryId);
     void updateSubCategory(SubCategoryUpdateRequestDto subCategoryUpdateRequestDto);
@@ -22,4 +27,7 @@ public interface CategoryService {
 //    void createProductCategoryList();
 //    void softDeleteProductCategoryList();
 //    void updateProductCategoryList();
+
+    // CategoryFilter
+    CategoryFilterResponseDto getCategoryFilter(Long mainCategoryId);
 }
