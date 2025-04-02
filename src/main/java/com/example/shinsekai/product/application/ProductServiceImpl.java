@@ -2,7 +2,6 @@ package com.example.shinsekai.product.application;
 
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
-import com.example.shinsekai.common.service.S3Service;
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
 import com.example.shinsekai.product.dto.out.ProductResponseDto;
 import com.example.shinsekai.product.entity.Product;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final S3Service s3Service;
 
     //  상품 생성
     @Override

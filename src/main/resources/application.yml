@@ -16,15 +16,6 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
-  cloud:
-    aws:
-      s3:
-        bucket: shinsekai-storage
-      credentials:
-        accessKey: ${AWS_ACCESS_KEY_ID}
-        secretKey: ${AWS_SECRET_ACCESS_KEY}
-      region:
-        static: ap-northeast-2
 
 jwt:
   secret-key: ${SECRET_KEY}
