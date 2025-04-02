@@ -4,7 +4,7 @@ import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
 import com.example.shinsekai.cart.infrastructure.CartRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
-import com.example.shinsekai.product.infrastructure.ProductOptionListRepository;
+import com.example.shinsekai.option.infrastructure.ProductOptionListRepository;
 import com.example.shinsekai.product.infrastructure.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

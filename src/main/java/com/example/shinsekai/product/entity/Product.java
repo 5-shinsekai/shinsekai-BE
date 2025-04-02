@@ -21,7 +21,7 @@ public class Product extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "PRODUCT_CODE", nullable = false, length = 255, unique = true, updatable = false)
+    @Column(name = "PRODUCT_CODE", nullable = false, length = 50, unique = true, updatable = false)
     private String productCode;
 
     @Column(name = "PRODUCT_NAME", nullable = false, length = 100)
@@ -65,8 +65,6 @@ public class Product extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    /*@Column(name = "MIN_STOCK_COUNT", nullable = false)
-    private int minStockCount; // 최소 재고개수 // 옵션에 ㄱㄱ*/
 
     @Builder
     public Product(Long id,

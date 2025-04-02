@@ -1,4 +1,4 @@
-package com.example.shinsekai.product.entity.option;
+package com.example.shinsekai.option.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -6,9 +6,9 @@ import lombok.Getter;
 
 
 @Entity
-@Table(name = "color_option")
+@Table(name = "color")
 @Getter
-public class ColorOption extends BaseEntity {
+public class Color extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
