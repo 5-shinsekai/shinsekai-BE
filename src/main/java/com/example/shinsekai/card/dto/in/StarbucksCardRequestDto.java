@@ -1,7 +1,7 @@
 package com.example.shinsekai.card.dto.in;
 
 import com.example.shinsekai.card.entity.StarbucksCard;
-import com.example.shinsekai.card.vo.StarbucksCardRequestVo;
+import com.example.shinsekai.card.vo.in.StarbucksCardRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,24 +11,19 @@ import lombok.ToString;
 @ToString
 public class StarbucksCardRequestDto {
     private Long id;
-    private String cardUuid;
     private String memberUuid;
+    private String cardUuid;
     private String cardName;
     private String cardNumber;
-    private String pinNumber;
-    private String cardImageUrl;
-    private String cardDescription;
-    private double remainAmount;
 
-    public StarbucksCard toEntity(String memberUuid, String cardUuid, double remainAmount){
+    public StarbucksCard toEntity(String cardUuid, double remainAmount, String cardImageUrl, String cardDescription) {
         return StarbucksCard.builder()
-                .memberUuid(memberUuid)
                 .cardUuid(cardUuid)
                 .cardName(cardName)
                 .cardNumber(cardNumber)
+                .remainAmount(remainAmount)
                 .cardImageUrl(cardImageUrl)
                 .cardDescription(cardDescription)
-                .remainAmount(remainAmount)
                 .build();
     }
 
@@ -36,10 +31,6 @@ public class StarbucksCardRequestDto {
         return StarbucksCardRequestDto.builder()
                 .cardName(starbucksCardRequestVo.getCardName())
                 .cardNumber(starbucksCardRequestVo.getCardNumber())
-                .cardImageUrl(starbucksCardRequestVo.getCardImageUrl())
-                .memberUuid(starbucksCardRequestVo.getMemberUuid())
-                .pinNumber(starbucksCardRequestVo.getPinNumber())
-                .cardDescription(starbucksCardRequestVo.getCardDescription())
                 .build();
     }
 }

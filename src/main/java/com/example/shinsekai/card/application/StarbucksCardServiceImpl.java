@@ -1,10 +1,10 @@
 package com.example.shinsekai.card.application;
 
-import com.example.shinsekai.card.dto.in.StarbucksCardKeyMapRequestDto;
 import com.example.shinsekai.card.dto.in.StarbucksCardRequestDto;
 import com.example.shinsekai.card.dto.out.StarbucksCardResponseDto;
+import com.example.shinsekai.card.entity.MemberStarbucksCardList;
 import com.example.shinsekai.card.entity.StarbucksCard;
-import com.example.shinsekai.card.entity.StarbucksCardKeyMap;
+import com.example.shinsekai.card.infrastructure.MemberStarbucksListRepository;
 import com.example.shinsekai.card.infrastructure.StarbucksCardRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
@@ -13,61 +13,81 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class StarbucksCardServiceImpl implements StarbucksCardService {
 
     private final StarbucksCardRepository starbucksCardRepository;
-    private final StarbucksCardKeyMapService starbucksCardKeyMapService;
+    private final MemberStarbucksListRepository memberStarbucksListRepository;
 
     @Override
     public List<StarbucksCardResponseDto> getStarbucksCard(String memberUuid) {
-        List<StarbucksCard> starbucksCards = starbucksCardRepository.findByMemberUuid(memberUuid);
-        List<StarbucksCardResponseDto> starbucksCardResponseDtos = new ArrayList<>();
-        for(StarbucksCard starbucksCard : starbucksCards){
-            starbucksCardResponseDtos.add(StarbucksCardResponseDto.from(starbucksCard));
-        }
-        return starbucksCardResponseDtos;
+
+        return memberStarbucksListRepository.findMemberStarbucksCardListByMemberUuidAndActive(memberUuid, true).stream()
+                .map(memberStarbucksCardLists -> StarbucksCardResponseDto.from(
+                        memberStarbucksCardLists.getStarbucksCard(),
+                        memberStarbucksCardLists.getMemberStarbucksCardUuid()
+                    )
+                ).toList();
     }
 
     @Override
     @Transactional
-    public void createStarbucksCard(StarbucksCardRequestDto starbucksCardDto) {
-        //인증용 카드 정보 불러오기
-        StarbucksCardKeyMap starbucksCardKeyMap = starbucksCardKeyMapService.getStarbucksCardKeyMap(starbucksCardDto.getCardNumber())
-                .orElseThrow(()->new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD));
-
-        boolean matchResult = starbucksCardKeyMapService.matchStarbucksCardAndPin(starbucksCardKeyMap, starbucksCardDto.getPinNumber());
-        if(!matchResult) throw new BaseException(BaseResponseStatus.INVALID_STARBUCKS_CARD);
+    public void createStarbucksCard(String memberUuid, StarbucksCardRequestDto starbucksCardDto) {
 
         try{
-            /*
-            * 임시 memberUuid
-            * */
-            String memberUuid = "7d8eb4ca-d560-4f45-ba76-ef9b6ce6346f";
+            String starbucksCardUuid = UUID.randomUUID().toString();
+            double remainAmount = 50000;
+            String cardImgUrl = "/card/img/starbucksCard.png";
+            String carDescription = "Starbucks Card";
 
-            starbucksCardRepository.save(starbucksCardDto.toEntity(
-                        memberUuid, UUID.randomUUID().toString(), starbucksCardKeyMap.getAmount()
-                    )
-            );
+            StarbucksCard starbucksCard = starbucksCardDto.toEntity(starbucksCardUuid, remainAmount, cardImgUrl, carDescription);
 
-            //키맵 등록 여부 수정
-            starbucksCardKeyMapService.updateStarbuckscardKeyMap(StarbucksCardKeyMapRequestDto.builder()
-                            .id(starbucksCardKeyMap.getId())
-                            .cardNumber(starbucksCardKeyMap.getCardNumber())
-                            .pinNumber(starbucksCardKeyMap.getPinNumber())
-                            .amount(starbucksCardKeyMap.getAmount())
-                            .isRegistered(true)
-                            .build());
+            saveStarbucksCard(starbucksCard);
+            saveMemberStarbucksCardList(memberUuid, starbucksCard);
 
         }catch (Exception e){
             throw new BaseException(BaseResponseStatus.NO_CREATION_STARBUCKS_CARD);
         }
 
     }
+
+
+    @Override
+    public void saveStarbucksCard(StarbucksCard starbucksCard) {
+        starbucksCardRepository.save(starbucksCard);
+    }
+
+    @Override
+    public void saveMemberStarbucksCardList(String memberUuid, StarbucksCard starbucksCard) {
+
+        String memberStarbucksCardUuid = UUID.randomUUID().toString();
+
+        memberStarbucksListRepository.save(MemberStarbucksCardList.builder()
+                        .memberStarbucksCardUuid(memberStarbucksCardUuid)
+                        .memberUuid(memberUuid)
+                        .starbucksCard(starbucksCard)
+                        .active(true)
+                        .build()
+        );
+    }
+
+    @Override
+    @Transactional
+    public void deleteStarbucksCard(String starbucksCardUuid) {
+        try {
+            Optional<MemberStarbucksCardList> memberStarbucksCardList
+                    = memberStarbucksListRepository.findMemberStarbucksCardListByMemberStarbucksCardUuid(starbucksCardUuid);
+            memberStarbucksCardList.ifPresent(MemberStarbucksCardList::changeActive);
+        }catch (Exception e){
+            throw new BaseException(BaseResponseStatus.NO_DELETE_STARBUCKS_CARD);
+        }
+    }
+
 }
+
