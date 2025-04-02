@@ -7,17 +7,12 @@ import com.example.shinsekai.member.application.MemberService;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
-import com.example.shinsekai.member.vo.RefreshRequestVo;
 import com.example.shinsekai.member.vo.SignInRequestVo;
 import com.example.shinsekai.member.vo.SignInResponseVo;
 import com.example.shinsekai.member.vo.SignUpRequestVo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/member")
 @RestController
@@ -47,9 +42,10 @@ public class MemberController {
     }
 
     // Access + Refresh Token 모두 갱신
-    @PostMapping("/refresh")
-    public BaseResponseEntity<SignInResponseDto> createRefreshTokens(@RequestBody RefreshRequestVo refreshRequestVo) {
-        SignInResponseDto response = jwtTokenProvider.refreshTokens(refreshRequestVo);
+    @GetMapping("/refresh")
+    public BaseResponseEntity<SignInResponseDto> createRefreshTokens(HttpServletRequest request) {
+        String refreshToken = request.getHeader("Authorization").replace("Bearer ", "");
+        SignInResponseDto response = jwtTokenProvider.reCreateTokens(refreshToken);
         return new BaseResponseEntity<>(response);
     }
 }

@@ -3,6 +3,9 @@ package com.example.shinsekai.common.jwt;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.member.application.MemberService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        final String accessToken;
+        final String token;
         final String uuid;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -46,8 +48,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        accessToken = authHeader.replace("Bearer ", "");
-        uuid = jwtTokenProvider.validateAndGetUserUuid(accessToken);
+        token = authHeader.replace("Bearer ", "");
+
+        try {
+            uuid = jwtTokenProvider.extractAllClaims(token).getSubject();
+        } catch (Exception e) {
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
+        }
 
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.memberService.loadUserByUsername(uuid);
