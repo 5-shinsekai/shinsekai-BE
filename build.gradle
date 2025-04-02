@@ -59,10 +59,8 @@ dependencies {
 	//	bcrypt
 	implementation 'org.mindrot:jbcrypt:0.4'
 
-	// Spring Boot Redis 의존성
+	//	Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-	// Redis 클라이언트 (Jedis)
 	implementation 'org.springframework.data:spring-data-redis'
 
 	compileOnly 'org.projectlombok:lombok'
