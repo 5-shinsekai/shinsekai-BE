@@ -14,4 +14,6 @@ public interface ColorService {
     void deleteColor(Long id);
 
     List<ColorResponseDto> getAllColors();
+
+    ColorResponseDto getColor(Long id);
 }

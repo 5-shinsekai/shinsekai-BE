@@ -51,5 +51,12 @@ public class ColorServiceImpl implements ColorService {
                 .toList();
     }
 
+    @Override
+    public ColorResponseDto getColor(Long id) {
+        Color color = colorRepository.findById(id)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+        return ColorResponseDto.from(color);
+    }
+
 
 }

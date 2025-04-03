@@ -46,4 +46,9 @@ public class ColorController {
     public BaseResponseEntity<List<ColorResponseDto>> getAllColors() {
         return new BaseResponseEntity<>(colorService.getAllColors());
     }
+
+    @GetMapping("/{id}")
+    public BaseResponseEntity<ColorResponseDto> getColor(@PathVariable Long id) {
+        return new BaseResponseEntity<>(colorService.getColor(id));
+    }
 }
