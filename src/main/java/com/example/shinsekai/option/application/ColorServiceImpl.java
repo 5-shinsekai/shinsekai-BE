@@ -1,6 +1,9 @@
 package com.example.shinsekai.option.application;
 
+import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.option.dto.in.ColorRequestDto;
+import com.example.shinsekai.option.entity.Color;
 import com.example.shinsekai.option.infrastructure.ColorRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,15 @@ public class ColorServiceImpl implements ColorService {
         }
 
         colorRepository.save(dto.toEntity());
+    }
+
+    @Override
+    @Transactional
+    public void updateColor(Long id, ColorRequestDto dto) {
+        Color color = colorRepository.findById(id)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+
+        color.updateColorName(dto.getColorName());
     }
 
 

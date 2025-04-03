@@ -25,4 +25,7 @@ public class Color extends BaseEntity {
         this.colorName = colorName;
     }
 
+    public void updateColorName(String newName) {
+        this.colorName = newName;
+    }
 }

@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class ColorRequestDto {
 
-    String colorName;
+    private String colorName;
 
     @Builder
     public ColorRequestDto(String colorName) {

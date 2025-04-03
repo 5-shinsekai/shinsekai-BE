@@ -7,12 +7,9 @@ import com.example.shinsekai.option.dto.in.ColorRequestDto;
 import com.example.shinsekai.option.vo.in.ColorRequestVo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Color", description = "상품 색상")
+@Tag(name = "Color", description = "색상")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/option/color")
@@ -23,6 +20,14 @@ public class ColorController {
     @PostMapping
     public BaseResponseEntity<Void> createColor(@RequestBody ColorRequestVo colorRequestVo) {
         colorService.createColor(ColorRequestDto.from(colorRequestVo));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @PutMapping("/{id}")
+    public BaseResponseEntity<Void> updateColor(
+            @PathVariable Long id,
+            @RequestBody ColorRequestVo colorRequestVo) {
+        colorService.updateColor(id,ColorRequestDto.from(colorRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }
