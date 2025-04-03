@@ -57,6 +57,8 @@ public class SecurityConfig {
                                         "/api/v1/product/**",
                                         "/api/v1/category/**",
                                         "/api/v1/vendor/**",
+                                        "/api/v1/starbucksCard/**",
+                                        "/api/v1/purchase/**",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/error"
