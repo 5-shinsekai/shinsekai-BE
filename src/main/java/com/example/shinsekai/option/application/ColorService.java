@@ -7,5 +7,6 @@ public interface ColorService {
     void createColor(ColorRequestDto dto);
 
     void updateColor(Long id,ColorRequestDto dto);
-//    void deleteColor(ColorRequestDto dto);
+
+    void deleteColor(Long id);
 }

@@ -27,7 +27,15 @@ public class ColorController {
     public BaseResponseEntity<Void> updateColor(
             @PathVariable Long id,
             @RequestBody ColorRequestVo colorRequestVo) {
-        colorService.updateColor(id,ColorRequestDto.from(colorRequestVo));
+        colorService.updateColor(id, ColorRequestDto.from(colorRequestVo));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @DeleteMapping("/{id}")
+    public BaseResponseEntity<Void> deleteColor(
+            @PathVariable Long id
+    ) {
+        colorService.deleteColor(id);
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }

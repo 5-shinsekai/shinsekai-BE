@@ -34,5 +34,11 @@ public class ColorServiceImpl implements ColorService {
         color.updateColorName(dto.getColorName());
     }
 
+    @Override
+    @Transactional
+    public void deleteColor(Long id) {
+        colorRepository.deleteById(id);
+    }
+
 
 }
