@@ -4,10 +4,13 @@ import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.option.application.ColorService;
 import com.example.shinsekai.option.dto.in.ColorRequestDto;
+import com.example.shinsekai.option.dto.out.ColorResponseDto;
 import com.example.shinsekai.option.vo.in.ColorRequestVo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Color", description = "색상")
 @RestController
@@ -37,5 +40,10 @@ public class ColorController {
     ) {
         colorService.deleteColor(id);
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @GetMapping
+    public BaseResponseEntity<List<ColorResponseDto>> getAllColors() {
+        return new BaseResponseEntity<>(colorService.getAllColors());
     }
 }

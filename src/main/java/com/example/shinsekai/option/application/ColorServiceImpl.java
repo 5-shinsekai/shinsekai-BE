@@ -3,11 +3,14 @@ package com.example.shinsekai.option.application;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.option.dto.in.ColorRequestDto;
+import com.example.shinsekai.option.dto.out.ColorResponseDto;
 import com.example.shinsekai.option.entity.Color;
 import com.example.shinsekai.option.infrastructure.ColorRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +41,14 @@ public class ColorServiceImpl implements ColorService {
     @Transactional
     public void deleteColor(Long id) {
         colorRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ColorResponseDto> getAllColors() {
+        List<Color> colors = colorRepository.findAll();
+        return colors.stream()
+                .map(ColorResponseDto::from)
+                .toList();
     }
 
 
