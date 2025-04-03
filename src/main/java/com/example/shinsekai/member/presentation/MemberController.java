@@ -7,9 +7,9 @@ import com.example.shinsekai.member.application.MemberService;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
-import com.example.shinsekai.member.vo.SignInRequestVo;
-import com.example.shinsekai.member.vo.SignInResponseVo;
-import com.example.shinsekai.member.vo.SignUpRequestVo;
+import com.example.shinsekai.member.vo.in.SignInRequestVo;
+import com.example.shinsekai.member.vo.in.SignInResponseVo;
+import com.example.shinsekai.member.vo.in.SignUpRequestVo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -48,4 +48,10 @@ public class MemberController {
         SignInResponseDto response = jwtTokenProvider.reCreateTokens(refreshToken);
         return new BaseResponseEntity<>(response);
     }
+
+    @GetMapping("/findId")
+    public BaseResponseEntity<Void> findId() {
+return null;
+    }
+
 }

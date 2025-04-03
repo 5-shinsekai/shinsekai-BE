@@ -1,8 +1,10 @@
 package com.example.shinsekai.common.email.presentation;
 
 import com.example.shinsekai.common.email.application.EmailService;
-import com.example.shinsekai.common.email.dto.in.EmailAuthRequestDto;
-import com.example.shinsekai.common.email.vo.EmailAuthVo;
+import com.example.shinsekai.common.email.dto.in.EmailVerificationRequestDto;
+import com.example.shinsekai.common.email.dto.in.VerificationCodeRequestDto;
+import com.example.shinsekai.common.email.vo.EmailVerificationVo;
+import com.example.shinsekai.common.email.vo.VerificationCodeVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/emailAuth")
 @RequiredArgsConstructor
 public class EmailController {
-
     private final EmailService emailService;
 
     @PostMapping("/request")
-    public BaseResponseEntity<Boolean> sendVerificationCode(@RequestBody EmailAuthVo emailAuthVo) {
-        emailService.sendVerificationEmail(EmailAuthRequestDto.from(emailAuthVo));
+    public BaseResponseEntity<Void> sendVerificationCode(@RequestBody EmailVerificationVo emailVerificationVo) {
+        emailService.sendVerificationEmail(EmailVerificationRequestDto.from(emailVerificationVo));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @PostMapping("/submit")
+    public BaseResponseEntity<Void> verifyCode(@RequestBody VerificationCodeVo verificationCodeVo) {
+        emailService.verifyCode(VerificationCodeRequestDto.from(verificationCodeVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 

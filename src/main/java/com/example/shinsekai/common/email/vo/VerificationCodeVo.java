@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class EmailAuthVo {
-
+public class VerificationCodeVo {
     private String email;
+    private String code;
 }

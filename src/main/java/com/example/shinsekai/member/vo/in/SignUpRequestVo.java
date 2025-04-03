@@ -1,4 +1,4 @@
-package com.example.shinsekai.member.vo;
+package com.example.shinsekai.member.vo.in;
 
 import com.example.shinsekai.member.entity.Gender;
 import lombok.Getter;

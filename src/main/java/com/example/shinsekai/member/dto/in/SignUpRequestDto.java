@@ -2,7 +2,7 @@ package com.example.shinsekai.member.dto.in;
 
 import com.example.shinsekai.member.entity.Gender;
 import com.example.shinsekai.member.entity.Member;
-import com.example.shinsekai.member.vo.SignUpRequestVo;
+import com.example.shinsekai.member.vo.in.SignUpRequestVo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

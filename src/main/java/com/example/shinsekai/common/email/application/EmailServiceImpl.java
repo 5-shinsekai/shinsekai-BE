@@ -1,7 +1,8 @@
 package com.example.shinsekai.common.email.application;
 
 import com.example.shinsekai.common.email.EmailEnum;
-import com.example.shinsekai.common.email.dto.in.EmailAuthRequestDto;
+import com.example.shinsekai.common.email.dto.in.EmailVerificationRequestDto;
+import com.example.shinsekai.common.email.dto.in.VerificationCodeRequestDto;
 import com.example.shinsekai.common.email.properties.MailProperties;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
@@ -17,7 +18,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -34,10 +34,10 @@ public class EmailServiceImpl implements EmailService{
     private String verificationCode;
 
     @Override
-    public void sendVerificationEmail(EmailAuthRequestDto emailAuthRequestDto) {
+    public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto) {
 
         try {
-            Member member = memberRepository.findByEmail(emailAuthRequestDto.getEmail())
+            Member member = memberRepository.findByEmail(emailVerificationRequestDto.getEmail())
                     .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
             verificationCode = generateVerificationCode();
@@ -49,6 +49,19 @@ public class EmailServiceImpl implements EmailService{
         } catch (BaseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void verifyCode(VerificationCodeRequestDto verificationCodeRequestDto) {
+
+        memberRepository.findByEmail(verificationCodeRequestDto.getEmail())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
+
+        if (!verificationCodeRequestDto.getCode()
+                .equals(redisProvider.getEmailVerificationCode(verificationCodeRequestDto.getEmail()))) {
+            throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+        }
+
     }
 
     private void sendEmail(String email, String subject, String body) {
@@ -67,7 +80,7 @@ public class EmailServiceImpl implements EmailService{
             redisProvider.setEmailVerificationCode(email, verificationCode, FIVE_MINUTE);
 
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL);
         }
     }
 

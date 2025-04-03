@@ -1,10 +1,11 @@
 package com.example.shinsekai.common.email.application;
 
-import com.example.shinsekai.common.email.EmailEnum;
-import com.example.shinsekai.common.email.dto.in.EmailAuthRequestDto;
-import com.example.shinsekai.common.email.vo.EmailAuthVo;
+import com.example.shinsekai.common.email.dto.in.EmailVerificationRequestDto;
+import com.example.shinsekai.common.email.dto.in.VerificationCodeRequestDto;
 
 public interface EmailService {
 
-    void sendVerificationEmail(EmailAuthRequestDto emailAuthRequestDto);
+    void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto);
+
+    void verifyCode(VerificationCodeRequestDto verificationCodeRequestDto);
 }

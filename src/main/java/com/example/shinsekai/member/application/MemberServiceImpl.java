@@ -5,8 +5,10 @@ import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.common.jwt.TokenEnum;
 import com.example.shinsekai.common.redis.RedisProvider;
+import com.example.shinsekai.member.dto.in.FindIdRequestDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
+import com.example.shinsekai.member.dto.out.FindIdResponseDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
 import com.example.shinsekai.member.entity.Member;
 import com.example.shinsekai.member.infrastructure.MemberRepository;
@@ -67,6 +69,19 @@ public class MemberServiceImpl implements MemberService {
                 = redisProvider.deleteValue(jwtTokenProvider.extractAllClaims(accessToken).getSubject());
         if(!deleteRefreshTokenSuccess)
             throw new BaseException(BaseResponseStatus.FAILED_TO_RESTORE);
+    }
+
+    @Override
+    public FindIdResponseDto findId(FindIdRequestDto findIdRequestDto) {
+        if (!findIdRequestDto.isEmailVerified()) {
+            new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+        }
+
+        Member member = memberRepository.findByEmail(findIdRequestDto.getEmail())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
+
+       // return new FindIdResponseDto().from();
+        return null;
     }
 
     /**
