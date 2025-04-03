@@ -14,7 +14,7 @@ public class FindIdResponseDto {
     private String loginId;
 
     @Builder
-    private FindIdResponseDto(String loginId) {
+    public FindIdResponseDto(String loginId) {
         this.loginId = loginId;
     }
 

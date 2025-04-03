@@ -3,9 +3,7 @@ package com.example.shinsekai.member.application;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
-import com.example.shinsekai.common.jwt.TokenEnum;
 import com.example.shinsekai.common.redis.RedisProvider;
-import com.example.shinsekai.member.dto.in.FindIdRequestDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.FindIdResponseDto;
@@ -18,8 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -63,7 +59,6 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public void logout(String accessToken) {
-
         // redis에서 토큰 삭제
         boolean deleteRefreshTokenSuccess
                 = redisProvider.deleteValue(jwtTokenProvider.extractAllClaims(accessToken).getSubject());
@@ -72,16 +67,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public FindIdResponseDto findId(FindIdRequestDto findIdRequestDto) {
-        if (!findIdRequestDto.isEmailVerified()) {
+    public FindIdResponseDto findId(String email, boolean emailVerified) {
+        if (!emailVerified) {
             new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
         }
 
-        Member member = memberRepository.findByEmail(findIdRequestDto.getEmail())
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
        // return new FindIdResponseDto().from();
-        return null;
+        return new FindIdResponseDto().from(member);
     }
 
     /**

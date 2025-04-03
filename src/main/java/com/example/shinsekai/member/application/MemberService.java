@@ -1,6 +1,5 @@
 package com.example.shinsekai.member.application;
 
-import com.example.shinsekai.member.dto.in.FindIdRequestDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.FindIdResponseDto;
@@ -15,7 +14,7 @@ public interface MemberService {
 
     void logout(String accessToken);
 
-    FindIdResponseDto findId(FindIdRequestDto findIdRequestDto);
+    FindIdResponseDto findId(String email, boolean emailVerified);
 
     UserDetails loadUserByUsername(String memberUuid);
 

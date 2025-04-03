@@ -7,9 +7,12 @@ import com.example.shinsekai.member.application.MemberService;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
+import com.example.shinsekai.member.vo.in.ChangePasswordVo;
 import com.example.shinsekai.member.vo.in.SignInRequestVo;
 import com.example.shinsekai.member.vo.in.SignInResponseVo;
 import com.example.shinsekai.member.vo.in.SignUpRequestVo;
+import com.example.shinsekai.member.vo.out.FindIdResponseVo;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,18 +25,21 @@ public class MemberController {
     private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Operation(summary = "회원 가입")
     @PostMapping("/sign-up")
     public BaseResponseEntity<Void> signUp(@RequestBody SignUpRequestVo signUpRequestVo) {
         memberService.signUp(SignUpRequestDto.from(signUpRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "로그인")
     @PostMapping("/sign-in")
     public BaseResponseEntity<SignInResponseVo> signIn(@RequestBody SignInRequestVo signInRequestVo) {
         SignInResponseVo response = memberService.signIn(SignInRequestDto.from(signInRequestVo)).toVo();
         return new BaseResponseEntity<>(response);
     }
 
+    @Operation(summary = "로그아웃")
     @PostMapping("/logout")
     public BaseResponseEntity<Void> logout(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
@@ -41,7 +47,7 @@ public class MemberController {
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
-    // Access + Refresh Token 모두 갱신
+    @Operation(summary = "재인증")
     @GetMapping("/refresh")
     public BaseResponseEntity<SignInResponseDto> createRefreshTokens(HttpServletRequest request) {
         String refreshToken = request.getHeader("Authorization").replace("Bearer ", "");
@@ -49,9 +55,17 @@ public class MemberController {
         return new BaseResponseEntity<>(response);
     }
 
+    @Operation(summary = "아이디 찾기")
     @GetMapping("/findId")
-    public BaseResponseEntity<Void> findId() {
-return null;
+    public BaseResponseEntity<FindIdResponseVo> findId(@RequestParam String email,
+                                                       @RequestParam boolean emailVerified) {
+        FindIdResponseVo result = memberService.findId(email, emailVerified).toVo();
+        return new BaseResponseEntity<>(result);
     }
 
+    @Operation(summary = "비밀번호 변경")
+    @PutMapping("/changePw")
+    public BaseResponseEntity<Void> changePassword(@RequestBody ChangePasswordVo changePasswordVo) {
+        return null;
+    }
 }
