@@ -109,7 +109,7 @@ public class EmailServiceImpl implements EmailService{
             helper.setSubject(subject);
 
             String html
-                    = verificationEmailBuilder.buildVerificationEmail(member.getName(),generateVerificationCode());
+                    = verificationEmailBuilder.buildVerificationEmail(member.getName(), verificationCode);
 
             helper.setText(html, true);
 

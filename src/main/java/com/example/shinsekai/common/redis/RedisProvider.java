@@ -44,10 +44,10 @@ public class RedisProvider {
         return redisTemplate.opsForValue().get("EMAIL_PW:"+email);
     }
 
-    public void setEmailVerificationCodeForPw(String email, String eMailAuthCode, long expirationTime) {
+    public void setEmailVerificationCodeForPw(String email, String eMailVerificationCode, long expirationTime) {
         redisTemplate.opsForValue().set(
                 "EMAIL_PW:"+email,
-                eMailAuthCode,
+                eMailVerificationCode,
                 expirationTime,
                 TimeUnit.MILLISECONDS
         );
