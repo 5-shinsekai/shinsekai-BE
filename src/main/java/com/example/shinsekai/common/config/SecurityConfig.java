@@ -49,6 +49,7 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/redis/**",
                                         "/api/v1/member/**",
+                                        "/api/v1/cart/**",
                                         "/api/v1/size/**",
                                         "/api/v1/color/**",
                                         "/api/v1/option/**",
