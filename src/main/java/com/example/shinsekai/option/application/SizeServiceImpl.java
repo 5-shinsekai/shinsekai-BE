@@ -3,11 +3,14 @@ package com.example.shinsekai.option.application;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.option.dto.in.SizeRequestDto;
+import com.example.shinsekai.option.dto.out.SizeResponseDto;
 import com.example.shinsekai.option.entity.Size;
 import com.example.shinsekai.option.infrastructure.SizeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +43,24 @@ public class SizeServiceImpl implements SizeService {
     public void deleteSize(Long id) {
         Size size = sizeRepository.findById(id)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
-        
+
         sizeRepository.delete(size);
     }
+
+    @Override
+    public List<SizeResponseDto> getAllSize() {
+        List<Size> sizes = sizeRepository.findAll();
+        return sizes.stream()
+                .map(SizeResponseDto::from)
+                .toList();
+    }
+
+    @Override
+    public SizeResponseDto getSize(Long id) {
+        Size size = sizeRepository.findById(id)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+        return SizeResponseDto.from(size);
+    }
+
+
 }

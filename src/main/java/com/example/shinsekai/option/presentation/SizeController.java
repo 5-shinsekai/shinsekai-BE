@@ -4,10 +4,13 @@ import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.option.application.SizeService;
 import com.example.shinsekai.option.dto.in.SizeRequestDto;
+import com.example.shinsekai.option.dto.out.SizeResponseDto;
 import com.example.shinsekai.option.vo.in.SizeRequestVo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Size", description = "사이즈")
 @RestController
@@ -33,5 +36,15 @@ public class SizeController {
     public BaseResponseEntity<Void> deleteSize(@PathVariable Long id) {
         sizeService.deleteSize(id);
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @GetMapping
+    public BaseResponseEntity<List<SizeResponseDto>> findAll() {
+        return new BaseResponseEntity<>(sizeService.getAllSize());
+    }
+
+    @GetMapping("/{id}")
+    public BaseResponseEntity<SizeResponseDto> findById(@PathVariable Long id) {
+        return new BaseResponseEntity<>(sizeService.getSize(id));
     }
 }
