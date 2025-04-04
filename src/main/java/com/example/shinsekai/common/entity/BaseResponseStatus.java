@@ -54,6 +54,7 @@ public enum BaseResponseStatus {
     INVALID_EMAIL_ADDRESS(HttpStatus.BAD_REQUEST, false, 2012, "이메일을 다시 확인해주세요."),
     INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, false, 2013, "잘못된 인증코드입니다."),
     FAILED_TO_SEND_EMAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 2014, "이메일 전송에 실패했습니다."),
+    DUPLICATED_PASSWORD(HttpStatus.CONFLICT, false, 2015, "기존 패스워드와 동일합니다."),
 
     /**
      * 3000: product service error

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Builder
 @ToString
 public class ChangePasswordRequestDto {
+    private String accessToken;
     private String loginId;
     private String newPassword;
 
@@ -22,8 +23,9 @@ public class ChangePasswordRequestDto {
     }
 
     @Builder
-    public static ChangePasswordRequestDto from(ChangePasswordVo changePasswordVo) {
+    public static ChangePasswordRequestDto from(ChangePasswordVo changePasswordVo, String accessToken) {
         return ChangePasswordRequestDto.builder()
+                .accessToken(accessToken)
                 .loginId(changePasswordVo.getLoginId())
                 .newPassword(changePasswordVo.getNewPassword())
                 .build();

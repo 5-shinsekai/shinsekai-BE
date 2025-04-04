@@ -1,5 +1,6 @@
 package com.example.shinsekai.common.email.presentation;
 
+import com.example.shinsekai.common.email.EmailEnum;
 import com.example.shinsekai.common.email.application.EmailService;
 import com.example.shinsekai.common.email.dto.in.EmailVerificationRequestDto;
 import com.example.shinsekai.common.email.dto.in.VerificationCodeRequestDto;
@@ -22,10 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
     private final EmailService emailService;
 
-    @Operation(summary = "인증 메일 발송")
-    @PostMapping("/request")
-    public BaseResponseEntity<Void> sendVerificationCode(@RequestBody EmailVerificationVo emailVerificationVo) {
-        emailService.sendVerificationEmail(EmailVerificationRequestDto.from(emailVerificationVo));
+    @Operation(summary = "아이디 찾기를 위한 인증 메일 발송")
+    @PostMapping("/requestId")
+    public BaseResponseEntity<Void> sendVerificationCodeForId(@RequestBody EmailVerificationVo emailVerificationVo) {
+        emailService.sendVerificationEmail(EmailVerificationRequestDto.from(emailVerificationVo), EmailEnum.FIND_LOGIN_ID);
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @Operation(summary = "비밀번호 변경을 위한 인증 메일 발송")
+    @PostMapping("/requestPw")
+    public BaseResponseEntity<Void> sendVerificationCodeForPw(@RequestBody EmailVerificationVo emailVerificationVo) {
+        emailService.sendVerificationEmail(EmailVerificationRequestDto.from(emailVerificationVo), EmailEnum.CHANGE_PASSWORD);
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 

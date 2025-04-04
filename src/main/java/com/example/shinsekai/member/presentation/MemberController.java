@@ -4,6 +4,7 @@ import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.member.application.MemberService;
+import com.example.shinsekai.member.dto.in.ChangePasswordRequestDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
@@ -50,7 +51,7 @@ public class MemberController {
     @Operation(summary = "재인증")
     @GetMapping("/refresh")
     public BaseResponseEntity<SignInResponseDto> createRefreshTokens(HttpServletRequest request) {
-        String refreshToken = request.getHeader("Authorization").replace("Bearer ", "");
+        String refreshToken = request.getHeader("Authorization").substring(7);
         SignInResponseDto response = jwtTokenProvider.reCreateTokens(refreshToken);
         return new BaseResponseEntity<>(response);
     }
@@ -65,7 +66,11 @@ public class MemberController {
 
     @Operation(summary = "비밀번호 변경")
     @PutMapping("/changePw")
-    public BaseResponseEntity<Void> changePassword(@RequestBody ChangePasswordVo changePasswordVo) {
-        return null;
+    public BaseResponseEntity<Void> changePassword(HttpServletRequest request,
+                                                   @RequestBody ChangePasswordVo changePasswordVo) {
+
+        String accessToken = request.getHeader("Authorization").substring(7);
+        memberService.changePassword(ChangePasswordRequestDto.from(changePasswordVo, accessToken));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }

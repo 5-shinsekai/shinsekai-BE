@@ -10,6 +10,7 @@ import lombok.Builder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Getter
@@ -29,7 +30,7 @@ public class SignUpRequestDto {
 
     public Member toEntity(PasswordEncoder passwordEncoder) {
         return Member.builder()
-                .memberUuid(UUID.randomUUID().toString())
+                .memberUuid(generateMemberUuid())
                 .loginId(this.loginId)
                 .email(this.email)
                 .password(passwordEncoder.encode(password))
@@ -74,5 +75,13 @@ public class SignUpRequestDto {
                 .name(signUpRequestVo.getName())
                 .birth(signUpRequestVo.getBirth())
                 .build();
+    }
+
+    public static String generateMemberUuid() {
+        String prefix = "M";
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String uuidPart = UUID.randomUUID().toString().substring(0, 8);
+
+        return prefix + date + "-" + uuidPart;
     }
 }

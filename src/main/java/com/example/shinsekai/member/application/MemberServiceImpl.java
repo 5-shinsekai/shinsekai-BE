@@ -3,7 +3,9 @@ package com.example.shinsekai.member.application;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
+import com.example.shinsekai.common.jwt.TokenEnum;
 import com.example.shinsekai.common.redis.RedisProvider;
+import com.example.shinsekai.member.dto.in.ChangePasswordRequestDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.FindIdResponseDto;
@@ -13,8 +15,7 @@ import com.example.shinsekai.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -25,23 +26,17 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisProvider redisProvider;
+    private final PasswordEncoder passwordEncoder;
 
-    /**
-     * @param signUpRequestDto
-     */
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
         try {
-            memberRepository.save(signUpRequestDto.toEntity(new BCryptPasswordEncoder()));
+            memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.FAILED_TO_RESTORE);
         }
     }
 
-    /**
-     * @param signInRequestDto
-     * @return SignInResponseDto
-     */
     @Override
     public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
         Member member = memberRepository.findByLoginId(signInRequestDto.getLoginId())
@@ -54,9 +49,6 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    /**
-     * @param accessToken
-     */
     @Override
     public void logout(String accessToken) {
         // redis에서 토큰 삭제
@@ -75,17 +67,27 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
-       // return new FindIdResponseDto().from();
         return new FindIdResponseDto().from(member);
     }
 
-    /**
-     * @param memberUuid
-     * @return UserDetails
-     */
     @Override
-    public UserDetails loadUserByUsername (String memberUuid) {
-        return memberRepository.findByMemberUuid(memberUuid).orElseThrow(() -> new IllegalArgumentException(memberUuid));
+    public void changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
+        try {
+            // 토큰 검증
+            jwtTokenProvider.extractAllClaims(changePasswordRequestDto.getAccessToken());
+        } catch (Exception e) {
+            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
+        }
+
+        Member member = memberRepository.findByLoginId(changePasswordRequestDto.getLoginId())
+                            .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
+
+        if (!passwordEncoder.matches(changePasswordRequestDto.getNewPassword(), member.getPassword())) {
+            throw new BaseException(BaseResponseStatus.DUPLICATED_PASSWORD);
+        }
+
+        member.updatePassword(changePasswordRequestDto);
+        memberRepository.save(member);
     }
 
 }

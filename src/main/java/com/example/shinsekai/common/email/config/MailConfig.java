@@ -17,6 +17,12 @@ public class MailConfig {
 
     private final MailProperties mailProperties;
 
+    /**
+     * JavaMailSender Bean 생성 및 설정.
+     * SMTP 서버와 연결하여 메일을 보낼 수 있도록 구성합니다.
+     *
+     * @return JavaMailSender 설정 인스턴스
+     */
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

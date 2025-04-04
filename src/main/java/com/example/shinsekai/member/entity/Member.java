@@ -1,6 +1,7 @@
 package com.example.shinsekai.member.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
+import com.example.shinsekai.member.dto.in.ChangePasswordRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -77,6 +78,10 @@ public class Member extends BaseEntity implements UserDetails {
         this.birth = birth;
     }
 
+    public void updatePassword(ChangePasswordRequestDto dto) {
+        this.password = dto.getNewPassword();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {    // 사용자의 권한(역할)을 반환
         return Collections.singleton(new SimpleGrantedAuthority("MEMBER"));
@@ -84,7 +89,7 @@ public class Member extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.loginId;
+        return this.memberUuid;
     }
 
     @Override
