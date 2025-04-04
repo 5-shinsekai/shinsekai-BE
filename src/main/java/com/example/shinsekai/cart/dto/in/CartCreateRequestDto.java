@@ -5,6 +5,10 @@ import com.example.shinsekai.cart.vo.in.CartCreateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 @Getter
 public class CartCreateRequestDto {
     private String memberUuid;
@@ -37,17 +41,15 @@ public class CartCreateRequestDto {
                 .build();
     }
 
-    public Cart toEntity(String cartUuid){
+    public Cart toEntity(){
         return Cart.builder()
-                .cartUuid(cartUuid)
+                .cartUuid(generateCartCode())
                 .memberUuid(memberUuid)
                 .productOptionListId(productOptionListId)
                 .productCode(productCode)
                 .quantity(quantity)
-                .checked(true)
                 .engravingMessage(getCleanedEngravingMessage())
                 .isFrozen(isFrozen)
-                .isDeleted(false)
                 .build();
     }
 
@@ -56,5 +58,13 @@ public class CartCreateRequestDto {
             return null;
         }
         return engravingMessage;
+    }
+
+    public static String generateCartCode() {
+        String prefix = "C";
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String uuidPart = UUID.randomUUID().toString().substring(0, 8);
+
+        return prefix + date + "-" + uuidPart;
     }
 }

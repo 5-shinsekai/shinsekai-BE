@@ -11,13 +11,14 @@ import java.util.Date;
 
 @Getter
 @Entity
+@Builder
 @NoArgsConstructor
 public class Cart extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String cartUuid;
 
     @Column(nullable = false, length = 50)
@@ -32,8 +33,9 @@ public class Cart extends BaseEntity {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = false, length = 255)
-    private boolean checked;
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean checked = true;
 
     @Column(length = 10)
     private String engravingMessage;
@@ -42,7 +44,8 @@ public class Cart extends BaseEntity {
     private boolean isFrozen;
 
     @Column(nullable = false)
-    private boolean isDeleted;
+    @Builder.Default
+    private boolean isDeleted = false;
 
     @Builder
     public Cart(Long id, String cartUuid, String memberUuid, Long productOptionListId, String productCode, int quantity, boolean checked,
@@ -57,5 +60,9 @@ public class Cart extends BaseEntity {
         this.engravingMessage = engravingMessage;
         this.isFrozen = isFrozen;
         this.isDeleted = isDeleted;
+    }
+
+    public void increaseQuantity(int i) {
+        this.quantity += i;
     }
 }

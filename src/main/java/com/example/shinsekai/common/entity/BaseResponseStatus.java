@@ -68,6 +68,10 @@ public enum BaseResponseStatus {
 
     NO_EXIST_OPTIONS_IN_PRODUCT(HttpStatus.NOT_FOUND, false, 3007, "해당 상품에 옵션이 존재하지 않습니다"),
 
+    // Cart
+    CART_PRODUCT_KIND_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3008, "장바구니에 담을 수 있는 상품 종류는 최대 20개까지입니다"),
+    CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3009, "해당 상품은 장바구니에 담을 수 있는 수량을 초과했습니다."),
+
     /**
      * 4000: comment service error
      */
