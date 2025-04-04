@@ -51,6 +51,7 @@ public class SecurityConfig {
                                         "/api/v1/member/**",
                                         "/api/v1/size/**",
                                         "/api/v1/color/**",
+                                        "/api/v1/option/**",
                                         "/api/v1/product/**",
                                         "/api/v1/category/**",
                                         "/api/v1/vendor/**",
