@@ -2,9 +2,9 @@ package com.example.shinsekai.category.application;
 
 import com.example.shinsekai.category.dto.in.MainCategoryCreateRequestDto;
 import com.example.shinsekai.category.dto.in.MainCategoryUpdateRequestDto;
-import com.example.shinsekai.category.dto.in.SubCategoryCreateRequestDto;
-import com.example.shinsekai.category.dto.in.SubCategoryUpdateRequestDto;
 import com.example.shinsekai.category.dto.out.CommonFilterItemDto;
+import com.example.shinsekai.category.entity.PriceRange;
+import com.example.shinsekai.category.infrastructure.PriceRangeRepository;
 import com.example.shinsekai.common.config.CategoryFilterConfig;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.enums.ColorType;
@@ -16,7 +16,6 @@ import com.example.shinsekai.category.dto.out.CategoryFilterResponseDto;
 import com.example.shinsekai.category.dto.out.SubCategoryResponseDto;
 import com.example.shinsekai.category.dto.out.MainCategoryResponseDto;
 import com.example.shinsekai.category.entity.MainCategory;
-import com.example.shinsekai.category.entity.SubCategory;
 import com.example.shinsekai.category.infrastructure.MainCategoryRepository;
 import com.example.shinsekai.category.infrastructure.SubCategoryRepository;
 import com.example.shinsekai.season.infrastructure.SeasonRepository;
@@ -31,14 +30,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-@Service
-@RequiredArgsConstructor
 @Slf4j
-public class CategoryServiceImpl implements CategoryService {
+@RequiredArgsConstructor
+@Service
+public class MainCategoryServiceImpl implements MainCategoryService {
 
     private final MainCategoryRepository mainCategoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final SeasonRepository seasonRepository;
+    private final PriceRangeRepository priceRangeRepository;
 
     private final CategoryFilterConfig categoryFilterConfig;
 
@@ -86,54 +86,6 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-    @Override
-    @Transactional
-    public List<SubCategoryResponseDto> getAllSubCategory(Long categoryId) {
-        return subCategoryRepository.findAllByMainCategoryIdAndIsDeletedFalse(categoryId, Sort.by(Sort.Order.asc("name")))
-                .stream().map(SubCategoryResponseDto::from).toList();
-    }
-
-    @Override
-    @Transactional
-    public void createSubCategory(SubCategoryCreateRequestDto subCategoryCreateRequestDto) {
-        if(!mainCategoryRepository.existsById(subCategoryCreateRequestDto.getMainCategoryId()))
-            throw new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY);
-
-        try {
-            subCategoryRepository.save(subCategoryCreateRequestDto.toEntity());
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.INVALID_INPUT);
-        }
-    }
-
-    @Override
-    @Transactional
-    public void softDeleteSubCategory(Long categoryId) {
-        SubCategory subCategory = subCategoryRepository.findById(categoryId).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY)
-        );
-        subCategory.setDeleted();
-    }
-
-    @Override
-    @Transactional
-    public void updateSubCategory(SubCategoryUpdateRequestDto subCategoryUpdateRequestDto) {
-        SubCategory subCategory = subCategoryRepository.findByIdAndIsDeletedFalse(subCategoryUpdateRequestDto.getId()).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY)
-        );
-
-        if(subCategoryUpdateRequestDto.getMainCategoryId() != null
-                && !mainCategoryRepository.existsById(subCategoryUpdateRequestDto.getMainCategoryId()))
-            throw new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY);
-
-        SubCategory updateSubCategory = subCategoryUpdateRequestDto.toEntity(subCategory);
-
-        try{
-            subCategoryRepository.save(updateSubCategory);
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.INVALID_INPUT);
-        }
-    }
 
     @Override
     @Transactional
@@ -141,7 +93,8 @@ public class CategoryServiceImpl implements CategoryService {
 
         Set<FilterType> filterTypes = categoryFilterConfig.getFilterTypesForCategory(mainCategoryId);
 
-        List<SubCategoryResponseDto> subCategories = subCategoryRepository.findAllByMainCategoryIdAndIsDeletedFalse(mainCategoryId, Sort.by(Sort.Order.asc("name")))
+        List<SubCategoryResponseDto> subCategories = subCategoryRepository
+                .findAllByMainCategoryIdAndIsDeletedFalse(mainCategoryId, Sort.by(Sort.Order.asc("name")))
                 .stream().map(SubCategoryResponseDto::from).toList();
 
         List<CommonFilterItemDto> seasons = seasonRepository.findByEndDateAfter(LocalDate.now())
@@ -155,8 +108,8 @@ public class CategoryServiceImpl implements CategoryService {
                 ? Arrays.stream(ColorType.values()).map(CommonFilterItemDto::from).toList()
                 : List.of();
 
-        List<CommonFilterItemDto> priceRange = Arrays.stream(PriceRangeType.values())
-                .map(CommonFilterItemDto::from)
+        List<CommonFilterItemDto> priceRange = priceRangeRepository.findAll()
+                .stream().map(CommonFilterItemDto::from)
                 .toList();
 
         return CategoryFilterResponseDto.builder()
