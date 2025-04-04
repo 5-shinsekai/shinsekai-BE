@@ -1,14 +1,17 @@
 package com.example.shinsekai.season.entity;
 
+import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
-public class Season {
+@NoArgsConstructor
+public class Season extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
