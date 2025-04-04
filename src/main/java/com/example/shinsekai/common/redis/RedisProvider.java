@@ -27,13 +27,26 @@ public class RedisProvider {
         );
     }
 
-    public String getEmailVerificationCode(String email) {
-        return redisTemplate.opsForValue().get("EMAIL:"+email);
+    public String getEmailVerificationCodeForLoginId(String email) {
+        return redisTemplate.opsForValue().get("EMAIL_ID:"+email);
     }
 
-    public void setEmailVerificationCode(String email, String eMailAuthCode, long expirationTime) {
+    public void setEmailVerificationCodeForLoginId(String email, String eMailVerificationCode, long expirationTime) {
         redisTemplate.opsForValue().set(
-                "EMAIL:"+email,
+                "EMAIL_ID:"+email,
+                eMailVerificationCode,
+                expirationTime,
+                TimeUnit.MILLISECONDS
+        );
+    }
+
+    public String getEmailVerificationCodeForPw(String email) {
+        return redisTemplate.opsForValue().get("EMAIL_PW:"+email);
+    }
+
+    public void setEmailVerificationCodeForPw(String email, String eMailAuthCode, long expirationTime) {
+        redisTemplate.opsForValue().set(
+                "EMAIL_PW:"+email,
                 eMailAuthCode,
                 expirationTime,
                 TimeUnit.MILLISECONDS

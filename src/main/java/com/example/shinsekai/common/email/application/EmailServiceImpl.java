@@ -1,6 +1,6 @@
 package com.example.shinsekai.common.email.application;
 
-import com.example.shinsekai.common.email.EmailEnum;
+import com.example.shinsekai.common.email.entity.EmailType;
 import com.example.shinsekai.common.email.dto.in.EmailVerificationRequestDto;
 import com.example.shinsekai.common.email.dto.in.VerificationCodeRequestDto;
 import com.example.shinsekai.common.email.properties.MailProperties;
@@ -9,7 +9,7 @@ import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.redis.RedisProvider;
 import com.example.shinsekai.member.entity.Member;
 import com.example.shinsekai.member.infrastructure.MemberRepository;
-import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +28,9 @@ public class EmailServiceImpl implements EmailService{
     private final JavaMailSender mailSender;
     private final MailProperties mailProperties;
     private final RedisProvider redisProvider;
+    private final VerificationEmailBuilder verificationEmailBuilder;
 
     private final long FIVE_MINUTE = 300000L;
-
     private String verificationCode;
 
     /**
@@ -41,16 +41,26 @@ public class EmailServiceImpl implements EmailService{
      * @throws BaseException              해당 이메일로 등록된 회원이 없을 경우 예외 발생
      */
     @Override
-    public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto, EmailEnum mailType) {
-
+    public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto, EmailType mailType) {
         Member member = memberRepository.findByEmail(emailVerificationRequestDto.getEmail())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
         verificationCode = generateVerificationCode();
+        sendEmail(member, this.setSubject(mailType));
 
-        String subject = this.setSubject(mailType);
-        String body = this.setBody(member, verificationCode);
-        sendEmail(member.getEmail(), subject, body);
+        switch (mailType) {
+            case FIND_LOGIN_ID -> {
+                redisProvider.setEmailVerificationCodeForLoginId(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
+                break;
+            }
+            case CHANGE_PASSWORD -> {
+                redisProvider.setEmailVerificationCodeForPw(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
+                break;
+            }
+            default -> {
+                return;
+            }
+        }
     }
 
     /**
@@ -61,13 +71,24 @@ public class EmailServiceImpl implements EmailService{
      */
     @Override
     public void verifyCode(VerificationCodeRequestDto verificationCodeRequestDto) {
-
         memberRepository.findByEmail(verificationCodeRequestDto.getEmail())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
         if (!verificationCodeRequestDto.getCode()
-                .equals(redisProvider.getEmailVerificationCode(verificationCodeRequestDto.getEmail()))) {
+                .equals(redisProvider.getEmailVerificationCodeForLoginId(verificationCodeRequestDto.getEmail()))) {
             throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+        }
+
+        if (verificationCodeRequestDto.getEmailType().equals(EmailType.FIND_LOGIN_ID)) {
+            if (!verificationCodeRequestDto.getCode()
+                    .equals(redisProvider.getEmailVerificationCodeForLoginId(verificationCodeRequestDto.getEmail()))) {
+                throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+            }
+        } else if (verificationCodeRequestDto.getEmailType().equals(EmailType.CHANGE_PASSWORD)) {
+            if (!verificationCodeRequestDto.getCode()
+                    .equals(redisProvider.getEmailVerificationCodeForPw(verificationCodeRequestDto.getEmail()))) {
+                throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+            }
         }
 
     }
@@ -75,27 +96,27 @@ public class EmailServiceImpl implements EmailService{
     /**
      * 이메일을 실제로 전송하며, 전송 성공 시 Redis에 인증코드를 저장
      *
-     * @param email   수신자 이메일 주소
+     * @param member  사용자 정보
      * @param subject 이메일 제목
-     * @param body    이메일 본문 (인증코드 포함)
      * @throws BaseException 이메일 전송 실패 시 예외 발생
      */
-    private void sendEmail(String email, String subject, String body) {
+    private void sendEmail(Member member, String subject) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            // sMailProperties에서 동적으로 발신자 정보 가져오기
-            helper.setFrom(mailProperties.getUsername());
-            helper.setTo(email);
+            helper.setFrom(new InternetAddress(mailProperties.getUsername(), "스타벅스 스토어", "UTF-8"));
+            helper.setTo(member.getEmail());
             helper.setSubject(subject);
-            helper.setText(body);
+
+            String html
+                    = verificationEmailBuilder.buildVerificationEmail(member.getName(),generateVerificationCode());
+
+            helper.setText(html, true);
 
             mailSender.send(message);
 
-            redisProvider.setEmailVerificationCode(email, verificationCode, FIVE_MINUTE);
-        } catch (MessagingException e) {
-            throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -105,7 +126,7 @@ public class EmailServiceImpl implements EmailService{
      * @param mailType 이메일 유형 (FIND_LOGIN_ID, CHANGE_PASSWORD 등)
      * @return 이메일 제목 문자열
      */
-    private String setSubject(EmailEnum mailType) {
+    private String setSubject(EmailType mailType) {
         switch (mailType) {
             case FIND_LOGIN_ID:
                 return "[스타벅스] 아이디 찾기를 위한 인증코드 안내메일";
@@ -114,27 +135,6 @@ public class EmailServiceImpl implements EmailService{
             default:
                 return "[스타벅스] 안내메일";
         }
-    }
-
-    /**
-     * 수신자 정보와 인증코드를 포함한 이메일 본문을 구성합니다.
-     *
-     * @param member           수신 대상 회원 정보
-     * @param verificationCode 생성된 인증코드
-     * @return 이메일 본문 문자열
-     */
-    private String setBody(Member member, String verificationCode) {
-
-        StringBuffer sb = new StringBuffer();
-        sb.append("본인확인 인증코드 입니다.\n");
-        sb.append(member.getName() + " 고객님\n");
-        sb.append("본인 확인을 위해 아래의 인증코드를 화면에 입력해주세요.\n");
-        sb.append("\n");
-        sb.append(verificationCode + "\n");
-        sb.append("\n");
-        sb.append("*인증코드는 5분 동안만 유효합니다.\n");
-        sb.append("*본 이메일은 스파로스 아카데미 1차 프로젝트를 위해 전송된 메일입니다.");
-        return sb.toString();
     }
 
     /**
