@@ -23,22 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
     private final EmailService emailService;
 
-    @Operation(summary = "아이디 찾기를 위한 인증 메일 발송")
-    @PostMapping("/requestId")
+    @Operation(summary = "인증 메일 발송")
+    @PostMapping("/requestMail")
     public BaseResponseEntity<Void> sendVerificationCodeForId(@RequestBody EmailVerificationVo emailVerificationVo) {
-        emailService.sendVerificationEmail(EmailVerificationRequestDto.from(emailVerificationVo), EmailType.FIND_LOGIN_ID);
-        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
-    }
-
-    @Operation(summary = "비밀번호 변경을 위한 인증 메일 발송")
-    @PostMapping("/requestPw")
-    public BaseResponseEntity<Void> sendVerificationCodeForPw(@RequestBody EmailVerificationVo emailVerificationVo) {
-        emailService.sendVerificationEmail(EmailVerificationRequestDto.from(emailVerificationVo), EmailType.CHANGE_PASSWORD);
+        emailService.sendVerificationEmail(EmailVerificationRequestDto.from(emailVerificationVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "인증 메일 검증")
-    @PostMapping("/submit")
+    @PostMapping("/submitCode")
     public BaseResponseEntity<Void> verifyCode(@RequestBody VerificationCodeVo verificationCodeVo) {
         emailService.verifyCode(VerificationCodeRequestDto.from(verificationCodeVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);

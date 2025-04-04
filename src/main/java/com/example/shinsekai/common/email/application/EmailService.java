@@ -6,7 +6,7 @@ import com.example.shinsekai.common.email.dto.in.VerificationCodeRequestDto;
 
 public interface EmailService {
 
-    void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto, EmailType mailType);
+    void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto);
 
     void verifyCode(VerificationCodeRequestDto verificationCodeRequestDto);
 }

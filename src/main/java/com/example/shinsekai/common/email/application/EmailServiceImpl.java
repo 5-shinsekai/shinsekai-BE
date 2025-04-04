@@ -37,24 +37,27 @@ public class EmailServiceImpl implements EmailService{
      * 이메일 인증 요청을 처리하며, 인증코드를 생성해 해당 이메일로 발송합니다.
      *
      * @param emailVerificationRequestDto 이메일 인증 요청 정보 (email)
-     * @param mailType                    인증 메일 타입 (FIND_LOGIN_ID, CHANGE_PASSWORD 등)
      * @throws BaseException              해당 이메일로 등록된 회원이 없을 경우 예외 발생
      */
     @Override
-    public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto, EmailType mailType) {
+    public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto) {
         Member member = memberRepository.findByEmail(emailVerificationRequestDto.getEmail())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
         verificationCode = generateVerificationCode();
-        sendEmail(member, this.setSubject(mailType));
+        sendEmail(member, this.setSubject(emailVerificationRequestDto.getMailType()));
 
-        switch (mailType) {
+        switch (emailVerificationRequestDto.getMailType()) {
             case FIND_LOGIN_ID -> {
                 redisProvider.setEmailVerificationCodeForLoginId(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
                 break;
             }
             case CHANGE_PASSWORD -> {
                 redisProvider.setEmailVerificationCodeForPw(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
+                break;
+            }
+            case SIGN_UP -> {
+                redisProvider.setEmailVerificationCodeForSignUp(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
                 break;
             }
             default -> {
@@ -79,14 +82,24 @@ public class EmailServiceImpl implements EmailService{
             throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
         }
 
+        // 아이디 찾기
         if (verificationCodeRequestDto.getEmailType().equals(EmailType.FIND_LOGIN_ID)) {
             if (!verificationCodeRequestDto.getCode()
                     .equals(redisProvider.getEmailVerificationCodeForLoginId(verificationCodeRequestDto.getEmail()))) {
                 throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
             }
-        } else if (verificationCodeRequestDto.getEmailType().equals(EmailType.CHANGE_PASSWORD)) {
+        }
+        // 비밀번호 찾기
+        else if (verificationCodeRequestDto.getEmailType().equals(EmailType.CHANGE_PASSWORD)) {
             if (!verificationCodeRequestDto.getCode()
                     .equals(redisProvider.getEmailVerificationCodeForPw(verificationCodeRequestDto.getEmail()))) {
+                throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+            }
+        }
+        // 회원가입
+        else if (verificationCodeRequestDto.getEmailType().equals(EmailType.SIGN_UP)) {
+            if (!verificationCodeRequestDto.getCode()
+                    .equals(redisProvider.getEmailVerificationCodeForSignUp(verificationCodeRequestDto.getEmail()))) {
                 throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
             }
         }
@@ -127,14 +140,19 @@ public class EmailServiceImpl implements EmailService{
      * @return 이메일 제목 문자열
      */
     private String setSubject(EmailType mailType) {
+        String subject = "";
         switch (mailType) {
             case FIND_LOGIN_ID:
-                return "[스타벅스] 아이디 찾기를 위한 인증코드 안내메일";
+                subject = "아이디 찾기"; break;
             case CHANGE_PASSWORD:
-                return "[스타벅스] 비밀번호 변경을 위한 인증코드 안내메일";
+                subject = "비밀번호 변경"; break;
+            case SIGN_UP:
+                subject = "회원가입"; break;
             default:
-                return "[스타벅스] 안내메일";
+                subject = "";
         }
+
+        return "[스타벅스] " + subject + "(을)를 위한 인증코드 안내메일";
     }
 
     /**

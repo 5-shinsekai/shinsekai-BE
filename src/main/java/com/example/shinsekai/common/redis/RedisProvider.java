@@ -53,6 +53,19 @@ public class RedisProvider {
         );
     }
 
+    public String getEmailVerificationCodeForSignUp(String email) {
+        return redisTemplate.opsForValue().get("EMAIL_SU:"+email);
+    }
+
+    public void setEmailVerificationCodeForSignUp(String email, String eMailVerificationCode, long expirationTime) {
+        redisTemplate.opsForValue().set(
+                "EMAIL_SU:"+email,
+                eMailVerificationCode,
+                expirationTime,
+                TimeUnit.MILLISECONDS
+        );
+    }
+
     public Long getExpire(String key) {
         return redisTemplate.getExpire(key, TimeUnit.MILLISECONDS);
     }
