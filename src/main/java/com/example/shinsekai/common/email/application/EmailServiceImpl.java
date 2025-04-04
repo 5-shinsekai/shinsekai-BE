@@ -56,10 +56,6 @@ public class EmailServiceImpl implements EmailService{
                 redisProvider.setEmailVerificationCodeForPw(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
                 break;
             }
-            case SIGN_UP -> {
-                redisProvider.setEmailVerificationCodeForSignUp(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
-                break;
-            }
             default -> {
                 return;
             }
@@ -93,13 +89,6 @@ public class EmailServiceImpl implements EmailService{
         else if (verificationCodeRequestDto.getEmailType().equals(EmailType.CHANGE_PASSWORD)) {
             if (!verificationCodeRequestDto.getCode()
                     .equals(redisProvider.getEmailVerificationCodeForPw(verificationCodeRequestDto.getEmail()))) {
-                throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
-            }
-        }
-        // 회원가입
-        else if (verificationCodeRequestDto.getEmailType().equals(EmailType.SIGN_UP)) {
-            if (!verificationCodeRequestDto.getCode()
-                    .equals(redisProvider.getEmailVerificationCodeForSignUp(verificationCodeRequestDto.getEmail()))) {
                 throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
             }
         }
@@ -146,8 +135,6 @@ public class EmailServiceImpl implements EmailService{
                 subject = "아이디 찾기"; break;
             case CHANGE_PASSWORD:
                 subject = "비밀번호 변경"; break;
-            case SIGN_UP:
-                subject = "회원가입"; break;
             default:
                 subject = "";
         }
