@@ -34,4 +34,13 @@ public class SizeServiceImpl implements SizeService {
 
         size.updateSizeName(dto.getSizeName());
     }
+
+    @Override
+    @Transactional
+    public void deleteSize(Long id) {
+        Size size = sizeRepository.findById(id)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+        
+        sizeRepository.delete(size);
+    }
 }

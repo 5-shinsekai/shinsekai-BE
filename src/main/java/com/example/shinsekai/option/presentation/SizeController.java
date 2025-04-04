@@ -28,4 +28,10 @@ public class SizeController {
         sizeService.updateSize(SizeRequestDto.from(id, sizeRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
+
+    @DeleteMapping("/{id}")
+    public BaseResponseEntity<Void> deleteSize(@PathVariable Long id) {
+        sizeService.deleteSize(id);
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
 }

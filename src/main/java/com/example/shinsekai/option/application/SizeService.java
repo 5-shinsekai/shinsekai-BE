@@ -7,4 +7,6 @@ public interface SizeService {
     void createSize(SizeRequestDto dto);
 
     void updateSize(SizeRequestDto dto);
+
+    void deleteSize(Long id);
 }
