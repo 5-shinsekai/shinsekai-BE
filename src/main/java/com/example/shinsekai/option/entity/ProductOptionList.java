@@ -20,7 +20,7 @@ public class ProductOptionList {
 
     private Long colorId;
 
-    @Column(name = "product_code", nullable = false, length = 50, unique = true, updatable = false)
+    @Column(name = "product_code", nullable = false, length = 50, updatable = false)
     private String productCode;
 
     @Column(name = "option_price", nullable = false)
