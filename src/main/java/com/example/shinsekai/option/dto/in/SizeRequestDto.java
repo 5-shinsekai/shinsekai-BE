@@ -8,8 +8,8 @@ import lombok.Getter;
 @Getter
 public class SizeRequestDto {
 
-    Long id;
-    String sizeName;
+    private Long id;
+    private String sizeName;
 
     @Builder
     public SizeRequestDto(Long id, String sizeName) {

@@ -16,7 +16,7 @@ public class Size extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "size_name", nullable = false)
+    @Column(name = "size_name", nullable = false, unique = true)
     private String sizeName;
 
     @Builder

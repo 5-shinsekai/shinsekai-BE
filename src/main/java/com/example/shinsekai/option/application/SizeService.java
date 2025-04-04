@@ -13,7 +13,7 @@ public interface SizeService {
 
     void deleteSize(Long id);
 
-    List<SizeResponseDto> getAllSize();
+    List<SizeResponseDto> getAllSizes();
 
     SizeResponseDto getSize(Long id);
 }

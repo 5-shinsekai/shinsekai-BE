@@ -48,7 +48,7 @@ public class SizeServiceImpl implements SizeService {
     }
 
     @Override
-    public List<SizeResponseDto> getAllSize() {
+    public List<SizeResponseDto> getAllSizes() {
         List<Size> sizes = sizeRepository.findAll();
         return sizes.stream()
                 .map(SizeResponseDto::from)

@@ -9,7 +9,7 @@ import java.util.List;
 public interface ColorService {
     void createColor(ColorRequestDto dto);
 
-    void updateColor(Long id, ColorRequestDto dto);
+    void updateColor(ColorRequestDto dto);
 
     void deleteColor(Long id);
 

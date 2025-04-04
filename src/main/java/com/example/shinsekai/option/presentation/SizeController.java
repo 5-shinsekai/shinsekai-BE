@@ -27,7 +27,9 @@ public class SizeController {
     }
 
     @PutMapping("/{id}")
-    public BaseResponseEntity<Void> updateSize(@PathVariable Long id, @RequestBody SizeRequestVo sizeRequestVo) {
+    public BaseResponseEntity<Void> updateSize(
+            @PathVariable Long id,
+            @RequestBody SizeRequestVo sizeRequestVo) {
         sizeService.updateSize(SizeRequestDto.from(id, sizeRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
@@ -39,12 +41,12 @@ public class SizeController {
     }
 
     @GetMapping
-    public BaseResponseEntity<List<SizeResponseDto>> findAll() {
-        return new BaseResponseEntity<>(sizeService.getAllSize());
+    public BaseResponseEntity<List<SizeResponseDto>> getAllSizes() {
+        return new BaseResponseEntity<>(sizeService.getAllSizes());
     }
 
     @GetMapping("/{id}")
-    public BaseResponseEntity<SizeResponseDto> findById(@PathVariable Long id) {
+    public BaseResponseEntity<SizeResponseDto> getSizes(@PathVariable Long id) {
         return new BaseResponseEntity<>(sizeService.getSize(id));
     }
 }

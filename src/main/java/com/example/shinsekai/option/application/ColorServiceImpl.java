@@ -30,8 +30,8 @@ public class ColorServiceImpl implements ColorService {
 
     @Override
     @Transactional
-    public void updateColor(Long id, ColorRequestDto dto) {
-        Color color = colorRepository.findById(id)
+    public void updateColor(ColorRequestDto dto) {
+        Color color = colorRepository.findById(dto.getId())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
 
         color.updateColorName(dto.getColorName());
@@ -40,7 +40,10 @@ public class ColorServiceImpl implements ColorService {
     @Override
     @Transactional
     public void deleteColor(Long id) {
-        colorRepository.deleteById(id);
+        Color color = colorRepository.findById(id)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+
+        colorRepository.delete(color);
     }
 
     @Override
