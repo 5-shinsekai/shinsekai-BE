@@ -24,4 +24,8 @@ public class Size extends BaseEntity {
         this.id = id;
         this.sizeName = sizeName;
     }
+
+    public void updateSizeName(String sizeName) {
+        this.sizeName = sizeName;
+    }
 }

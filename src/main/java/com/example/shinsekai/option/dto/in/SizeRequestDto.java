@@ -7,10 +7,13 @@ import lombok.Getter;
 
 @Getter
 public class SizeRequestDto {
+
+    Long id;
     String sizeName;
 
     @Builder
-    public SizeRequestDto(String sizeName) {
+    public SizeRequestDto(Long id, String sizeName) {
+        this.id = id;
         this.sizeName = sizeName;
     }
 
@@ -22,6 +25,13 @@ public class SizeRequestDto {
 
     public static SizeRequestDto from(SizeRequestVo sizeRequestVo) {
         return SizeRequestDto.builder()
+                .sizeName(sizeRequestVo.getSizeName().toUpperCase())
+                .build();
+    }
+
+    public static SizeRequestDto from(Long id, SizeRequestVo sizeRequestVo) {
+        return SizeRequestDto.builder()
+                .id(id)
                 .sizeName(sizeRequestVo.getSizeName().toUpperCase())
                 .build();
     }

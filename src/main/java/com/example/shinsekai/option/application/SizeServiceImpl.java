@@ -1,6 +1,9 @@
 package com.example.shinsekai.option.application;
 
+import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.option.dto.in.SizeRequestDto;
+import com.example.shinsekai.option.entity.Size;
 import com.example.shinsekai.option.infrastructure.SizeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +24,14 @@ public class SizeServiceImpl implements SizeService {
         }
 
         sizeRepository.save(dto.toEntity());
+    }
+
+    @Override
+    @Transactional
+    public void updateSize(SizeRequestDto dto) {
+        Size size = sizeRepository.findById(dto.getId())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+
+        size.updateSizeName(dto.getSizeName());
     }
 }

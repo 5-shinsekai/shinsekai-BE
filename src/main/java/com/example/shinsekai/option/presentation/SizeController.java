@@ -7,10 +7,7 @@ import com.example.shinsekai.option.dto.in.SizeRequestDto;
 import com.example.shinsekai.option.vo.in.SizeRequestVo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Size", description = "사이즈")
 @RestController
@@ -24,6 +21,11 @@ public class SizeController {
     public BaseResponseEntity<Void> createSize(@RequestBody SizeRequestVo sizeRequestVo) {
         sizeService.createSize(SizeRequestDto.from(sizeRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
 
+    @PutMapping("/{id}")
+    public BaseResponseEntity<Void> updateSize(@PathVariable Long id, @RequestBody SizeRequestVo sizeRequestVo) {
+        sizeService.updateSize(SizeRequestDto.from(id, sizeRequestVo));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }
