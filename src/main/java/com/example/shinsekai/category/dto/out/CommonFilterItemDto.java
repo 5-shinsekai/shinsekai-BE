@@ -1,5 +1,6 @@
 package com.example.shinsekai.category.dto.out;
 
+import com.example.shinsekai.category.entity.PriceRange;
 import com.example.shinsekai.category.vo.out.CommonFilterItemVo;
 import com.example.shinsekai.common.enums.ColorType;
 import com.example.shinsekai.common.enums.PriceRangeType;
@@ -33,10 +34,10 @@ public class CommonFilterItemDto {
                 .build();
     }
 
-    public static CommonFilterItemDto from(PriceRangeType priceRangeType) {
+    public static CommonFilterItemDto from(PriceRange priceRange) {
         return CommonFilterItemDto.builder()
-                .id(priceRangeType.getId())
-                .name(priceRangeType.getName())
+                .id(priceRange.getId())
+                .name(priceRange.getName())
                 .build();
     }
 
