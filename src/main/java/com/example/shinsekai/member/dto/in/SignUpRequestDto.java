@@ -26,16 +26,15 @@ public class SignUpRequestDto {
     private Gender gender;
     private String name;
     private LocalDate birth;
-    private boolean isActive;
 
     public Member toEntity(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .memberUuid(generateMemberUuid())
-                .loginId(this.loginId)
-                .email(this.email)
+                .loginId(loginId)
+                .email(email)
                 .password(passwordEncoder.encode(password))
-                .nickname(this.nickname)
-                .phone(this.phone)
+                .nickname(nickname)
+                .phone(phone)
                 .gender(gender)
                 .name(name)
                 .birth(birth)

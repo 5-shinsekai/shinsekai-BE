@@ -1,6 +1,5 @@
 package com.example.shinsekai.common.email.presentation;
 
-import com.example.shinsekai.common.email.entity.EmailType;
 import com.example.shinsekai.common.email.application.EmailService;
 import com.example.shinsekai.common.email.dto.in.EmailVerificationRequestDto;
 import com.example.shinsekai.common.email.dto.in.VerificationCodeRequestDto;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/emailAuth")
+@RequestMapping("/api/v1/emailVerify")
 @RequiredArgsConstructor
 public class EmailController {
     private final EmailService emailService;

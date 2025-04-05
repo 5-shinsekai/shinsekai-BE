@@ -31,7 +31,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(unique = true, nullable = false, length = 255)
     private String email;
 
-    @Column(nullable = false, length = 100, updatable = false)
+    @Column(nullable = false, length = 100)
     private String password;
 
     @Column(unique = true, nullable = false, length = 50)
@@ -78,8 +78,8 @@ public class Member extends BaseEntity implements UserDetails {
         this.birth = birth;
     }
 
-    public void updatePassword(ChangePasswordRequestDto dto) {
-        this.password = dto.getNewPassword();
+    public void updatePassword(String encodedNewPassword) {
+        this.password = encodedNewPassword;
     }
 
     @Override

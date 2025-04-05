@@ -73,20 +73,15 @@ public class EmailServiceImpl implements EmailService{
         memberRepository.findByEmail(verificationCodeRequestDto.getEmail())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
-        if (!verificationCodeRequestDto.getCode()
-                .equals(redisProvider.getEmailVerificationCodeForLoginId(verificationCodeRequestDto.getEmail()))) {
-            throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
-        }
-
         // 아이디 찾기
-        if (verificationCodeRequestDto.getEmailType().equals(EmailType.FIND_LOGIN_ID)) {
+        if (verificationCodeRequestDto.getMailType().equals(EmailType.FIND_LOGIN_ID)) {
             if (!verificationCodeRequestDto.getCode()
                     .equals(redisProvider.getEmailVerificationCodeForLoginId(verificationCodeRequestDto.getEmail()))) {
                 throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
             }
         }
         // 비밀번호 찾기
-        else if (verificationCodeRequestDto.getEmailType().equals(EmailType.CHANGE_PASSWORD)) {
+        else if (verificationCodeRequestDto.getMailType().equals(EmailType.CHANGE_PASSWORD)) {
             if (!verificationCodeRequestDto.getCode()
                     .equals(redisProvider.getEmailVerificationCodeForPw(verificationCodeRequestDto.getEmail()))) {
                 throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);

@@ -12,13 +12,13 @@ import lombok.ToString;
 public class VerificationCodeRequestDto {
     private String email;
     private String code;
-    private EmailType emailType;
+    private EmailType mailType;
 
     public static VerificationCodeRequestDto from(VerificationCodeVo verificationCodeVo) {
         return VerificationCodeRequestDto.builder()
                 .email(verificationCodeVo.getEmail())
                 .code(verificationCodeVo.getCode())
-                .emailType(verificationCodeVo.getMailType())
+                .mailType(verificationCodeVo.getMailType())
                 .build();
     }
 }

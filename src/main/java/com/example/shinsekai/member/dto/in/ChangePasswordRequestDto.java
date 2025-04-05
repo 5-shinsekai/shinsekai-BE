@@ -15,13 +15,6 @@ public class ChangePasswordRequestDto {
     private String loginId;
     private String newPassword;
 
-    public Member toEntity(PasswordEncoder passwordEncoder) {
-        return Member.builder()
-                .loginId(loginId)
-                .password(passwordEncoder.encode(newPassword))
-                .build();
-    }
-
     @Builder
     public static ChangePasswordRequestDto from(ChangePasswordVo changePasswordVo, String accessToken) {
         return ChangePasswordRequestDto.builder()

@@ -3,7 +3,6 @@ package com.example.shinsekai.member.application;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
-import com.example.shinsekai.common.jwt.TokenEnum;
 import com.example.shinsekai.common.redis.RedisProvider;
 import com.example.shinsekai.member.dto.in.ChangePasswordRequestDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
@@ -17,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -33,7 +33,7 @@ public class MemberServiceImpl implements MemberService {
         try {
             memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
         } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.FAILED_TO_RESTORE);
+            throw new BaseException(BaseResponseStatus.FAILED_TO_SIGN_UP);
         }
     }
 
@@ -41,6 +41,11 @@ public class MemberServiceImpl implements MemberService {
     public SignInResponseDto signIn(SignInRequestDto signInRequestDto) {
         Member member = memberRepository.findByLoginId(signInRequestDto.getLoginId())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
+
+        if (!passwordEncoder.matches(signInRequestDto.getPassword(), member.getPassword())) {
+            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
+        }
+
         try {
             Authentication authentication = jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
             return jwtTokenProvider.createToken(authentication, member);
@@ -71,6 +76,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public void changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
         try {
             // 토큰 검증
@@ -79,15 +85,40 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
         }
 
+        // 로그인 아이디로 회원 조회
         Member member = memberRepository.findByLoginId(changePasswordRequestDto.getLoginId())
                             .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
-        if (!passwordEncoder.matches(changePasswordRequestDto.getNewPassword(), member.getPassword())) {
+        // 비밀번호 중복 검사
+        if (passwordEncoder.matches(changePasswordRequestDto.getNewPassword(), member.getPassword())) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_PASSWORD);
         }
 
-        member.updatePassword(changePasswordRequestDto);
-        memberRepository.save(member);
+        // 비밀번호 형식 검사
+        if (!validatePassword(changePasswordRequestDto.getNewPassword())) {
+            throw new BaseException(BaseResponseStatus.INVALID_PASSWORD_FORMAT);
+        }
+
+        // 인코딩된 패스워드를 entity에 전달 -> 더티체킹
+        member.updatePassword(passwordEncoder.encode(changePasswordRequestDto.getNewPassword()));
     }
+
+    private boolean validatePassword(String password) {
+        // PASSWORD_REGEX → 유효성 체크할 정규식(Regex) 패턴 정의.
+        // 공백 허용 안 됨
+        // 소문자 (?=.*[a-z])
+        // 숫자 (?=.*\\d)
+        // 특수문자 (?=.*[@$!%*?&])
+        // 전체 길이 8~20자
+        final String PASSWORD_REGEX =
+                "^(?=\\S+$)(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[a-z\\d@$!%*?&]{8,20}$";
+
+        if (password == null) {
+            return false;
+        } else {
+            return password.matches(PASSWORD_REGEX);
+        }
+    }
+
 
 }

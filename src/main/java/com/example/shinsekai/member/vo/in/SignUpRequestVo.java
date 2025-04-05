@@ -12,12 +12,9 @@ public class SignUpRequestVo {
     private String email;
     private String password;
     private String nickname;
-    private boolean isActive;
     private String phone;
     private Gender gender;
     private String name;
     private LocalDate birth;
-
-
 }
 
