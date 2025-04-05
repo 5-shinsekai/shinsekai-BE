@@ -32,7 +32,6 @@ import java.util.function.Function;
 public class JwtTokenProvider {
 
     private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final RedisProvider redisProvider;
 
@@ -73,42 +72,46 @@ public class JwtTokenProvider {
 
     /**
      * 토큰 생성
-     *
      * @param authentication, member, tokenType
-     * @return 토큰
+     * @return 토큰 문자열
      */
     public String generateToken(Authentication authentication, Member member, TokenEnum tokenType) {
         String memberUuid = member.getMemberUuid();
-        String loginId = authentication.getName();
         Date now = new Date();
-        Date expiration = "ACCESS".equals(tokenType.toString())
-                ? new Date(now.getTime() + expireTime) : new Date(now.getTime() + refreshExpireTime);
+        Date expiration;
+        switch (tokenType) {
+            case ACCESS: expiration = new Date(now.getTime() + expireTime); break;
+            default: expiration = new Date(now.getTime() + refreshExpireTime);
+        }
 
         return Jwts.builder()
                 .signWith(getSignKey())
                 .subject(memberUuid)
-                .claim("username", loginId) // "username" 키에 로그인 아이디 저장
                 .issuedAt(now)                 // 토큰 발급 시간 설정
                 .expiration(expiration)        // 토큰 만료 시간
                 .compact();
     }
 
 
+    /**
+     * 사용자의 UUID와 입력된 비밀번호로 인증을 시도
+     * 인증에 성공하면 Authentication 객체를 반환
+     *
+     * @param member
+     * @param inputPassword
+     * @return 인증된 Authentication
+     */
     public Authentication authenticate(Member member, String inputPassword) {
-        if (!passwordEncoder.matches(inputPassword, member.getPassword())) {
-            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
-        }
         return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                member.getLoginId(),
+                member.getMemberUuid(),
                 inputPassword
         ));
     }
 
     /**
      * 토큰 발급
-     *
      * @param authentication, member
-     * @return 토큰
+     * @return SignInResponseDto
      */
     public SignInResponseDto createToken(Authentication authentication, Member member) {
         // 토큰 생성
@@ -123,8 +126,7 @@ public class JwtTokenProvider {
 
     /**
      * 토큰 삭제
-     *
-     * @param token, member
+     * @param token
      * @return 토큰
      */
     public boolean deleteToken(String token) {
@@ -143,14 +145,20 @@ public class JwtTokenProvider {
     }
 
     /**
-     * Access Token 갱신 (Refresh Token 검증 후 재발급)
+     * Access Token, Refresh Token 검증 후 재발급
+     * refreshToken은 redis에 저장
      * @param refreshToken
      * @return SignInResponseDto
      */
     @Transactional
     public SignInResponseDto reCreateTokens(String refreshToken) {
 
-        String memberUuid = extractAllClaims(refreshToken).getSubject();
+        String memberUuid;
+        try {
+            memberUuid = extractAllClaims(refreshToken).getSubject();
+        } catch (Exception e) {
+            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
+        }
         String storedRefreshToken = redisProvider.getToken(memberUuid);
 
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
@@ -172,7 +180,7 @@ public class JwtTokenProvider {
 
     /**
      * 토큰이 만료되었는지 확인
-     * @param token, tokenType
+     * @param token
      * @return 만료되었으면 true, 유효하면 false
      */
     public boolean isTokenValid(String token) {
@@ -183,6 +191,11 @@ public class JwtTokenProvider {
         }
     }
 
+    /**
+     * JWT 서명을 위한 HMAC 키를 생성합니다.
+     * secretKey 문자열을 바이트 배열로 변환한 후, HMAC-SHA 알고리즘에 적합한 키로 변환하여 반환합니다.
+     * @return JWT 서명에 사용할 Key 객체
+     */
     public Key getSignKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }

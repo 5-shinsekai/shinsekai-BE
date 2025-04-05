@@ -1,14 +1,14 @@
 package com.example.shinsekai.member.dto.in;
 
-import com.example.shinsekai.member.vo.SignInRequestVo;
+import com.example.shinsekai.member.vo.in.SignInRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@Getter
-public class SignInRequestDto {
 
+@Getter
+@NoArgsConstructor
+public class SignInRequestDto {
     private String loginId;
     private String password;
 
