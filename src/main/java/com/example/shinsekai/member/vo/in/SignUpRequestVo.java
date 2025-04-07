@@ -1,4 +1,4 @@
-package com.example.shinsekai.member.vo;
+package com.example.shinsekai.member.vo.in;
 
 import com.example.shinsekai.member.entity.Gender;
 import lombok.Getter;
@@ -12,12 +12,9 @@ public class SignUpRequestVo {
     private String email;
     private String password;
     private String nickname;
-    private boolean isActive;
     private String phone;
     private Gender gender;
     private String name;
     private LocalDate birth;
-
-
 }
 

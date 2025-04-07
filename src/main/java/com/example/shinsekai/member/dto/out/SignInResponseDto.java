@@ -1,7 +1,7 @@
 package com.example.shinsekai.member.dto.out;
 
 import com.example.shinsekai.member.entity.Member;
-import com.example.shinsekai.member.vo.SignInResponseVo;
+import com.example.shinsekai.member.vo.in.SignInResponseVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
