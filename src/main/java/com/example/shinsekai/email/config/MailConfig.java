@@ -1,6 +1,6 @@
-package com.example.shinsekai.common.email.config;
+package com.example.shinsekai.email.config;
 
-import com.example.shinsekai.common.email.properties.MailProperties;
+import com.example.shinsekai.email.properties.MailProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

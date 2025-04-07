@@ -1,10 +1,10 @@
-package com.example.shinsekai.common.email.presentation;
+package com.example.shinsekai.email.presentation;
 
-import com.example.shinsekai.common.email.application.EmailService;
-import com.example.shinsekai.common.email.dto.in.EmailVerificationRequestDto;
-import com.example.shinsekai.common.email.dto.in.VerificationCodeRequestDto;
-import com.example.shinsekai.common.email.vo.EmailVerificationVo;
-import com.example.shinsekai.common.email.vo.VerificationCodeVo;
+import com.example.shinsekai.email.application.EmailService;
+import com.example.shinsekai.email.dto.in.EmailVerificationRequestDto;
+import com.example.shinsekai.email.dto.in.VerificationCodeRequestDto;
+import com.example.shinsekai.email.vo.EmailVerificationVo;
+import com.example.shinsekai.email.vo.VerificationCodeVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,4 +1,4 @@
-package com.example.shinsekai.common.email.application;
+package com.example.shinsekai.email.application;
 
 import org.springframework.stereotype.Component;
 
