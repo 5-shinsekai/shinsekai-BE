@@ -1,6 +1,7 @@
 package com.example.shinsekai.product.presentation;
 
 import com.example.shinsekai.common.entity.BaseResponseEntity;
+import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.product.application.ProductService;
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
 import com.example.shinsekai.product.dto.out.ProductResponseDto;
@@ -9,9 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ProductController {
     @PostMapping
     public BaseResponseEntity<Void> createProduct(@RequestBody ProductRequestVo productRequestVo) {
         productService.createProduct(ProductRequestDto.from(productRequestVo));
-        return new BaseResponseEntity<>();
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     /*
@@ -41,7 +40,7 @@ public class ProductController {
 
         ProductRequestDto dto = ProductRequestDto.from(productVo);
         productService.createProduct(dto, thumbnailFile, contentImageFile);
-        return new BaseResponseEntity<>();
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
     */
 
@@ -51,28 +50,28 @@ public class ProductController {
             @PathVariable String productCode,
             @RequestBody ProductRequestVo productRequestVo) {
         productService.updateProduct(productCode, ProductRequestDto.from(productRequestVo));
-        return new BaseResponseEntity<>();
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "상품 하드 삭제")
     @DeleteMapping("/{productCode}")
     public BaseResponseEntity<Void> deleteProduct(@PathVariable String productCode) {
         productService.hardDeleteProduct(productCode);
-        return new BaseResponseEntity<>();
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "상품 소트프 삭제")
     @PatchMapping("/soft-delete/{productCode}")
     public BaseResponseEntity<Void> softDeleteProduct(@PathVariable String productCode) {
         productService.softDeleteProduct(productCode);
-        return new BaseResponseEntity<>();
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "상품 상태 토글 (SELLING ↔ HIDDEN) ")
     @PatchMapping("/toggle-productStatus/{productCode}")
     public BaseResponseEntity<Void> toggleProductStatus(@PathVariable String productCode) {
         productService.toggleProductStatus(productCode);
-        return new BaseResponseEntity<>();
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "판매 중인 상품 상세 조회")
