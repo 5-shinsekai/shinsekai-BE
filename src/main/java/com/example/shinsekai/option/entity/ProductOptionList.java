@@ -27,6 +27,7 @@ public class ProductOptionList {
     private int optionPrice;
 
     @Column(name = "option_status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private OptionStatus optionStatus;
 
     @Column(name = "stock_count")
