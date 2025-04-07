@@ -6,10 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
-@Builder
 @NoArgsConstructor
+@Entity
 public class SubCategory extends BaseEntity {
 
     @Id
@@ -22,18 +21,10 @@ public class SubCategory extends BaseEntity {
     @Column(nullable = false)
     private Long mainCategoryId;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean isDeleted = false;
-
-    public SubCategory(Long id, String name, Long mainCategoryId, boolean isDeleted) {
+    @Builder
+    public SubCategory(Long id, String name, Long mainCategoryId) {
         this.id = id;
         this.name = name;
         this.mainCategoryId = mainCategoryId;
-        this.isDeleted = isDeleted;
-    }
-
-    public void setDeleted(){
-        this.isDeleted = true;
     }
 }

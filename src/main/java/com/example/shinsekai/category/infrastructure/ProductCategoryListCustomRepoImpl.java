@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Repository
 public class ProductCategoryListCustomRepoImpl implements ProductCategoryListCustomRepository{
+
     private final JPAQueryFactory jpaQueryFactory;
 
     public List<Size> findSizesByMainCategory(Long mainCategoryId) {

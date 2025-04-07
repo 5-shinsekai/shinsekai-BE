@@ -10,6 +10,7 @@ import com.example.shinsekai.category.vo.in.MainCategoryUpdateRequestVo;
 import com.example.shinsekai.category.vo.out.CategoryFilterResponseVo;
 import com.example.shinsekai.category.vo.out.MainCategoryResponseVo;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class MainCategoryController {
 
     private final MainCategoryServiceImpl mainCategoryService;
 
+    @Operation(summary = "전체 메인 카테고리 조회")
     @GetMapping("/main")
     public BaseResponseEntity<List<MainCategoryResponseVo>> getAllMainCategory() {
         return new BaseResponseEntity<>(
@@ -33,18 +35,21 @@ public class MainCategoryController {
                 .toList());
     }
 
+    @Operation(summary = "메인 카테고리 생성")
     @PostMapping("/main")
     public BaseResponseEntity<Void> createMainCategory(@RequestBody MainCategoryCreateRequestVo mainCategoryCreateRequestVo){
         mainCategoryService.createMainCategory(MainCategoryCreateRequestDto.from(mainCategoryCreateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
-    @PatchMapping("/main/soft-delete/{categoryId}")
-    public BaseResponseEntity<Void> softDeleteMainCategory(@PathVariable Long categoryId){
-        mainCategoryService.softDeleteMainCategory(categoryId);
+    @Operation(summary = "메인 카테고리 삭제")
+    @DeleteMapping("/main/{categoryId}")
+    public BaseResponseEntity<Void> deleteMainCategory(@PathVariable Long categoryId){
+        mainCategoryService.deleteMainCategory(categoryId);
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "메인 카테고리 수정")
     @PutMapping("/main/{categoryId}")
     public BaseResponseEntity<Void> updateMainCategory(
             @PathVariable Long categoryId,
@@ -53,6 +58,7 @@ public class MainCategoryController {
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "메인 카테고리 하위 카테고리 필터 조회")
     @GetMapping("/{mainCategoryId}/filter")
     public BaseResponseEntity<CategoryFilterResponseVo> getCategoryFilter(@PathVariable Long mainCategoryId){
         return new BaseResponseEntity<>(mainCategoryService.getCategoryFilter(mainCategoryId).toVo());

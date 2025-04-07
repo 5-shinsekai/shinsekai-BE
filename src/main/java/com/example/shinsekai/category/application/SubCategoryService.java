@@ -10,7 +10,7 @@ public interface SubCategoryService {
     //SubCategory
     List<SubCategoryResponseDto> getAllSubCategory(Long categoryId);
     void createSubCategory(SubCategoryCreateRequestDto subCategoryCreateRequestDto);
-    void softDeleteSubCategory(Long categoryId);
+    void deleteSubCategory(Long categoryId);
     void updateSubCategory(SubCategoryUpdateRequestDto subCategoryUpdateRequestDto);
 
 }

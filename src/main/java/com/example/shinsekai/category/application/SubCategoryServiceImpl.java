@@ -27,14 +27,14 @@ public class SubCategoryServiceImpl implements SubCategoryService{
     @Override
     @Transactional
     public List<SubCategoryResponseDto> getAllSubCategory(Long categoryId) {
-        return subCategoryRepository.findAllByMainCategoryIdAndIsDeletedFalse(categoryId, Sort.by(Sort.Order.asc("name")))
+        return subCategoryRepository.findAllByMainCategoryId(categoryId, Sort.by(Sort.Order.asc("name")))
                 .stream().map(SubCategoryResponseDto::from).toList();
     }
 
     @Override
     @Transactional
     public void createSubCategory(SubCategoryCreateRequestDto subCategoryCreateRequestDto) {
-        if(!mainCategoryRepository.existsByIdAndIsDeletedFalse(subCategoryCreateRequestDto.getMainCategoryId()))
+        if(!mainCategoryRepository.existsById(subCategoryCreateRequestDto.getMainCategoryId()))
             throw new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY);
 
         try {
@@ -46,23 +46,24 @@ public class SubCategoryServiceImpl implements SubCategoryService{
 
     @Override
     @Transactional
-    public void softDeleteSubCategory(Long categoryId) {
+    public void deleteSubCategory(Long categoryId) {
         SubCategory subCategory = subCategoryRepository.findById(categoryId).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY)
         );
-        subCategory.setDeleted();
+
+        subCategoryRepository.delete(subCategory);
     }
 
     @Override
     @Transactional
     public void updateSubCategory(SubCategoryUpdateRequestDto subCategoryUpdateRequestDto) {
-        SubCategory subCategory = subCategoryRepository.findByIdAndIsDeletedFalse(subCategoryUpdateRequestDto.getId())
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryUpdateRequestDto.getId())
                 .orElseThrow(
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY)
         );
 
         if(subCategoryUpdateRequestDto.getMainCategoryId() != null
-                && !mainCategoryRepository.existsByIdAndIsDeletedFalse(subCategoryUpdateRequestDto.getMainCategoryId()))
+                && !mainCategoryRepository.existsById(subCategoryUpdateRequestDto.getMainCategoryId()))
             throw new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY);
 
         SubCategory updateSubCategory = subCategoryUpdateRequestDto.toEntity(subCategory);

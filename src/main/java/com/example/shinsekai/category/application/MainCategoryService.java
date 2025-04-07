@@ -11,7 +11,7 @@ public interface MainCategoryService {
     // MainCategory
     List<MainCategoryResponseDto> getAllMainCategory(); // getALlCategory
     void createMainCategory(MainCategoryCreateRequestDto mainCategoryCreateRequestDto);
-    void softDeleteMainCategory(Long categoryId);
+    void deleteMainCategory(Long categoryId);
     void updateMainCategory(MainCategoryUpdateRequestDto mainCategoryUpdateRequestDto);
 
     // CategoryFilter

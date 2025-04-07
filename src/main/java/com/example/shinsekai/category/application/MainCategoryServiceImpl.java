@@ -5,9 +5,7 @@ import com.example.shinsekai.category.dto.in.MainCategoryUpdateRequestDto;
 import com.example.shinsekai.category.dto.out.CommonFilterItemDto;
 import com.example.shinsekai.category.infrastructure.PriceRangeRepository;
 import com.example.shinsekai.category.infrastructure.ProductCategoryListCustomRepoImpl;
-import com.example.shinsekai.common.config.CategoryFilterConfig;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
-import com.example.shinsekai.common.enums.FilterType;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.category.dto.out.CategoryFilterResponseDto;
 import com.example.shinsekai.category.dto.out.SubCategoryResponseDto;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,12 +34,10 @@ public class MainCategoryServiceImpl implements MainCategoryService {
     private final PriceRangeRepository priceRangeRepository;
     private final ProductCategoryListCustomRepoImpl productCategoryListCustomRepository;
 
-    private final CategoryFilterConfig categoryFilterConfig;
-
     @Override
     @Transactional
     public List<MainCategoryResponseDto> getAllMainCategory() {
-        return mainCategoryRepository.findAllByIsDeletedFalse(Sort.by(Sort.Order.asc("name")))
+        return mainCategoryRepository.findAll(Sort.by(Sort.Order.asc("name")))
                 .stream()
                 .map(MainCategoryResponseDto::from)
                 .toList();
@@ -60,17 +55,18 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 
     @Override
     @Transactional
-    public void softDeleteMainCategory(Long categoryId) {
+    public void deleteMainCategory(Long categoryId) {
         MainCategory mainCategory = mainCategoryRepository.findById(categoryId).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT)
         );
-        mainCategory.setDeleted();
+
+        mainCategoryRepository.delete(mainCategory);
     }
 
     @Override
     @Transactional
     public void updateMainCategory(MainCategoryUpdateRequestDto mainCategoryUpdateRequestDto) {
-        MainCategory mainCategory = mainCategoryRepository.findByIdAndIsDeletedFalse(mainCategoryUpdateRequestDto.getId()).orElseThrow(
+        MainCategory mainCategory = mainCategoryRepository.findById(mainCategoryUpdateRequestDto.getId()).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT)
         );
 
@@ -83,30 +79,18 @@ public class MainCategoryServiceImpl implements MainCategoryService {
         }
     }
 
-
     @Override
     @Transactional
     public CategoryFilterResponseDto getCategoryFilter(Long mainCategoryId) {
-
-//        Set<FilterType> filterTypes = categoryFilterConfig.getFilterTypesForCategory(mainCategoryId);
-
         List<SubCategoryResponseDto> subCategories = subCategoryRepository
-                .findAllByMainCategoryIdAndIsDeletedFalse(mainCategoryId, Sort.by(Sort.Order.asc("name")))
+                .findAllByMainCategoryId(mainCategoryId, Sort.by(Sort.Order.asc("name")))
                 .stream().map(SubCategoryResponseDto::from).toList();
 
         List<CommonFilterItemDto> seasons = seasonRepository.findByEndDateAfter(LocalDate.now())
                 .stream().map(CommonFilterItemDto::from).toList();
 
-//        List<CommonFilterItemDto> sizes = filterTypes.contains(FilterType.SIZE)
-//                ? Arrays.stream(SizeType.values()).map(CommonFilterItemDto::from).toList()
-//                : List.of();
-
         List<CommonFilterItemDto> sizes = productCategoryListCustomRepository.findSizesByMainCategory(mainCategoryId)
                 .stream().map(CommonFilterItemDto::from).toList();
-
-//        List<CommonFilterItemDto> colors = filterTypes.contains(FilterType.COLOR)
-//                ? Arrays.stream(ColorType.values()).map(CommonFilterItemDto::from).toList()
-//                : List.of();
 
         List<CommonFilterItemDto> colors = productCategoryListCustomRepository.findColorsByMainCategory(mainCategoryId)
                 .stream().map(CommonFilterItemDto::from).toList();

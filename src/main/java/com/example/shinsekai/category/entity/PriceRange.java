@@ -1,12 +1,13 @@
 package com.example.shinsekai.category.entity;
 
+import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Entity
-public class PriceRange {
+public class PriceRange extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
