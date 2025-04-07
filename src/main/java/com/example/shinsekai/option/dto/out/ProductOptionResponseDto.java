@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 public class ProductOptionResponseDto {
 
+    private Long id;
     private String productCode;
     private Long sizeId;
     private Long colorId;
@@ -19,6 +20,7 @@ public class ProductOptionResponseDto {
 
     public static ProductOptionResponseDto from(ProductOptionList entity) {
         return new ProductOptionResponseDto(
+                entity.getId(),
                 entity.getProductCode(),
                 entity.getColorId(),
                 entity.getSizeId(),

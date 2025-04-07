@@ -39,6 +39,15 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         productOptionListRepository.save(dto.toEntity(productCode));
     }
 
+    @Transactional
+    @Override
+    public void deleteOption(Long id) {
+        if (!productOptionListRepository.existsById(id)) {
+            throw new BaseException(BaseResponseStatus.NO_EXIST_OPTION);
+        }
+        productOptionListRepository.deleteById(id);
+    }
+
     // 상품 옵션 생성 유효성 검사
     private void validateCreateOption(String productCode, ProductOptionRequestDto dto) {
         boolean exists = productOptionListRepository.existsByProductCodeAndColorIdAndSizeId(

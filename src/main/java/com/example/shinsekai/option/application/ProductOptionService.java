@@ -9,4 +9,6 @@ public interface ProductOptionService {
     void createOption(String productCode, ProductOptionRequestDto dto);
 
     List<ProductOptionResponseDto> getOptionsByProductCode(String productCode);
+
+    void deleteOption(Long id);
 }

@@ -16,22 +16,28 @@ import java.util.List;
 @Tag(name = "ProductOption", description = "상품 옵션 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/product/{productCode}")
+@RequestMapping("/api/v1/product")
 public class ProductOptionController {
 
     private final ProductOptionService productOptionService;
 
-    @GetMapping("/options")
+    @GetMapping("/{productCode}/options")
     public BaseResponseEntity<List<ProductOptionResponseDto>> getProductOptions(
             @PathVariable String productCode
     ) {
         return new BaseResponseEntity<>(productOptionService.getOptionsByProductCode(productCode));
     }
 
-    @PostMapping("/options")
+    @PostMapping("/{productCode}/options")
     public BaseResponseEntity<Void> createOption(@PathVariable String productCode,
                                                  @RequestBody ProductOptionRequestVo vo) {
         productOptionService.createOption(productCode,ProductOptionRequestDto.from(vo));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @DeleteMapping("/options/{optionId}")
+    public BaseResponseEntity<Void> deleteOption(@PathVariable Long optionId) {
+        productOptionService.deleteOption(optionId);
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
