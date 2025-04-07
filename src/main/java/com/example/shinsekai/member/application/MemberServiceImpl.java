@@ -30,7 +30,31 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
-        log.info("signUpRequestDto {}", signUpRequestDto);
+
+        // 아이디 중복 체크
+        memberRepository.findByLoginId(signUpRequestDto.getLoginId())
+                .ifPresent(member -> {
+                    throw new BaseException(BaseResponseStatus.SAME_LOGIN_ID);
+                });
+
+        // 이메일 중복 체크
+        memberRepository.findByEmail(signUpRequestDto.getEmail())
+                .ifPresent(member -> {
+                    throw new BaseException(BaseResponseStatus.SAME_EMAIL);
+                });
+        
+        // 닉네임 중복 체크
+        memberRepository.findByNickname(signUpRequestDto.getNickname())
+                .ifPresent(member -> {
+                    throw new BaseException(BaseResponseStatus.SAME_NICKNAME);
+                });
+
+        // 휴대전화 번호 중복체크
+        memberRepository.findByPhone(signUpRequestDto.getPhone())
+                .ifPresent(member -> {
+                    throw new BaseException(BaseResponseStatus.SAME_PHONE);
+                });
+
         try {
             memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
         } catch (Exception e) {
