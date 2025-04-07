@@ -30,6 +30,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void signUp(SignUpRequestDto signUpRequestDto) {
+        log.info("signUpRequestDto {}", signUpRequestDto);
         try {
             memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
         } catch (Exception e) {
@@ -119,6 +120,4 @@ public class MemberServiceImpl implements MemberService {
             return password.matches(PASSWORD_REGEX);
         }
     }
-
-
 }

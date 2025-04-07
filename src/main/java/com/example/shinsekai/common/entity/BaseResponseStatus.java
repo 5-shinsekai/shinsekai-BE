@@ -56,7 +56,15 @@ public enum BaseResponseStatus {
     FAILED_TO_SEND_EMAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 2014, "이메일 전송에 실패했습니다."),
     DUPLICATED_PASSWORD(HttpStatus.CONFLICT, false, 2015, "기존 패스워드와 동일합니다."),
     FAILED_TO_SIGN_UP(HttpStatus.BAD_REQUEST, false, 2016, "회원가입에 실패했습니다."),
-    INVALID_PASSWORD_FORMAT(HttpStatus.CONFLICT, false, 2015, "잘못된 형식의 비밀번호입니다."),
+    INVALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, false, 2017, "잘못된 형식의 비밀번호입니다."),
+    INVALID_LOGIN_ID_FORMAT(HttpStatus.BAD_REQUEST, false, 2018, "잘못된 형식의 아이디입니다."),
+    INVALID_EMAIL_FORMAT(HttpStatus.BAD_REQUEST, false, 2019, "잘못된 형식의 이메일입니다."),
+    INVALID_NICKNAME_FORMAT(HttpStatus.BAD_REQUEST, false, 2020, "잘못된 형식의 닉네임입니다."),
+    INVALID_PHONE_FORMAT(HttpStatus.BAD_REQUEST, false, 2021, "잘못된 형식의 전화번호입니다."),
+    INVALID_GENDER_FORMAT(HttpStatus.BAD_REQUEST, false, 2022, "성별은 '남성' 또는 '여성'만 가능합니다."),
+    INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, false, 2023, "잘못된 형식의 날짜입니다."),
+    INVALID_BIRTH_PAST(HttpStatus.BAD_REQUEST, false, 2024, "생년월일은 과거 날짜여야 합니다."),
+    INVALID_NAME_FORMAT(HttpStatus.BAD_REQUEST, false, 2025, "잘못된 형식의 이름입니다."),
 
     /**
      * 3000: product service error
