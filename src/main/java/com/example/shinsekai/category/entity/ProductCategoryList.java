@@ -1,6 +1,7 @@
 package com.example.shinsekai.category.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
@@ -13,9 +14,21 @@ public class ProductCategoryList {
 
     private String productCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private MainCategory mainCategory;
+    private Long mainCategoryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private SubCategory subCategory;
+    private Long subCategoryId;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private MainCategory mainCategory;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private SubCategory subCategory;
+
+    @Builder
+    public ProductCategoryList(Long id, String productCode, Long mainCategoryId, Long subCategoryId) {
+        this.id = id;
+        this.productCode = productCode;
+        this.mainCategoryId = mainCategoryId;
+        this.subCategoryId = subCategoryId;
+    }
 }

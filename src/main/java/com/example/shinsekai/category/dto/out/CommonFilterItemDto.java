@@ -5,6 +5,8 @@ import com.example.shinsekai.category.vo.out.CommonFilterItemVo;
 import com.example.shinsekai.common.enums.ColorType;
 import com.example.shinsekai.common.enums.PriceRangeType;
 import com.example.shinsekai.common.enums.SizeType;
+import com.example.shinsekai.option.entity.Color;
+import com.example.shinsekai.option.entity.Size;
 import com.example.shinsekai.season.entity.Season;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,17 +22,31 @@ public class CommonFilterItemDto {
         this.name = name;
     }
 
-    public static CommonFilterItemDto from(SizeType sizeType) {
+//    public static CommonFilterItemDto from(SizeType sizeType) {
+//        return CommonFilterItemDto.builder()
+//                .id(sizeType.getId())
+//                .name(sizeType.getName())
+//                .build();
+//    }
+
+    public static CommonFilterItemDto from(Size size) {
         return CommonFilterItemDto.builder()
-                .id(sizeType.getId())
-                .name(sizeType.getName())
+                .id(size.getId().intValue())
+                .name(size.getSizeName())
                 .build();
     }
 
-    public static CommonFilterItemDto from(ColorType colorType) {
+//    public static CommonFilterItemDto from(ColorType colorType) {
+//        return CommonFilterItemDto.builder()
+//                .id(colorType.getId())
+//                .name(colorType.getName())
+//                .build();
+//    }
+
+    public static CommonFilterItemDto from(Color color) {
         return CommonFilterItemDto.builder()
-                .id(colorType.getId())
-                .name(colorType.getName())
+                .id(color.getId().intValue())
+                .name(color.getColorName())
                 .build();
     }
 

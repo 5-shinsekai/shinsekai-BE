@@ -3,14 +3,11 @@ package com.example.shinsekai.category.application;
 import com.example.shinsekai.category.dto.in.MainCategoryCreateRequestDto;
 import com.example.shinsekai.category.dto.in.MainCategoryUpdateRequestDto;
 import com.example.shinsekai.category.dto.out.CommonFilterItemDto;
-import com.example.shinsekai.category.entity.PriceRange;
 import com.example.shinsekai.category.infrastructure.PriceRangeRepository;
+import com.example.shinsekai.category.infrastructure.ProductCategoryListCustomRepoImpl;
 import com.example.shinsekai.common.config.CategoryFilterConfig;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
-import com.example.shinsekai.common.enums.ColorType;
 import com.example.shinsekai.common.enums.FilterType;
-import com.example.shinsekai.common.enums.PriceRangeType;
-import com.example.shinsekai.common.enums.SizeType;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.category.dto.out.CategoryFilterResponseDto;
 import com.example.shinsekai.category.dto.out.SubCategoryResponseDto;
@@ -26,7 +23,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +35,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
     private final SubCategoryRepository subCategoryRepository;
     private final SeasonRepository seasonRepository;
     private final PriceRangeRepository priceRangeRepository;
+    private final ProductCategoryListCustomRepoImpl productCategoryListCustomRepository;
 
     private final CategoryFilterConfig categoryFilterConfig;
 
@@ -91,7 +88,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
     @Transactional
     public CategoryFilterResponseDto getCategoryFilter(Long mainCategoryId) {
 
-        Set<FilterType> filterTypes = categoryFilterConfig.getFilterTypesForCategory(mainCategoryId);
+//        Set<FilterType> filterTypes = categoryFilterConfig.getFilterTypesForCategory(mainCategoryId);
 
         List<SubCategoryResponseDto> subCategories = subCategoryRepository
                 .findAllByMainCategoryIdAndIsDeletedFalse(mainCategoryId, Sort.by(Sort.Order.asc("name")))
@@ -100,13 +97,19 @@ public class MainCategoryServiceImpl implements MainCategoryService {
         List<CommonFilterItemDto> seasons = seasonRepository.findByEndDateAfter(LocalDate.now())
                 .stream().map(CommonFilterItemDto::from).toList();
 
-        List<CommonFilterItemDto> sizes = filterTypes.contains(FilterType.SIZE)
-                ? Arrays.stream(SizeType.values()).map(CommonFilterItemDto::from).toList()
-                : List.of();
+//        List<CommonFilterItemDto> sizes = filterTypes.contains(FilterType.SIZE)
+//                ? Arrays.stream(SizeType.values()).map(CommonFilterItemDto::from).toList()
+//                : List.of();
 
-        List<CommonFilterItemDto> colors = filterTypes.contains(FilterType.COLOR)
-                ? Arrays.stream(ColorType.values()).map(CommonFilterItemDto::from).toList()
-                : List.of();
+        List<CommonFilterItemDto> sizes = productCategoryListCustomRepository.findSizesByMainCategory(mainCategoryId)
+                .stream().map(CommonFilterItemDto::from).toList();
+
+//        List<CommonFilterItemDto> colors = filterTypes.contains(FilterType.COLOR)
+//                ? Arrays.stream(ColorType.values()).map(CommonFilterItemDto::from).toList()
+//                : List.of();
+
+        List<CommonFilterItemDto> colors = productCategoryListCustomRepository.findColorsByMainCategory(mainCategoryId)
+                .stream().map(CommonFilterItemDto::from).toList();
 
         List<CommonFilterItemDto> priceRange = priceRangeRepository.findAll()
                 .stream().map(CommonFilterItemDto::from)
