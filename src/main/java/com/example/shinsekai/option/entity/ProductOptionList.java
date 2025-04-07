@@ -20,13 +20,14 @@ public class ProductOptionList {
 
     private Long colorId;
 
-    @Column(name = "product_code", nullable = false, length = 50, unique = true, updatable = false)
+    @Column(name = "product_code", nullable = false, length = 50, updatable = false)
     private String productCode;
 
     @Column(name = "option_price", nullable = false)
     private int optionPrice;
 
     @Column(name = "option_status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private OptionStatus optionStatus;
 
     @Column(name = "stock_count")
