@@ -52,6 +52,11 @@ public enum BaseResponseStatus {
     DUPLICATED_NICKNAME(HttpStatus.CONFLICT, false, 2010, "이미 사용중인 닉네임입니다."),
     SAME_NICKNAME(HttpStatus.CONFLICT, false, 2011, "현재 사용중인 닉네임입니다."),
     INVALID_EMAIL_ADDRESS(HttpStatus.BAD_REQUEST, false, 2012, "이메일을 다시 확인해주세요."),
+    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, false, 2013, "잘못된 인증코드입니다."),
+    FAILED_TO_SEND_EMAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 2014, "이메일 전송에 실패했습니다."),
+    DUPLICATED_PASSWORD(HttpStatus.CONFLICT, false, 2015, "기존 패스워드와 동일합니다."),
+    FAILED_TO_SIGN_UP(HttpStatus.BAD_REQUEST, false, 2016, "회원가입에 실패했습니다."),
+    INVALID_PASSWORD_FORMAT(HttpStatus.CONFLICT, false, 2015, "잘못된 형식의 비밀번호입니다."),
 
     /**
      * 3000: product service error

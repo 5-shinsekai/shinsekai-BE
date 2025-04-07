@@ -10,3 +10,24 @@ jwt:
   token:
     access-expire-time: 1800000
     refresh-expire-time: 1209600000
+
+redis:
+  host: localhost        # Redis 서버의 호스트
+  port: 6379             # Redis 기본 포트
+  password: ""           # 패스워드가 있을 경우 추가
+  timeout: 3000          # 연결 타임아웃
+  jedis:
+    pool:
+      max-active: 10     # 최대 연결 수
+      max-idle: 5        # 최대 유휴 연결 수
+      max-wait: 2000     # 최대 대기 시간
+
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: ${MAIL_USERNAME}
+  password: ${MAIL_PASSWORD}
+  properties:
+    auth: true
+    starttls: true
+    sslTrust: smtp.gmail.com

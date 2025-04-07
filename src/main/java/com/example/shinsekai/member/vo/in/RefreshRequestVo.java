@@ -1,4 +1,4 @@
-package com.example.shinsekai.member.vo;
+package com.example.shinsekai.member.vo.in;
 
 import lombok.Getter;
 import lombok.ToString;

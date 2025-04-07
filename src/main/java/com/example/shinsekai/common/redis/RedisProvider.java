@@ -27,6 +27,45 @@ public class RedisProvider {
         );
     }
 
+    public String getEmailVerificationCodeForLoginId(String email) {
+        return redisTemplate.opsForValue().get("EMAIL_ID:"+email);
+    }
+
+    public void setEmailVerificationCodeForLoginId(String email, String eMailVerificationCode, long expirationTime) {
+        redisTemplate.opsForValue().set(
+                "EMAIL_ID:"+email,
+                eMailVerificationCode,
+                expirationTime,
+                TimeUnit.MILLISECONDS
+        );
+    }
+
+    public String getEmailVerificationCodeForPw(String email) {
+        return redisTemplate.opsForValue().get("EMAIL_PW:"+email);
+    }
+
+    public void setEmailVerificationCodeForPw(String email, String eMailVerificationCode, long expirationTime) {
+        redisTemplate.opsForValue().set(
+                "EMAIL_PW:"+email,
+                eMailVerificationCode,
+                expirationTime,
+                TimeUnit.MILLISECONDS
+        );
+    }
+
+    public String getEmailVerificationCodeForSignUp(String email) {
+        return redisTemplate.opsForValue().get("EMAIL_SU:"+email);
+    }
+
+    public void setEmailVerificationCodeForSignUp(String email, String eMailVerificationCode, long expirationTime) {
+        redisTemplate.opsForValue().set(
+                "EMAIL_SU:"+email,
+                eMailVerificationCode,
+                expirationTime,
+                TimeUnit.MILLISECONDS
+        );
+    }
+
     public Long getExpire(String key) {
         return redisTemplate.getExpire(key, TimeUnit.MILLISECONDS);
     }
