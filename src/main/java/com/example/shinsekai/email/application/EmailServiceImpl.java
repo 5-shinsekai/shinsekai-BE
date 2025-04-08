@@ -1,9 +1,9 @@
-package com.example.shinsekai.common.email.application;
+package com.example.shinsekai.email.application;
 
-import com.example.shinsekai.common.email.entity.EmailType;
-import com.example.shinsekai.common.email.dto.in.EmailVerificationRequestDto;
-import com.example.shinsekai.common.email.dto.in.VerificationCodeRequestDto;
-import com.example.shinsekai.common.email.properties.MailProperties;
+import com.example.shinsekai.email.entity.EmailType;
+import com.example.shinsekai.email.dto.in.EmailVerificationRequestDto;
+import com.example.shinsekai.email.dto.in.VerificationCodeRequestDto;
+import com.example.shinsekai.email.properties.MailProperties;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.redis.RedisProvider;

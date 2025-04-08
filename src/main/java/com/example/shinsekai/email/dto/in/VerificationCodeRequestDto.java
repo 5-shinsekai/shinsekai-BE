@@ -1,7 +1,7 @@
-package com.example.shinsekai.common.email.dto.in;
+package com.example.shinsekai.email.dto.in;
 
-import com.example.shinsekai.common.email.entity.EmailType;
-import com.example.shinsekai.common.email.vo.VerificationCodeVo;
+import com.example.shinsekai.email.entity.EmailType;
+import com.example.shinsekai.email.vo.VerificationCodeVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;

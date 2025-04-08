@@ -1,4 +1,4 @@
-package com.example.shinsekai.common.email.entity;
+package com.example.shinsekai.email.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

@@ -1,4 +1,4 @@
-package com.example.shinsekai.common.email.properties;
+package com.example.shinsekai.email.properties;
 
 import lombok.Getter;
 import lombok.Setter;
