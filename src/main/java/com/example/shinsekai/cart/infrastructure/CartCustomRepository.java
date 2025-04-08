@@ -13,4 +13,5 @@ public interface CartCustomRepository {
     Optional<Cart> findCartByProductOptionAndEngraving(String memberUuid, String productCode, Long optionId, String engravingMessage);
     public boolean existsByMemberUuidAndProductCode(String memberUuid, String productCode);
     List<Cart> findByMemberUuid(String memberUuid);
+    Optional<Cart> findCartByProductAndOption(String memberUuid, String productCode, Long productOptionListId);
 }
