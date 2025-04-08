@@ -2,20 +2,20 @@ package com.example.shinsekai.purchase.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Entity
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class PurchaseProductList extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(updatable = false)
-    private Long optionId;
+    @Column(updatable = false, nullable = false)
+    private Long productOptionId;
 
     @Column(updatable = false, nullable = false)
     private String productCode;
