@@ -80,13 +80,13 @@ public class BaseExceptionHandler {
                 return new ResponseEntity<>(response, response.httpStatus());
             }
 
-            // 특정 필드인 경우만 INVALID_BIRTH_FORMAT으로 반환
-            if (e.getMessage() != null && e.getMessage().contains("LocalDate")) {
+            // LocalDate인 필드인 경우만 INVALID_BIRTH_FORMAT으로 반환
+            if (cause.getMessage() != null && cause.getMessage().contains("LocalDate")) {
                 BaseResponseEntity<Void> response = new BaseResponseEntity<>(BaseResponseStatus.INVALID_DATE_FORMAT);
                 return new ResponseEntity<>(response, response.httpStatus());
-            }else {
-                cause = cause.getCause();  // 깊이 파고들기
             }
+
+            cause = cause.getCause();  // 깊이 파고들기
         }
 
         // BaseException이 아닌 경우는 일반 INVALID_INPUT으로 처리
