@@ -65,4 +65,12 @@ public class Cart extends BaseEntity {
     public void increaseQuantity(int i) {
         this.quantity += i;
     }
+
+    public boolean getIsFrozen() {
+        return isFrozen;
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
 }
