@@ -10,11 +10,13 @@ import lombok.ToString;
 @Builder
 @ToString
 public class EmailVerificationRequestDto {
+    private String name;
     private String email;
     private EmailType mailType;
 
     public static EmailVerificationRequestDto from(EmailVerificationVo emailVerificationVo) {
         return EmailVerificationRequestDto.builder()
+                .name(emailVerificationVo.getName())
                 .email(emailVerificationVo.getEmail())
                 .mailType(emailVerificationVo.getMailType())
                 .build();

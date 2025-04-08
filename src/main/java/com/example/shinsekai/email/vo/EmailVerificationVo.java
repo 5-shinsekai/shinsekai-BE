@@ -8,6 +8,7 @@ import lombok.ToString;
 @ToString
 public class EmailVerificationVo {
 
+    private String name;
     private String email;
     private EmailType mailType;
 }

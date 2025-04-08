@@ -15,9 +15,12 @@ import com.example.shinsekai.member.vo.in.SignUpRequestVo;
 import com.example.shinsekai.member.vo.out.FindIdResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequestMapping("/api/v1/member")
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +31,8 @@ public class MemberController {
 
     @Operation(summary = "회원 가입")
     @PostMapping("/sign-up")
-    public BaseResponseEntity<Void> signUp(@RequestBody SignUpRequestVo signUpRequestVo) {
+    public BaseResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequestVo signUpRequestVo) {
+        log.info("signUpRequestVo {}", signUpRequestVo);
         memberService.signUp(SignUpRequestDto.from(signUpRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
