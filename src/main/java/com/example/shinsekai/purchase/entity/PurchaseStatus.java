@@ -25,6 +25,6 @@ public enum PurchaseStatus {
                 return purchaseStatus;
             }
         }
-        throw new IllegalArgumentException("Unknown value: " + value);
+        throw new IllegalArgumentException("주문상태 오류: " + value);
     }
 }

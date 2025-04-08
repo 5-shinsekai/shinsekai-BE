@@ -1,8 +1,10 @@
 package com.example.shinsekai.payment.application;
 
 import com.example.shinsekai.payment.dto.in.PaymentRequestDto;
+import com.example.shinsekai.payment.entity.Payment;
+import com.example.shinsekai.purchase.dto.in.PurchaseTemporaryRequestDto;
 
 public interface PaymentService {
-    String handlePaymentSuccess(String purchaseId, String paymentKey, int amount);
-    void createPayment(PaymentRequestDto paymentRequestDto);
+    void createPayment(Payment payment);
+    void deletePayment(PaymentRequestDto paymentRequestDto);
 }

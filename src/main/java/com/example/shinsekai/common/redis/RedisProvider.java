@@ -3,6 +3,7 @@ package com.example.shinsekai.common.redis;
 import com.example.shinsekai.purchase.dto.in.PurchaseTemporaryRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -79,17 +80,27 @@ public class RedisProvider {
         return redisTemplate.delete(key);
     }
 
-
-    public void setTemporaryPayment(String orderId, PurchaseTemporaryRequestDto purchaseTemporaryRequestDto, long expirationTime) {
+    @Builder
+    public String setTemporaryPayment(String orderId, PurchaseTemporaryRequestDto purchaseTemporaryRequestDto, long expirationTime) {
         try {
             String json = objectMapper.writeValueAsString(purchaseTemporaryRequestDto); // 객체 → JSON 변환
-            redisTemplate.opsForValue().set(orderId, json, expirationTime, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set(orderId, json, expirationTime, TimeUnit.MINUTES);
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize PendingPayment: {}", e.getMessage());
         }
+        return orderId;
     }
 
-    public String getTemporaryPayment(String orderId) {
-        return redisTemplate.opsForValue().get(orderId);
+    public PurchaseTemporaryRequestDto getTemporaryPayment(String orderId) {
+        String json = redisTemplate.opsForValue().get(orderId);
+        if (json == null) return null;
+
+        try {
+            return objectMapper.readValue(json, PurchaseTemporaryRequestDto.class);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to deserialize JSON to PurchaseTemporaryRequestDto: {}", e.getMessage());
+            return null;
+        }
     }
+
 }

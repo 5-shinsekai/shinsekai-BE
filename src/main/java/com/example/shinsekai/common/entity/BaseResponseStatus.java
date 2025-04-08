@@ -119,7 +119,26 @@ public enum BaseResponseStatus {
     NO_EXIST_STARBUCKS_CARD(HttpStatus.NOT_FOUND, false, 10002, "카드 정보가 존재하지 않습니다."),
     INVALID_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10003, "카드 정보가 일치하지 않습니다."),
     NO_CREATION_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10004, "카드 생성 중 오류가 발생했습니다."),
-    NO_DELETE_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10005, "카드 삭제 중 오류가 발생했습니다.");
+    NO_DELETE_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10005, "카드 삭제 중 오류가 발생했습니다."),
+
+    // 결제
+    PAYMENT_VERIFICATION_FAILED(HttpStatus.BAD_REQUEST, false, 10010, "결제 인증에 실패했습니다."),
+    INVALID_ORDER_ID(HttpStatus.BAD_REQUEST, false, 10011, "유효하지 않은 주문번호입니다."),
+    AMOUNT_MISMATCH(HttpStatus.CONFLICT, false, 10012, "결제 금액이 일치하지 않습니다."),
+    TEMPORARY_PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, false, 10013, "임시 결제 정보가 존재하지 않습니다."),
+    PAYMENT_APPROVAL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, 10014, "결제 승인에 실패했습니다."),
+    PAYMENT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, 10015, "결제 정보 저장에 실패했습니다."),
+    PAYMENT_CANCELLED(HttpStatus.BAD_REQUEST, false, 10016, "사용자에 의해 결제가 취소되었습니다."),
+
+    //구매
+    PURCHASE_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, 20010, "구매 정보 생성에 실패했습니다."),
+    PURCHASE_NOT_FOUND(HttpStatus.NOT_FOUND, false, 20011, "해당 구매 정보를 찾을 수 없습니다."),
+    PURCHASE_PRODUCT_LIST_EMPTY(HttpStatus.BAD_REQUEST, false, 20012, "구매 상품 목록이 비어 있습니다."),
+    COUPON_INVALID(HttpStatus.BAD_REQUEST, false, 20015, "유효하지 않은 쿠폰입니다."),
+    GIFT_CERTIFICATION_INVALID(HttpStatus.BAD_REQUEST, false, 20016, "유효하지 않은 기프트 인증 번호입니다."),
+    PURCHASE_DUPLICATE(HttpStatus.CONFLICT, false, 20019, "이미 처리된 구매 요청입니다.");
+
+
 
     private final HttpStatusCode httpStatusCode;
     private final boolean isSuccess;

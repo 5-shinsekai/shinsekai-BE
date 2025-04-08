@@ -18,11 +18,11 @@ public class Purchase extends BaseEntity {
     @Column(unique = true, nullable = false, updatable = false)
     private String purchaseCode;
 
+    @Column(unique = true, nullable = false, updatable = false)
+    private String paymentCode;
+
     @Column( nullable = false, updatable = false)
     private String memberUuid;
-
-    @Column(nullable = false, updatable = false)
-    private String payCode;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,14 +50,14 @@ public class Purchase extends BaseEntity {
 
 
     @Builder
-    public Purchase(Long id, String purchaseCode, String memberUuid, String payCode,
+    public Purchase(Long id, String purchaseCode, String memberUuid, String paymentCode,
                     PurchaseStatus purchaseStatus, String cancelReason, String receiver,
                     String address, String giftCertificateUuid, String couponUuid,
                     double shipmentFee, double productTotalPrice) {
         this.id = id;
         this.purchaseCode = purchaseCode;
         this.memberUuid = memberUuid;
-        this.payCode = payCode;
+        this.paymentCode = paymentCode;
         this.purchaseStatus = purchaseStatus;
         this.cancelReason = cancelReason;
         this.receiver = receiver;
