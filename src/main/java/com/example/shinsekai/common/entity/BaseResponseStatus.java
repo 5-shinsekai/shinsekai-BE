@@ -78,18 +78,16 @@ public enum BaseResponseStatus {
     NO_EXIST_PRODUCT(HttpStatus.NOT_FOUND, false, 3001, "존재하지 않는 상품입니다"),
     NO_EXIST_OPTION(HttpStatus.NOT_FOUND, false, 3002, "존재하지 않는 옵션입니다"),
     NO_EXIST_CATEGORY(HttpStatus.NOT_FOUND, false, 3003, "존재하지 않는 카테고리입니다"),
-    NO_EXIST_PRODUCT_CATEGORY(HttpStatus.NOT_FOUND, false, 30010, "존재하지 않는 상품 카테고리입니다"),
 
     DUPLICATED_PRODUCT(HttpStatus.CONFLICT, false, 3004, "이미 등록된 상품입니다"),
     DUPLICATED_OPTION(HttpStatus.CONFLICT, false, 3005, "이미 등록된 옵션입니다"),
     DUPLICATED_CATEGORY(HttpStatus.CONFLICT, false, 3006, "이미 등록된 카테고리입니다"),
 
     NO_EXIST_OPTIONS_IN_PRODUCT(HttpStatus.NOT_FOUND, false, 3007, "해당 상품에 옵션이 존재하지 않습니다"),
-    NOT_ENOUGH_STOCK(HttpStatus.CONFLICT, false, 3008, "해당 상품에 재고가 충분하지 않습니다"),
 
     // Cart
-    CART_PRODUCT_KIND_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3108, "장바구니에 담을 수 있는 상품 종류는 최대 20개까지입니다"),
-    CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3109, "해당 상품은 장바구니에 담을 수 있는 수량을 초과했습니다."),
+    CART_PRODUCT_KIND_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3008, "장바구니에 담을 수 있는 상품 종류는 최대 20개까지입니다"),
+    CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3009, "해당 상품은 장바구니에 담을 수 있는 수량을 초과했습니다."),
 
     /**
      * 4000: comment service error
@@ -134,7 +132,6 @@ public enum BaseResponseStatus {
     INVALID_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10003, "카드 정보가 일치하지 않습니다."),
     NO_CREATION_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10004, "카드 생성 중 오류가 발생했습니다."),
     NO_DELETE_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10005, "카드 삭제 중 오류가 발생했습니다."),
-    NO_CHARGE_STARBUCKS_CARD(HttpStatus.NOT_FOUND, false, 10006, "카드 잔액이 부족합니다."),
 
     // 결제
     PAYMENT_VERIFICATION_FAILED(HttpStatus.BAD_REQUEST, false, 10010, "결제 인증에 실패했습니다."),
@@ -145,36 +142,15 @@ public enum BaseResponseStatus {
     PAYMENT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, 10015, "결제 정보 저장에 실패했습니다."),
     PAYMENT_CANCELLED(HttpStatus.BAD_REQUEST, false, 10016, "사용자에 의해 결제가 취소되었습니다."),
 
-    // 배송지
-    DUPLICATED_ADDRESS(HttpStatus.CONFLICT, false, 10020, "기존 배송지와 동일합니다."),
-    FAILED_TO_SAVE_ADDRESS(HttpStatus.INTERNAL_SERVER_ERROR, false, 10021, "배송지 저장에 실패헀습니다."),
-    NO_EXIST_ADDRESS(HttpStatus.NOT_FOUND, false, 10022, "존재하지 않는 배송지입니다."),
-    INVALID_ZIP_NO_FORMAT(HttpStatus.BAD_REQUEST, false, 10023, "잘못된 형식의 우편번호입니다."),
-    INVALID_ADDRESS_NICKNAME_FORMAT(HttpStatus.BAD_REQUEST, false, 10024, "잘못된 형식의 배송지 별칭입니다."),
-    INVALID_DELIVERY_MEMO_FORMAT(HttpStatus.BAD_REQUEST, false, 10025, "잘못된 형식의 배송 메모입니다."),
-    INVALID_TOTAL_ADDRESS_FORMAT(HttpStatus.BAD_REQUEST, false, 10026, "잘못된 형식의 주소입니다."),
-    INVALID_MEMBER_UUID(HttpStatus.BAD_REQUEST, false, 10027, "잘못된 형식의 사용자 UUID 입니다."),
-    INVALID_ADDRESS_UUID(HttpStatus.BAD_REQUEST, false, 10028, "잘못된 형식의 배송지 UUID 입니다."),
-    ADDRESS_QUANTITY_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 10029, "저장 가능한 배송지 개수를 초과했습니다."),
-    FAILED_TO_DELETE_MAIN_ADDRESS(HttpStatus.BAD_REQUEST, false, 10030, "기본 배송지는 삭제가 불가능합니다."),
-    
-    // 약관
-    NO_EXIST_AGREEMENT(HttpStatus.NOT_FOUND, false, 10040, "존재하지 않는 약관입니다."),
-    FAILED_TO_DELETE_AGREEMENT(HttpStatus.BAD_REQUEST, false, 10041, "삭제할 수 없는 약관입니다."),
-
     //구매
     PURCHASE_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, 20010, "구매 정보 생성에 실패했습니다."),
     PURCHASE_NOT_FOUND(HttpStatus.NOT_FOUND, false, 20011, "해당 구매 정보를 찾을 수 없습니다."),
     PURCHASE_PRODUCT_LIST_EMPTY(HttpStatus.BAD_REQUEST, false, 20012, "구매 상품 목록이 비어 있습니다."),
     COUPON_INVALID(HttpStatus.BAD_REQUEST, false, 20015, "유효하지 않은 쿠폰입니다."),
     GIFT_CERTIFICATION_INVALID(HttpStatus.BAD_REQUEST, false, 20016, "유효하지 않은 기프트 인증 번호입니다."),
-    PURCHASE_DUPLICATE(HttpStatus.NOT_FOUND, false, 20019, "이미 처리된 구매 요청입니다."),
+    PURCHASE_DUPLICATE(HttpStatus.CONFLICT, false, 20019, "이미 처리된 구매 요청입니다.");
 
-    //시즌
-    NO_EXIST_SEASON(HttpStatus.NOT_FOUND, false, 20030, "시즌 정보가 존재하지 않습니다."),
 
-    // 기획전(이벤트)
-    NO_EXIST_EVENT(HttpStatus.NOT_FOUND, false, 20040, "기획전 정보가 존재하지 않습니다.");
 
     private final HttpStatusCode httpStatusCode;
     private final boolean isSuccess;
