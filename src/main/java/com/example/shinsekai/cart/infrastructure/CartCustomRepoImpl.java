@@ -104,4 +104,21 @@ public class CartCustomRepoImpl implements CartCustomRepository {
 
         return result != null;
     }
+
+    public Optional<Cart> findCartByProductAndOption(String memberUuid, String productCode, Long productOptionListId) {
+        QCart cart = QCart.cart;
+        BooleanBuilder builder = new BooleanBuilder();
+
+        builder.and(cart.memberUuid.eq(memberUuid));
+        builder.and(cart.productCode.eq(productCode));
+        builder.and(cart.productOptionListId.eq(productOptionListId));
+        builder.and(cart.isDeleted.isFalse());
+
+        Cart result = jpaQueryFactory
+                .selectFrom(cart)
+                .where(builder)
+                .fetchOne();
+
+        return Optional.ofNullable(result);
+    }
 }
