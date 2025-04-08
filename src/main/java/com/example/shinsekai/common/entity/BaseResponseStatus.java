@@ -87,6 +87,7 @@ public enum BaseResponseStatus {
     // Cart
     CART_PRODUCT_KIND_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3008, "장바구니에 담을 수 있는 상품 종류는 최대 20개까지입니다"),
     CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3009, "해당 상품은 장바구니에 담을 수 있는 수량을 초과했습니다."),
+    INVALID_CART_ACCESS(HttpStatus.BAD_REQUEST, false, 3010,"유효하지 않거나 접근 권한이 없는 장바구니 항목입니다."),
 
     /**
      * 4000: comment service error

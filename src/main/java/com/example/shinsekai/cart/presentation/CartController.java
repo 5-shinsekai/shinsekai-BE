@@ -2,7 +2,9 @@ package com.example.shinsekai.cart.presentation;
 
 import com.example.shinsekai.cart.application.CartServiceImpl;
 import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
+import com.example.shinsekai.cart.dto.in.CartDeleteRequestDto;
 import com.example.shinsekai.cart.vo.in.CartCreateRequestVo;
+import com.example.shinsekai.cart.vo.in.CartDeleteRequestVo;
 import com.example.shinsekai.cart.vo.out.CartGetResponseVo;
 import com.example.shinsekai.cart.vo.out.CartGroupedByProductTypeVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
@@ -34,8 +36,23 @@ public class CartController {
     @Operation(summary = "장바구니 조회")
     @GetMapping
     public BaseResponseEntity<CartGroupedByProductTypeVo> getAllCarts(HttpServletRequest request){
-
         return new BaseResponseEntity<>(cartService.getAllCarts(request.getHeader("Authorization").substring(7))
                 .toVo());
     }
+
+    @Operation(summary = "장바구니 삭제")
+    @DeleteMapping
+    public BaseResponseEntity<Void> deleteCart(HttpServletRequest request, List<CartDeleteRequestVo> cartDeleteRequestVoList){
+        cartService.deleteCart(request.getHeader("Authorization").substring(7),
+                cartDeleteRequestVoList.stream().map(CartDeleteRequestDto::from).toList());
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+//    @Operation(summary = "장바구니 수정")
+//    @GetMapping
+//    public BaseResponseEntity<> updateCart(HttpServletRequest request){
+//
+//        return new BaseResponseEntity<>(cartService.getAllCarts(request.getHeader("Authorization").substring(7))
+//                .toVo());
+//    }
 }
