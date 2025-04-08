@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 
+import static com.example.shinsekai.email.entity.EmailType.CHANGE_PASSWORD;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -41,12 +43,17 @@ public class EmailServiceImpl implements EmailService{
      */
     @Override
     public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto) {
-        Member member = memberRepository.findByEmail(emailVerificationRequestDto.getEmail())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
-        verificationCode = generateVerificationCode();
-        sendEmail(member, this.setSubject(emailVerificationRequestDto.getMailType()));
+        // 메일 타입 꺼내기
+        EmailType mailType = emailVerificationRequestDto.getMailType();
+        
+        // 메일 타입에 따른 데이터 셋팅
+        switch (mailType) {
+            case SIGN_UP: sendEmailForSignUp(emailVerificationRequestDto); break;
+            default: sendEmailForMember(emailVerificationRequestDto);
+        }
 
+        // 메일 타입에 따른 redis 저장
         switch (emailVerificationRequestDto.getMailType()) {
             case FIND_LOGIN_ID -> {
                 redisProvider.setEmailVerificationCodeForLoginId(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
@@ -54,6 +61,10 @@ public class EmailServiceImpl implements EmailService{
             }
             case CHANGE_PASSWORD -> {
                 redisProvider.setEmailVerificationCodeForPw(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
+                break;
+            }
+            case SIGN_UP -> {
+                redisProvider.setEmailVerificationCodeForSignUp(emailVerificationRequestDto.getEmail(), verificationCode, FIVE_MINUTE);
                 break;
             }
             default -> {
@@ -73,18 +84,33 @@ public class EmailServiceImpl implements EmailService{
         memberRepository.findByEmail(verificationCodeRequestDto.getEmail())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
-        // 아이디 찾기
-        if (verificationCodeRequestDto.getMailType().equals(EmailType.FIND_LOGIN_ID)) {
-            if (!verificationCodeRequestDto.getCode()
-                    .equals(redisProvider.getEmailVerificationCodeForLoginId(verificationCodeRequestDto.getEmail()))) {
-                throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+        switch (verificationCodeRequestDto.getMailType()) {
+            case FIND_LOGIN_ID -> {
+                if (!verificationCodeRequestDto.getCode()
+                        .equals(redisProvider.getEmailVerificationCodeForLoginId(
+                                verificationCodeRequestDto.getEmail()
+                        ))) {
+                    throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+                }
             }
-        }
-        // 비밀번호 찾기
-        else if (verificationCodeRequestDto.getMailType().equals(EmailType.CHANGE_PASSWORD)) {
-            if (!verificationCodeRequestDto.getCode()
-                    .equals(redisProvider.getEmailVerificationCodeForPw(verificationCodeRequestDto.getEmail()))) {
-                throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+            case CHANGE_PASSWORD -> {
+                if (!verificationCodeRequestDto.getCode()
+                        .equals(redisProvider.getEmailVerificationCodeForPw(
+                                verificationCodeRequestDto.getEmail()
+                        ))) {
+                    throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+                }
+            }
+            case SIGN_UP -> {
+                if (!verificationCodeRequestDto.getCode()
+                        .equals(redisProvider.getEmailVerificationCodeForSignUp(
+                                verificationCodeRequestDto.getEmail()
+                        ))) {
+                    throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+                }
+            }
+            default -> {
+                return;
             }
         }
 
@@ -93,20 +119,21 @@ public class EmailServiceImpl implements EmailService{
     /**
      * 이메일을 실제로 전송하며, 전송 성공 시 Redis에 인증코드를 저장
      *
-     * @param member  사용자 정보
-     * @param subject 이메일 제목
+     * @param email    수신자 이메일
+     * @param name     수신자 이름 
+     * @param subject  이메일 제목
      * @throws BaseException 이메일 전송 실패 시 예외 발생
      */
-    private void sendEmail(Member member, String subject) {
+    private void sendEmail(String email, String name, String subject) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(new InternetAddress(mailProperties.getUsername(), "스타벅스 스토어", "UTF-8"));
-            helper.setTo(member.getEmail());
+            helper.setTo(email);
             helper.setSubject(subject);
 
             String html
-                    = verificationEmailBuilder.buildVerificationEmail(member.getName(), verificationCode);
+                    = verificationEmailBuilder.buildVerificationEmail(name, verificationCode);
 
             helper.setText(html, true);
 
@@ -115,6 +142,24 @@ public class EmailServiceImpl implements EmailService{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void sendEmailForMember(EmailVerificationRequestDto emailVerificationRequestDto) {
+        Member member = memberRepository.findByEmail(emailVerificationRequestDto.getEmail())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
+
+        verificationCode = generateVerificationCode();
+        sendEmail(member.getEmail(),
+                member.getName(),
+                this.setSubject(emailVerificationRequestDto.getMailType()));
+    }
+
+    private void sendEmailForSignUp(EmailVerificationRequestDto emailVerificationRequestDto) {
+        verificationCode = generateVerificationCode();
+
+        sendEmail(emailVerificationRequestDto.getEmail(),
+                emailVerificationRequestDto.getName(),
+                this.setSubject(emailVerificationRequestDto.getMailType()));
     }
 
     /**
@@ -130,6 +175,8 @@ public class EmailServiceImpl implements EmailService{
                 subject = "아이디 찾기"; break;
             case CHANGE_PASSWORD:
                 subject = "비밀번호 변경"; break;
+            case SIGN_UP:
+                subject = "회원가입"; break;
             default:
                 subject = "";
         }
