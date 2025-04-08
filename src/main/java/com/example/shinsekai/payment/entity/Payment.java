@@ -2,43 +2,45 @@ package com.example.shinsekai.payment.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Payment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true, nullable = false, updatable = false)
-    private String payCode;
+    private String paymentCode;
+
+    @Column(unique = true, nullable = false, updatable = false)
+    private String paymentKey;
 
     @Column(nullable = false, updatable = false)
     private String memberUuid;
 
     @Column(nullable = false, updatable = false)
-    private String payMethod;
+    private String paymentMethod;
 
     @Column(nullable = false, updatable = false)
-    private double payPrice;
+    private double paymentPrice;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime payTimestamp;
+    private String purchaseName;
+    private String status;
+    private String receiptUrl;
+    private LocalDateTime approvedAt;
 
+    //Card 정보
+    private String cardName;
+    private String cardNumber;
+    private String approveNo;
+    private boolean isInterestFree;
+    private int installmentPlanMonths;
+    private boolean useCardPoint;
 
-    @Builder
-    public Payment(Long id, String payCode, String memberUuid, String payMethod, double payPrice, LocalDateTime payTimestamp) {
-        this.id = id;
-        this.payCode = payCode;
-        this.memberUuid = memberUuid;
-        this.payMethod = payMethod;
-        this.payPrice = payPrice;
-        this.payTimestamp = payTimestamp;
-    }
 }

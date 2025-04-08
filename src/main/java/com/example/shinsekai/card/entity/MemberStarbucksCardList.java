@@ -7,18 +7,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class MemberStarbucksCardList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String memberStarbucksCardUuid;
     private String memberUuid;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private StarbucksCard starbucksCard;

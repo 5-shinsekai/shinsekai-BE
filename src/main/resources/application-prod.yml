@@ -35,3 +35,6 @@ redis:
       max-idle: 5        # 최대 유휴 연결 수
       max-wait: 2000     # 최대 대기 시간
 
+toss:
+  secret-key: ${TOSS_SECRET_KEY}
+  confirm-url: https://api.tosspayments.com/v1/payments/confirm
