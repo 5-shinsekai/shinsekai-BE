@@ -6,40 +6,30 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
-@Entity
 @Getter
-@Builder
 @NoArgsConstructor
+@Entity
 public class MainCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String name;
 
     @Lob
     @Column(nullable = false)
     private String categoryImage;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String categoryImageAltText;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean isDeleted = false;
-
-    public MainCategory(Long id, String name, String categoryImage, String categoryImageAltText, boolean isDeleted) {
+    @Builder
+    public MainCategory(Long id, String name, String categoryImage, String categoryImageAltText) {
         this.id = id;
         this.name = name;
         this.categoryImage = categoryImage;
         this.categoryImageAltText = categoryImageAltText;
-        this.isDeleted = isDeleted;
-    }
-
-    public void setDeleted () {
-        this.isDeleted = true;
     }
 }

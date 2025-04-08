@@ -7,13 +7,10 @@ import lombok.Getter;
 public class SubCategoryCreateRequestVo {
     private String name;
     private Long mainCategoryId;
-    private boolean isDeleted;
 
     @Builder
-    public SubCategoryCreateRequestVo(String name, Long mainCategoryId, boolean isDeleted) {
+    public SubCategoryCreateRequestVo(String name, Long mainCategoryId) {
         this.name = name;
         this.mainCategoryId = mainCategoryId;
-        this.isDeleted = isDeleted;
     }
-
 }

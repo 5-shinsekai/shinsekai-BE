@@ -18,9 +18,10 @@ public class SubCategoryUpdateRequestDto {
         this.mainCategoryId = mainCategoryId;
     }
 
-    public static SubCategoryUpdateRequestDto from(SubCategoryUpdateRequestVo subCategoryUpdateRequestVo){
+    public static SubCategoryUpdateRequestDto from(
+            Long categoryId, SubCategoryUpdateRequestVo subCategoryUpdateRequestVo){
         return SubCategoryUpdateRequestDto.builder()
-                .id(subCategoryUpdateRequestVo.getId())
+                .id(categoryId)
                 .name(subCategoryUpdateRequestVo.getName())
                 .mainCategoryId(subCategoryUpdateRequestVo.getMainCategoryId())
                 .build();

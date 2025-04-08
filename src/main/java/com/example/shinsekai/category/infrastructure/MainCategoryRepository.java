@@ -8,6 +8,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface  MainCategoryRepository extends JpaRepository<MainCategory, Long> {
-    Optional<MainCategory> findByIdAndIsDeletedFalse(Long id);
-    List<MainCategory> findAllByIsDeletedFalse(Sort sort);
 }

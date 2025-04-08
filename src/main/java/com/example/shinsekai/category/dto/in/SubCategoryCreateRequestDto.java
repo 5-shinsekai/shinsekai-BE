@@ -9,20 +9,17 @@ import lombok.Getter;
 public class SubCategoryCreateRequestDto {
     private String name;
     private Long mainCategoryId;
-    private boolean isDeleted;
 
     @Builder
-    public SubCategoryCreateRequestDto(String name, Long mainCategoryId, boolean isDeleted) {
+    public SubCategoryCreateRequestDto(String name, Long mainCategoryId) {
         this.name = name;
         this.mainCategoryId = mainCategoryId;
-        this.isDeleted = isDeleted;
     }
 
     public static SubCategoryCreateRequestDto from(SubCategoryCreateRequestVo subCategoryCreateRequestVo){
         return SubCategoryCreateRequestDto.builder()
                 .name(subCategoryCreateRequestVo.getName())
                 .mainCategoryId(subCategoryCreateRequestVo.getMainCategoryId())
-                .isDeleted(subCategoryCreateRequestVo.isDeleted())
                 .build();
     }
 
@@ -30,7 +27,6 @@ public class SubCategoryCreateRequestDto {
         return SubCategory.builder()
                 .name(name)
                 .mainCategoryId(mainCategoryId)
-                .isDeleted(isDeleted)
                 .build();
     }
 }

@@ -4,27 +4,29 @@ import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @Entity
-public class SubCategory extends BaseEntity {
+public class PriceRange extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String name;
 
     @Column(nullable = false)
-    private Long mainCategoryId;
+    private int min;
+
+    @Column(nullable = false)
+    private int max;
 
     @Builder
-    public SubCategory(Long id, String name, Long mainCategoryId) {
+    public PriceRange(int id, String name, int min, int max) {
         this.id = id;
         this.name = name;
-        this.mainCategoryId = mainCategoryId;
+        this.min = min;
+        this.max = max;
     }
 }
