@@ -20,9 +20,9 @@ public class MainCategoryUpdateRequestDto {
         this.categoryImageAltText = categoryImageAltText;
     }
 
-    public static MainCategoryUpdateRequestDto from(MainCategoryUpdateRequestVo mainCategoryUpdateRequestVo){
+    public static MainCategoryUpdateRequestDto from(Long categoryId, MainCategoryUpdateRequestVo mainCategoryUpdateRequestVo){
         return MainCategoryUpdateRequestDto.builder()
-                .id(mainCategoryUpdateRequestVo.getId())
+                .id(categoryId)
                 .name(mainCategoryUpdateRequestVo.getName())
                 .categoryImage(mainCategoryUpdateRequestVo.getCategoryImage())
                 .categoryImageAltText(mainCategoryUpdateRequestVo.getCategoryImageAltText())
