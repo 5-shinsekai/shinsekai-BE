@@ -4,6 +4,7 @@ import com.example.shinsekai.address.dto.in.AddressRequestDto;
 import com.example.shinsekai.address.dto.out.AddressResponseDto;
 import com.example.shinsekai.address.entity.Address;
 import com.example.shinsekai.address.infrastructure.AddressCustomRepoImpl;
+import com.example.shinsekai.address.infrastructure.AddressCustomRepository;
 import com.example.shinsekai.address.infrastructure.AddressRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class AddressServiceImpl implements AddressService{
 
     private final AddressRepository addressRepository;
-    private final AddressCustomRepoImpl addressCustomRepository;
+    private final AddressCustomRepository addressCustomRepository;
 
     @Override
     public List<AddressResponseDto> getAddress(String memberUuid) {
