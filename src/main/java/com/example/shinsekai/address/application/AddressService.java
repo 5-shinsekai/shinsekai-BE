@@ -11,5 +11,5 @@ public interface AddressService {
     void createAddress(AddressRequestDto addressRequestDto);
     void updateAddress(AddressRequestDto addressRequestDto);
     void hardDeleteAddress(String addressUuid);
-    void softDeleteAddress(String addressUuid);
+    void softDeleteAddress(String memberUuid, String addressUuid);
 }

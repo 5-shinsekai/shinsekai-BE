@@ -33,6 +33,7 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
+    @Transactional
     public void createAddress(AddressRequestDto addressRequestDto) {
 
         // 배송지 중복 검사
@@ -60,6 +61,7 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
+    @Transactional
     public void hardDeleteAddress(String addressUuid) {
         Address address = addressRepository.findByAddressUuid(addressUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
@@ -67,9 +69,12 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
-    public void softDeleteAddress(String addressUuid) {
-        Address address = addressRepository.findByAddressUuid(addressUuid)
+    @Transactional
+    public void softDeleteAddress(String memberUuid, String addressUuid) {
+        Address address = addressRepository.findByMemberUuidAndAddressUuid(memberUuid, addressUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
+
+        log.info("address {}", address.toString());
 
         address.setDeleted();
     }

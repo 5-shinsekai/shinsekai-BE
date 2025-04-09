@@ -3,6 +3,7 @@ package com.example.shinsekai.address.presentation;
 import com.example.shinsekai.address.application.AddressService;
 import com.example.shinsekai.address.dto.in.AddressRequestDto;
 import com.example.shinsekai.address.dto.out.AddressResponseDto;
+import com.example.shinsekai.address.vo.AddressDeleteRequestVo;
 import com.example.shinsekai.address.vo.AddressRequestVo;
 import com.example.shinsekai.address.vo.AddressResponseVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
@@ -56,7 +57,8 @@ public class AddressController {
     @Operation(summary = "배송지 삭제")
     @DeleteMapping
     public BaseResponseEntity<Void> deleteAddress(HttpServletRequest request,
-                                                  @Valid @RequestBody AddressRequestVo addressRequestVo) {
-        return null;
+                                                  @Valid @RequestBody AddressDeleteRequestVo addressRequestVo) {
+        addressService.softDeleteAddress(jwtTokenProvider.getAccessToken(request), addressRequestVo.getAddressUuid());
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }

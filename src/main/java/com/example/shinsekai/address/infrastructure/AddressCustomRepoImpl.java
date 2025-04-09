@@ -96,7 +96,12 @@ public class AddressCustomRepoImpl implements AddressCustomRepository{
             builder.and(address.isMainAddress.isFalse());
             update.set(address.isMainAddress, true);
             hasUpdate = true;
+        }else {
+            builder.and(address.isMainAddress.isTrue());
+            update.set(address.isMainAddress, false);
+            hasUpdate = true;
         }
+
         // 메인 휴대전화 번호
         if (addressRequestDto.getFirstPhoneNumber() != null) {
             update.set(address.firstPhoneNumber, addressRequestDto.getFirstPhoneNumber());

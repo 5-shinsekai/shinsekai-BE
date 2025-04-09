@@ -12,5 +12,6 @@ import java.util.Optional;
 @Repository
 public interface AddressRepository extends JpaRepository<Address,Long> {
     List<Address> findByMemberUuid(String memberUuid);
+    Optional<Address> findByMemberUuidAndAddressUuid(String memberUuid, String addressUuid);
     Optional<Address> findByAddressUuid(String addressUuid);
 }
