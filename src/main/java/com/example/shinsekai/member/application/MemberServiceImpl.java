@@ -55,11 +55,8 @@ public class MemberServiceImpl implements MemberService {
                     throw new BaseException(BaseResponseStatus.SAME_PHONE);
                 });
 
-        try {
-            memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.FAILED_TO_SIGN_UP);
-        }
+        memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
+
     }
 
     @Override
@@ -71,12 +68,8 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
         }
 
-        try {
-            Authentication authentication = jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
-            return jwtTokenProvider.createToken(authentication, member);
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
-        }
+        Authentication authentication = jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
+        return jwtTokenProvider.createToken(authentication, member);
     }
 
     @Override
