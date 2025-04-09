@@ -8,6 +8,7 @@ import com.example.shinsekai.product.dto.out.ProductOutlineResponseDto;
 import com.example.shinsekai.product.dto.out.ProductResponseDto;
 import com.example.shinsekai.product.vo.in.ProductRequestVo;
 import com.example.shinsekai.product.vo.out.ProductOutlineResponseVo;
+import com.example.shinsekai.product.vo.out.ProductResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -67,17 +68,9 @@ public class ProductController {
 
     @Operation(summary = "판매 중인 상품 상세 조회")
     @GetMapping("/{productCode}")
-    public BaseResponseEntity<ProductResponseDto> getSellingProduct(@PathVariable String productCode) {
-        return new BaseResponseEntity<>(productService.getSellingProduct(productCode));
+    public BaseResponseEntity<ProductResponseVo> getSellingProduct(@PathVariable String productCode) {
+        return new BaseResponseEntity<>(productService.getSellingProduct(productCode).toVo());
     }
-
-    /*@Operation(summary = "판매 중인 상품 전체 조회")
-    @GetMapping("/page")
-    public BaseResponseEntity<Page<ProductCodeResponseDto>> getAllSellingProducts(
-            @PageableDefault(size = 10, sort = "productCode", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        return new BaseResponseEntity<>(productService.getAllSellingProducts(pageable));
-    }*/
 
     @Operation(summary = "판매 중인 상품 코드만 페이징 조회")
     @GetMapping("/product-code/page")

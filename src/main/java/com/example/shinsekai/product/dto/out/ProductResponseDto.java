@@ -71,6 +71,17 @@ public class ProductResponseDto {
     public ProductResponseVo toVo() {
         return ProductResponseVo.builder()
                 .productCode(productCode)
+                .productName(productName)
+                .productPrice(productPrice)
+                .productStatus(productStatus)
+                .productSummary(productSummary)
+                .contentImages(contentImages)
+                .thumbnailUrl(thumbnailUrl)
+                .userPurchaseLimit(userPurchaseLimit)
+                .isFrozen(isFrozen)
+                .isEngraving(isEngraving)
+                .discountRate(discountRate)
+                .productOptionIds(productOptionIds)
                 .build();
     }
 }
