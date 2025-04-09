@@ -18,4 +18,10 @@ public class CartDeleteRequestDto {
                 .id(cartDeleteRequestVo.getId())
                 .build();
     }
+
+    public static CartDeleteRequestDto from(Long id) {
+        return CartDeleteRequestDto.builder()
+                .id(id)
+                .build();
+    }
 }
