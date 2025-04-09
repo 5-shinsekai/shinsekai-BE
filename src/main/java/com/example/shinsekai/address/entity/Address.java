@@ -21,11 +21,12 @@ public class Address extends BaseEntity {
     @Column(unique = true, nullable = false, updatable = false)
     private String addressUuid;
 
-    @Column(unique = true, nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private String memberUuid;
 
     @Column(nullable = false, length = 100)
     private String zipNo;
+
     @Column(nullable = false, length = 30)
     private String addressNickname;
     @Column(nullable = false, length = 100)

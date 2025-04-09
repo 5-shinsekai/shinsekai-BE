@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class AddressRequestVo {
+public class AddressUpdateRequestVo {
 
     @NotBlank(message = "INVALID_ADDRESS_UUID")
     private String addressUuid;

@@ -46,7 +46,7 @@ public class AddressCustomRepoImpl implements AddressCustomRepository{
         builder.and(address.isDeleted.isFalse());
 
         Long count = jpaQueryFactory
-                .select(address.id)
+                .select(address.count())
                 .from(address)
                 .where(builder)
                 .fetchOne();
