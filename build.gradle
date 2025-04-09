@@ -61,7 +61,7 @@ dependencies {
 
 	//	Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.springframework.data:spring-data-redis'
+//	implementation 'org.springframework.data:spring-data-redis'
 
 	// email
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
