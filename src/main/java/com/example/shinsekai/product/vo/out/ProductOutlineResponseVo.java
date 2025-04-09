@@ -13,6 +13,7 @@ public class ProductOutlineResponseVo {
     private double productPrice;
     private String thumbnailUrl;
     private int discountRate;
+    private boolean isNew;
 
     @Builder
     public ProductOutlineResponseVo(
@@ -20,11 +21,13 @@ public class ProductOutlineResponseVo {
             String productName,
             double productPrice,
             String thumbnailUrl,
-            int discountRate) {
+            int discountRate,
+            boolean isNew) {
         this.productCode = productCode;
         this.productName = productName;
         this.productPrice = productPrice;
         this.thumbnailUrl = thumbnailUrl;
         this.discountRate = discountRate;
+        this.isNew = isNew;
     }
 }
