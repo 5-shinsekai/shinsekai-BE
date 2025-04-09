@@ -50,7 +50,7 @@ public class CartCustomRepoImpl implements CartCustomRepository {
         return count == null || count < MAX_CART_PRODUCT_KINDS_PER_USER;
     }
 
-    public int sumQuantityByProductCode(String memberUuid, String productCode) {
+    public List<Cart> findAllCartByProduct(String memberUuid, String productCode) {
         QCart cart = QCart.cart;
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -58,67 +58,9 @@ public class CartCustomRepoImpl implements CartCustomRepository {
         builder.and(cart.productCode.eq(productCode));
         builder.and(cart.isDeleted.isFalse());
 
-        Integer total = jpaQueryFactory
-                .select(cart.quantity.sum())
-                .from(cart)
-                .where(builder)
-                .fetchOne();
-
-        return total != null ? total : 0;
-    }
-
-    public Optional<Cart> findCartByProductOptionAndEngraving(String memberUuid, String productCode, Long optionId,
-                                                              String engravingMessage) {
-        QCart cart = QCart.cart;
-        BooleanBuilder builder = new BooleanBuilder();
-
-        builder.and(cart.memberUuid.eq(memberUuid));
-        builder.and(cart.productCode.eq(productCode));
-        builder.and(cart.productOptionListId.eq(optionId));
-        builder.and(cart.isDeleted.isFalse());
-        Optional.ofNullable(engravingMessage).ifPresent(
-                message -> builder.and(cart.engravingMessage.eq(message))
-        );
-
-        Cart result = jpaQueryFactory
+        return jpaQueryFactory
                 .selectFrom(cart)
                 .where(builder)
-                .fetchOne();
-
-        return Optional.ofNullable(result);
-    }
-
-    public boolean existsByMemberUuidAndProductCode(String memberUuid, String productCode) {
-        QCart cart = QCart.cart;
-
-        BooleanBuilder builder = new BooleanBuilder();
-        builder.and(cart.memberUuid.eq(memberUuid));
-        builder.and(cart.productCode.eq(productCode));
-        builder.and(cart.isDeleted.isFalse());
-
-        Integer result = jpaQueryFactory
-                .selectOne()
-                .from(cart)
-                .where(builder)
-                .fetchFirst();
-
-        return result != null;
-    }
-
-    public Optional<Cart> findCartByProductAndOption(String memberUuid, String productCode, Long productOptionListId) {
-        QCart cart = QCart.cart;
-        BooleanBuilder builder = new BooleanBuilder();
-
-        builder.and(cart.memberUuid.eq(memberUuid));
-        builder.and(cart.productCode.eq(productCode));
-        builder.and(cart.productOptionListId.eq(productOptionListId));
-        builder.and(cart.isDeleted.isFalse());
-
-        Cart result = jpaQueryFactory
-                .selectFrom(cart)
-                .where(builder)
-                .fetchOne();
-
-        return Optional.ofNullable(result);
+                .fetch();
     }
 }

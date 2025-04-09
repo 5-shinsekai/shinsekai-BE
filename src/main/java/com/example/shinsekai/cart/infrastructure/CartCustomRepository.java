@@ -9,9 +9,6 @@ import java.util.Optional;
 @Repository
 public interface CartCustomRepository {
     boolean canAddMoreProductKindToCart(String memberUuid);
-    int sumQuantityByProductCode(String memberUuid, String productCode);
-    Optional<Cart> findCartByProductOptionAndEngraving(String memberUuid, String productCode, Long optionId, String engravingMessage);
-    public boolean existsByMemberUuidAndProductCode(String memberUuid, String productCode);
     List<Cart> findByMemberUuid(String memberUuid);
-    Optional<Cart> findCartByProductAndOption(String memberUuid, String productCode, Long productOptionListId);
+    List<Cart> findAllCartByProduct(String memberUuid, String productCode);
 }
