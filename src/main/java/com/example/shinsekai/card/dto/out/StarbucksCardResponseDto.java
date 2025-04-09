@@ -2,12 +2,11 @@ package com.example.shinsekai.card.dto.out;
 
 import com.example.shinsekai.card.entity.StarbucksCard;
 import com.example.shinsekai.card.vo.out.StarbucksCardResponseVo;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class StarbucksCardResponseDto {
@@ -15,16 +14,7 @@ public class StarbucksCardResponseDto {
     private String cardNumber;
     private String cardName;
     private String cardImageUrl;
-    private double remainAmount;
-
-    @Builder
-    public StarbucksCardResponseDto(String memberStarbucksCardListUuid,String cardNumber, String cardName, String cardImageUrl, double remainAmount) {
-        this.memberStarbucksCardListUuid = memberStarbucksCardListUuid;
-        this.cardNumber = cardNumber;
-        this.cardName = cardName;
-        this.cardImageUrl = cardImageUrl;
-        this.remainAmount = remainAmount;
-    }
+    private Double remainAmount;
 
     public static StarbucksCardResponseDto from(StarbucksCard starbucksCard, String memberStarbucksCardListUuid){
         return StarbucksCardResponseDto.builder()

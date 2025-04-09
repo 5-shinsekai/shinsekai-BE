@@ -6,19 +6,26 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 @Getter
 @Builder
 @ToString
 public class StarbucksCardRequestDto {
-    private Long id;
     private String memberUuid;
     private String cardUuid;
     private String cardName;
     private String cardNumber;
+    private String cardImageUrl;
+    private String cardDescription;
+    private Double remainAmount;
 
-    public StarbucksCard toEntity(String cardUuid, double remainAmount, String cardImageUrl, String cardDescription) {
+
+    public StarbucksCard toEntity() {
         return StarbucksCard.builder()
-                .cardUuid(cardUuid)
+                .cardUuid(generateStarbucksCardCode())
                 .cardName(cardName)
                 .cardNumber(cardNumber)
                 .remainAmount(remainAmount)
@@ -27,10 +34,22 @@ public class StarbucksCardRequestDto {
                 .build();
     }
 
-    public static StarbucksCardRequestDto from(StarbucksCardRequestVo starbucksCardRequestVo){
+    public static StarbucksCardRequestDto from(StarbucksCardRequestVo starbucksCardRequestVo, String memberUuid){
         return StarbucksCardRequestDto.builder()
+                .memberUuid(memberUuid)
                 .cardName(starbucksCardRequestVo.getCardName())
                 .cardNumber(starbucksCardRequestVo.getCardNumber())
+                .remainAmount(starbucksCardRequestVo.getRemainAmount())
+                .cardImageUrl(starbucksCardRequestVo.getCardImageUrl())
+                .cardDescription(starbucksCardRequestVo.getCardDescription())
                 .build();
+    }
+
+    public static String generateStarbucksCardCode() {
+        String prefix = "S";
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String uuidPart = UUID.randomUUID().toString().substring(0, 8);
+
+        return prefix + date + "-" + uuidPart;
     }
 }

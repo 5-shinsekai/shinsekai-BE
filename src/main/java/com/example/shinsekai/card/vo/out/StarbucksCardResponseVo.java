@@ -13,7 +13,7 @@ public class StarbucksCardResponseVo {
     private String cardName;
     private String cardNumber;
     private String cardImageUrl;
-    private double remainAmount;
+    private Double remainAmount;
 
     @Builder
     public StarbucksCardResponseVo(String memberStarbucksCardListUuid, String cardName, String cardNumber, String cardImageUrl, double remainAmount) {
