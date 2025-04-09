@@ -4,8 +4,9 @@ import com.example.shinsekai.address.application.AddressService;
 import com.example.shinsekai.address.dto.in.AddressRequestDto;
 import com.example.shinsekai.address.dto.out.AddressResponseDto;
 import com.example.shinsekai.address.vo.AddressDeleteRequestVo;
-import com.example.shinsekai.address.vo.AddressRequestVo;
+import com.example.shinsekai.address.vo.AddressCreateRequestVo;
 import com.example.shinsekai.address.vo.AddressResponseVo;
+import com.example.shinsekai.address.vo.AddressUpdateRequestVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
@@ -40,7 +41,7 @@ public class AddressController {
     @Operation(summary = "배송지 생성")
     @PostMapping
     public BaseResponseEntity<Void> createAddress(HttpServletRequest request,
-                                                  @Valid @RequestBody AddressRequestVo addressRequestVo) {
+                                                  @Valid @RequestBody AddressCreateRequestVo addressRequestVo) {
 
         addressService.createAddress(AddressRequestDto.from(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
@@ -49,7 +50,7 @@ public class AddressController {
     @Operation(summary = "배송지 수정")
     @PutMapping
     public BaseResponseEntity<Void> updateAddress(HttpServletRequest request,
-                                                  @Valid @RequestBody AddressRequestVo addressRequestVo) {
+                                                  @Valid @RequestBody AddressUpdateRequestVo addressRequestVo) {
         addressService.updateAddress(AddressRequestDto.fromForUpdate(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
