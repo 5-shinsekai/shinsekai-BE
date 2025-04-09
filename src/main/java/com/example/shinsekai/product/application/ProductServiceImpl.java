@@ -1,8 +1,12 @@
 package com.example.shinsekai.product.application;
 
+import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
+import com.example.shinsekai.option.entity.ProductOptionList;
+import com.example.shinsekai.option.infrastructure.ProductOptionListRepository;
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
+import com.example.shinsekai.product.dto.out.ProductOutlineResponseDto;
 import com.example.shinsekai.product.dto.out.ProductResponseDto;
 import com.example.shinsekai.product.entity.Product;
 import com.example.shinsekai.product.entity.ProductStatus;
@@ -10,19 +14,20 @@ import com.example.shinsekai.product.infrastructure.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
+
     private final ProductRepository productRepository;
+    private final ProductOptionListRepository productOptionListRepository;
 
     //  상품 생성
     @Override
@@ -31,41 +36,29 @@ public class ProductServiceImpl implements ProductService {
         ProductResponseDto.from(productRepository.save(productRequestDto.toEntity()));
     }
 
-    /*@Override
-    @Transactional
-    public void createProduct(ProductRequestDto productRequestDto, MultipartFile thumbnailFile, MultipartFile contentImageFile) {
-        try {
-            String thumbnailUrl = s3Service.upload(thumbnailFile, "thumbnails");
-            String contentImageUrl = s3Service.upload(contentImageFile, "contents");
-
-            ProductRequestDto dtoWithImages = productRequestDto.toBuilder()
-                    .thumbnailUrl(thumbnailUrl)
-                    .contentImages(contentImageUrl)
-                    .build();
-
-
-            ProductResponseDto.from(productRepository.save(dtoWithImages.toEntity()));
-        } catch (IOException e) {
-            throw new BaseException(BaseResponseStatus.S3_UPLOAD_FAIL);
-        }
-    }*/
-
     //  판매 중인 상품 조회
     @Override
     public ProductResponseDto getSellingProduct(String productCode) {
         Product product = productRepository.findByProductCodeAndIsDeletedFalse(productCode)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
-        return ProductResponseDto.from(product);
+        List<ProductOptionList> optionLists = productOptionListRepository.findAllByProductCode(productCode);
+        return ProductResponseDto.from(product,optionLists);
     }
 
-    //  판매 중인 상품 전체 조회
+    //  ProductCode 페이징 조회
     @Override
-    public List<ProductResponseDto> getAllSellingProducts() {
-        return productRepository.findAllByIsDeletedFalseAndProductStatus(ProductStatus.SELLING)
-                .stream()
-                .map(ProductResponseDto::from)
-                .collect(Collectors.toList());
+    public Page<String> getAllSellingProductCodes(Pageable pageable) {
+        return productRepository.findProductCodesByIsDeletedFalseAndProductStatusSelling(pageable);
+    }
+
+    //  개요 조회
+    @Override
+    public ProductOutlineResponseDto getSellingProductOutline(String productCode) {
+        Product product = productRepository.findByProductCodeAndIsDeletedFalse(productCode)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
+
+        return ProductOutlineResponseDto.from(product);
     }
 
     //  상품 수정

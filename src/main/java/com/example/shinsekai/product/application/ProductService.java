@@ -1,19 +1,20 @@
 package com.example.shinsekai.product.application;
 
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
+import com.example.shinsekai.product.dto.out.ProductOutlineResponseDto;
 import com.example.shinsekai.product.dto.out.ProductResponseDto;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
     void createProduct(ProductRequestDto productRequestDto);
-//    void createProduct(ProductRequestDto productRequestDto, MultipartFile thumbnailFile, MultipartFile contentImageFile);
+
+    Page<String> getAllSellingProductCodes(Pageable pageable);
+
+    ProductOutlineResponseDto getSellingProductOutline(String productCode);
 
     ProductResponseDto getSellingProduct(String productCode);
-
-    List<ProductResponseDto> getAllSellingProducts();
 
     void updateProduct(String productCode, ProductRequestDto productRequestDto);
 
