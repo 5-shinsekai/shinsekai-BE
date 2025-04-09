@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,48 +25,53 @@ public class Address extends BaseEntity {
     private String memberUuid;
 
     @Column(nullable = false, length = 100)
-    private String zipCode;
+    private String zipNo;
     @Column(nullable = false, length = 30)
     private String addressNickname;
     @Column(nullable = false, length = 100)
-    private String deriveryMemo;
+    private String deliveryMemo;
     @Column(nullable = false)
     private String totalAddress;
     private boolean isMainAddress;
     @Column(nullable = false, length = 30)
-    private String mainPhone;
+    private String firstPhoneNumber;
     @Column(nullable = false, length = 30)
-    private String subPhone;
+    private String secondPhoneNumber;
     @Column(nullable = false, length = 30)
-    private String receiver;
+    private String receiverName;
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean isDeleted;
+    private LocalDateTime deletedAt;
 
     @Builder
     public Address(Long id,
                    String addressUuid,
                    String memberUuid,
-                   String zipCode,
+                   String zipNo,
                    String addressNickname,
-                   String deriveryMemo,
+                   String deliveryMemo,
                    String totalAddress,
                    boolean isMainAddress,
                    String mainPhone,
                    String subPhone,
-                   String receiver,
+                   String receiverName,
                    boolean isDeleted) {
         this.id = id;
         this.addressUuid = addressUuid;
         this.memberUuid = memberUuid;
-        this.zipCode = zipCode;
+        this.zipNo = zipNo;
         this.addressNickname = addressNickname;
-        this.deriveryMemo = deriveryMemo;
+        this.deliveryMemo = deliveryMemo;
         this.totalAddress = totalAddress;
         this.isMainAddress = isMainAddress;
-        this.mainPhone = mainPhone;
-        this.subPhone = subPhone;
-        this.receiver = receiver;
+        this.firstPhoneNumber = mainPhone;
+        this.secondPhoneNumber = subPhone;
+        this.receiverName = receiverName;
         this.isDeleted = isDeleted;
     }
 
+    public void setDeleted() {
+        isDeleted = true;
+        deletedAt = LocalDateTime.now();
+    }
 }

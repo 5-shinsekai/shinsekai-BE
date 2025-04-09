@@ -9,6 +9,7 @@ public interface AddressService {
 
     List<AddressResponseDto> getAddress(String memberUuid);
     void createAddress(AddressRequestDto addressRequestDto);
-    void saveAddress(AddressRequestDto addressRequestDto);
-    void deleteAddress(String addressUuid);
+    void updateAddress(AddressRequestDto addressRequestDto);
+    void hardDeleteAddress(String addressUuid);
+    void softDeleteAddress(String addressUuid);
 }

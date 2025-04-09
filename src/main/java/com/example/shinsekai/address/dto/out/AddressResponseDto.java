@@ -14,40 +14,40 @@ public class AddressResponseDto {
     private Long id;
     private String addressUuid;
     private String memberUuid;
-    private String zipCode;
+    private String zipNo;
     private String addressNickname;
-    private String deriveryMemo;
+    private String deliveryMemo;
     private String totalAddress;
     private boolean isMainAddress;
-    private String mainPhone;
-    private String subPhone;
-    private String receiver;
+    private String firstPhoneNumber;
+    private String secondPhoneNumber;
+    private String receiverName;
     private boolean isDeleted;
 
     @Builder
     public AddressResponseDto(Long id,
                               String addressUuid,
                               String memberUuid,
-                              String zipCode,
+                              String zipNo,
                               String addressNickname,
-                              String deriveryMemo,
+                              String deliveryMemo,
                               String totalAddress,
                               boolean isMainAddress,
-                              String mainPhone,
-                              String subPhone,
-                              String receiver,
+                              String firstPhoneNumber,
+                              String secondPhoneNumber,
+                              String receiverName,
                               boolean isDeleted) {
         this.id = id;
         this.addressUuid = addressUuid;
         this.memberUuid = memberUuid;
-        this.zipCode = zipCode;
+        this.zipNo = zipNo;
         this.addressNickname = addressNickname;
-        this.deriveryMemo = deriveryMemo;
+        this.deliveryMemo = deliveryMemo;
         this.totalAddress = totalAddress;
         this.isMainAddress = isMainAddress;
-        this.mainPhone = mainPhone;
-        this.subPhone = subPhone;
-        this.receiver = receiver;
+        this.firstPhoneNumber = firstPhoneNumber;
+        this.secondPhoneNumber = secondPhoneNumber;
+        this.receiverName = receiverName;
         this.isDeleted = isDeleted;
     }
 
@@ -55,14 +55,14 @@ public class AddressResponseDto {
         return AddressResponseDto.builder()
                 .addressUuid(address.getAddressUuid())
                 .memberUuid(address.getMemberUuid())
-                .zipCode(address.getZipCode())
+                .zipNo(address.getZipNo())
                 .addressNickname(address.getAddressNickname())
-                .deriveryMemo(address.getDeriveryMemo())
+                .deliveryMemo(address.getDeliveryMemo())
                 .totalAddress(address.getTotalAddress())
                 .isMainAddress(address.isMainAddress())
-                .mainPhone(address.getMainPhone())
-                .subPhone(address.getSubPhone())
-                .receiver(address.getReceiver())
+                .firstPhoneNumber(address.getFirstPhoneNumber())
+                .secondPhoneNumber(address.getSecondPhoneNumber())
+                .receiverName(address.getReceiverName())
                 .isDeleted(address.isDeleted())
                 .build();
     }
@@ -71,14 +71,14 @@ public class AddressResponseDto {
         return AddressResponseVo.builder()
                 .addressUuid(addressUuid)
                 .memberUuid(memberUuid)
-                .zipCode(zipCode)
+                .zipNo(zipNo)
                 .addressNickname(addressNickname)
-                .deriveryMemo(deriveryMemo)
+                .deliveryMemo(deliveryMemo)
                 .totalAddress(totalAddress)
                 .isMainAddress(isMainAddress)
-                .mainPhone(mainPhone)
-                .subPhone(subPhone)
-                .receiver(receiver)
+                .firstPhoneNumber(firstPhoneNumber)
+                .secondPhoneNumber(secondPhoneNumber)
+                .receiverName(receiverName)
                 .build();
     }
 }

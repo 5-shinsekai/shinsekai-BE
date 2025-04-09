@@ -2,8 +2,6 @@ package com.example.shinsekai.address.dto.in;
 
 import com.example.shinsekai.address.entity.Address;
 import com.example.shinsekai.address.vo.AddressRequestVo;
-import com.example.shinsekai.common.entity.BaseResponseStatus;
-import com.example.shinsekai.common.exception.BaseException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -22,48 +20,65 @@ public class AddressRequestDto {
 
     private String addressUuid;
     private String memberUuid;
-    private String zipCode;
+    private String zipNo;
     private String addressNickname;
-    private String deriveryMemo;
+    private String deliveryMemo;
     private String totalAddress;
     private boolean isMainAddress;
-    private String mainPhone;
-    private String subPhone;
-    private String receiver;
+    private String firstPhoneNumber;
+    private String secondPhoneNumber;
+    private String receiverName;
     private boolean isDeleted;
 
     public static AddressRequestDto from(AddressRequestVo addressRequestVo, String memberUuid) {
         return AddressRequestDto.builder()
                 .memberUuid(memberUuid)
-                .zipCode(addressRequestVo.getZipCode())
+                .addressUuid(generateAddressUuid())
+                .zipNo(addressRequestVo.getZipNo())
                 .addressNickname(addressRequestVo.getAddressNickname())
-                .deriveryMemo(addressRequestVo.getDeriveryMemo())
+                .deliveryMemo(addressRequestVo.getDeliveryMemo())
                 .totalAddress(addressRequestVo.getTotalAddress())
                 .isMainAddress(addressRequestVo.isMainAddress())
-                .mainPhone(addressRequestVo.getMainPhone())
-                .subPhone(addressRequestVo.getSubPhone())
-                .receiver(addressRequestVo.getReceiver())
+                .firstPhoneNumber(addressRequestVo.getFirstPhoneNumber())
+                .secondPhoneNumber(addressRequestVo.getSecondPhoneNumber())
+                .receiverName(addressRequestVo.getReceiverName())
+                .isDeleted(addressRequestVo.isDeleted())
+                .build();
+    }
+
+    public static AddressRequestDto fromForUpdate(AddressRequestVo addressRequestVo, String memberUuid) {
+        return AddressRequestDto.builder()
+                .memberUuid(memberUuid)
+                .addressUuid(addressRequestVo.getAddressUuid())
+                .zipNo(addressRequestVo.getZipNo())
+                .addressNickname(addressRequestVo.getAddressNickname())
+                .deliveryMemo(addressRequestVo.getDeliveryMemo())
+                .totalAddress(addressRequestVo.getTotalAddress())
+                .isMainAddress(addressRequestVo.isMainAddress())
+                .firstPhoneNumber(addressRequestVo.getFirstPhoneNumber())
+                .secondPhoneNumber(addressRequestVo.getSecondPhoneNumber())
+                .receiverName(addressRequestVo.getReceiverName())
                 .isDeleted(addressRequestVo.isDeleted())
                 .build();
     }
 
     public Address toEntity(boolean isMainAddress){
         return Address.builder()
-                .addressUuid(generateAddressUuid())
+                .addressUuid(addressUuid)
                 .memberUuid(memberUuid)
-                .zipCode(zipCode)
+                .zipNo(zipNo)
                 .addressNickname(addressNickname)
-                .deriveryMemo(deriveryMemo)
+                .deliveryMemo(deliveryMemo)
                 .totalAddress(totalAddress)
                 .isMainAddress(isMainAddress)
-                .mainPhone(mainPhone)
-                .subPhone(subPhone)
-                .receiver(receiver)
+                .mainPhone(firstPhoneNumber)
+                .subPhone(secondPhoneNumber)
+                .receiverName(receiverName)
                 .isDeleted(isDeleted)
                 .build();
     }
 
-    private String generateAddressUuid() {
+    private static String generateAddressUuid() {
         String prefix = "A";
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String uuidPart = UUID.randomUUID().toString().substring(0, 8);

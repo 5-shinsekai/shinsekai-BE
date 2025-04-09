@@ -7,7 +7,6 @@ import com.example.shinsekai.address.vo.AddressRequestVo;
 import com.example.shinsekai.address.vo.AddressResponseVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
-import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +30,7 @@ public class AddressController {
     @GetMapping
     public BaseResponseEntity<List<AddressResponseVo>> getAddressList(HttpServletRequest request) {
         return new BaseResponseEntity<>(
-                addressService.getAddress(getAccessToken(request))
+                addressService.getAddress(jwtTokenProvider.getAccessToken(request))
                         .stream()
                         .map(AddressResponseDto::toVo)
                         .toList());
@@ -42,27 +41,22 @@ public class AddressController {
     public BaseResponseEntity<Void> createAddress(HttpServletRequest request,
                                                   @Valid @RequestBody AddressRequestVo addressRequestVo) {
 
-        addressService.createAddress(AddressRequestDto.from(addressRequestVo, getAccessToken(request)));
+        addressService.createAddress(AddressRequestDto.from(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "배송지 수정")
     @PutMapping
-    public BaseResponseEntity<Void> updateAddress(){return null;}
+    public BaseResponseEntity<Void> updateAddress(HttpServletRequest request,
+                                                  @Valid @RequestBody AddressRequestVo addressRequestVo) {
+        addressService.updateAddress(AddressRequestDto.fromForUpdate(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
     
     @Operation(summary = "배송지 삭제")
     @DeleteMapping
-    public BaseResponseEntity<Void> deleteAddress(){return null;}
-
-    private String getAccessToken(HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization").substring(7);
-
-        String memberUuid;
-        // meberUuid 꺼내기 및 검증
-        try {
-            return memberUuid = jwtTokenProvider.extractAllClaims(accessToken).getSubject();  // extractAllClaims 내부에서 우리가 발급한 토근인지 검증함
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);   // 유효하지 않은 토큰입니다~~ 메세지 날림
-        }
+    public BaseResponseEntity<Void> deleteAddress(HttpServletRequest request,
+                                                  @Valid @RequestBody AddressRequestVo addressRequestVo) {
+        return null;
     }
 }

@@ -3,9 +3,11 @@ package com.example.shinsekai.address.application;
 import com.example.shinsekai.address.dto.in.AddressRequestDto;
 import com.example.shinsekai.address.dto.out.AddressResponseDto;
 import com.example.shinsekai.address.entity.Address;
+import com.example.shinsekai.address.infrastructure.AddressCustomRepoImpl;
 import com.example.shinsekai.address.infrastructure.AddressRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class AddressServiceImpl implements AddressService{
 
     private final AddressRepository addressRepository;
+    private final AddressCustomRepoImpl addressCustomRepository;
 
     @Override
     public List<AddressResponseDto> getAddress(String memberUuid) {
@@ -33,28 +36,41 @@ public class AddressServiceImpl implements AddressService{
     public void createAddress(AddressRequestDto addressRequestDto) {
 
         // 배송지 중복 검사
-        addressRepository.findByMemberUuidAndAddressUuid(addressRequestDto.getMemberUuid(),
-                        addressRequestDto.getAddressUuid())
-                        .filter(a -> !a.isDeleted())
-                        .ifPresent(address -> {
-                            throw new BaseException(BaseResponseStatus.DUPLICATED_ADDRESS);
-                        });
+        if (!addressCustomRepository.canAddAddress(addressRequestDto.getMemberUuid()
+                , addressRequestDto.getAddressUuid())) {
+            throw new BaseException(BaseResponseStatus.DUPLICATED_ADDRESS);
+        }
 
-        // 최초 입력이면 mainAddress -> true
-        List<Address> addressList = addressRepository.findByMemberUuid(addressRequestDto.getMemberUuid())
-                .stream()
-                .filter(address -> !address.isDeleted())
-                .toList();
-        addressRepository.save(addressRequestDto.toEntity(addressList.isEmpty()));
+        // 최초 배송지인지 검사
+        boolean isFirstAddress = addressCustomRepository.isFirstAddress(addressRequestDto.getMemberUuid());
+
+        // 최초 배송지인지를 전달하여 isMainAddress 셋팅
+        addressRepository.save(addressRequestDto.toEntity(isFirstAddress));
     }
 
     @Override
-    public void saveAddress(AddressRequestDto addressRequestDto) {
-
+    @Transactional
+    public void updateAddress(AddressRequestDto addressRequestDto) {
+        try {
+            addressCustomRepository.dynamicUpdateAddress(addressRequestDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new  BaseException(BaseResponseStatus.FAILED_TO_SAVE_ADDRESS);
+        }
     }
 
     @Override
-    public void deleteAddress(String addressUuid) {
+    public void hardDeleteAddress(String addressUuid) {
+        Address address = addressRepository.findByAddressUuid(addressUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
+        addressRepository.delete(address);
+    }
 
+    @Override
+    public void softDeleteAddress(String addressUuid) {
+        Address address = addressRepository.findByAddressUuid(addressUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
+
+        address.setDeleted();
     }
 }

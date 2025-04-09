@@ -29,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto) {
 
         // 아이디 중복 체크
@@ -42,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
                 .ifPresent(member -> {
                     throw new BaseException(BaseResponseStatus.SAME_EMAIL);
                 });
-        
+
         // 닉네임 중복 체크
         memberRepository.findByNickname(signUpRequestDto.getNickname())
                 .ifPresent(member -> {
