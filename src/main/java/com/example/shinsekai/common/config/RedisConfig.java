@@ -1,5 +1,6 @@
 package com.example.shinsekai.common.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -11,6 +12,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
+    @Value("${spring.data.redis.host}")
+    private String redisHost;
+
+    @Value("${spring.data.redis.port}")
+    private int redisPort;
+
     /**
      * Redis와의 연결을 위한 RedisConnectionFactory Bean 정의
      * Lettuce를 사용하여 비동기/논블로킹 방식으로 Redis에 연결
@@ -19,7 +26,7 @@ public class RedisConfig {
      */
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory("redis", 6379);  // Redis와 연결
+        return new LettuceConnectionFactory(redisHost, redisPort);  // Redis와 연결
     }
 
     /**
