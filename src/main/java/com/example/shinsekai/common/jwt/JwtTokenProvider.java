@@ -115,12 +115,19 @@ public class JwtTokenProvider {
      * @return SignInResponseDto
      */
     public SignInResponseDto createToken(Authentication authentication, Member member) {
+
+        log.info("in JwtTokenProvider_createToken_here_1");
+
         // 토큰 생성
         String accessToken = generateToken(authentication, member, TokenEnum.ACCESS);
         String refreshToken = generateToken(authentication, member, TokenEnum.REFRESH);
 
+        log.info("JwtTokenProvider_createToken_here_2");
+
         // redis에는 refreshToken만 저장(accessToken은 만료시간이 짧음)
         redisProvider.setToken(member.getMemberUuid(), refreshToken, refreshExpireTime);
+
+        log.info("JwtTokenProvider_createToken_here_3");
 
         return SignInResponseDto.from(member, accessToken, refreshToken);
     }

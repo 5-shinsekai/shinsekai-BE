@@ -47,7 +47,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private Gender gender;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 30)
     private String name;
 
     @Column(nullable = false, length = 8)
