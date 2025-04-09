@@ -10,6 +10,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -188,6 +189,22 @@ public class JwtTokenProvider {
             return extractAllClaims(token).getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             return true;
+        }
+    }
+
+    /**
+     * 엑세스 토큰에서 memberUuid꺼내기
+     * @param request
+     * @return memberUuid
+     */
+    public String  getAccessToken(HttpServletRequest request) {
+        String accessToken = request.getHeader("Authorization").substring(7);
+
+        String memberUuid;
+        try {
+            return memberUuid = extractAllClaims(accessToken).getSubject();  // extractAllClaims 내부에서 우리가 발급한 토근인지 검증함
+        } catch (Exception e) {
+            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);   // "토큰이 유효하지 않습니다."
         }
     }
 
