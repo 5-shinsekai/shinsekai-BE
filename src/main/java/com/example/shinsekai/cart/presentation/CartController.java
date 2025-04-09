@@ -9,6 +9,7 @@ import com.example.shinsekai.cart.vo.out.CartGetResponseVo;
 import com.example.shinsekai.cart.vo.out.CartGroupedByProductTypeVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ import java.util.List;
 public class CartController {
 
     private final CartServiceImpl cartService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "장바구니 생성")
     @PostMapping
@@ -36,15 +38,30 @@ public class CartController {
     @Operation(summary = "장바구니 조회")
     @GetMapping
     public BaseResponseEntity<CartGroupedByProductTypeVo> getAllCarts(HttpServletRequest request){
-        return new BaseResponseEntity<>(cartService.getAllCarts(request.getHeader("Authorization").substring(7))
+        return new BaseResponseEntity<>(cartService.getAllCarts(jwtTokenProvider.getAccessToken(request))
                 .toVo());
     }
 
-    @Operation(summary = "장바구니 삭제")
-    @DeleteMapping
-    public BaseResponseEntity<Void> deleteCart(HttpServletRequest request, List<CartDeleteRequestVo> cartDeleteRequestVoList){
-        cartService.deleteCart(request.getHeader("Authorization").substring(7),
+    @Operation(summary = "선택된 장바구니 단일 삭제")
+    @DeleteMapping("/{id}")
+    public BaseResponseEntity<Void> deleteCart(HttpServletRequest request, @PathVariable Long id){
+        cartService.deleteCart(jwtTokenProvider.getAccessToken(request),CartDeleteRequestDto.from(id));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @Operation(summary = "선택된 장바구니 리스트 삭제")
+    @DeleteMapping("/list")
+    public BaseResponseEntity<Void> deleteSelectedAllCart(HttpServletRequest request,
+                                                          @RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList){
+        cartService.deleteSelectedAllCart(jwtTokenProvider.getAccessToken(request),
                 cartDeleteRequestVoList.stream().map(CartDeleteRequestDto::from).toList());
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @Operation(summary = "장바구니 전체 삭제")
+    @DeleteMapping("/all")
+    public BaseResponseEntity<Void> deleteAllCart(HttpServletRequest request){
+        cartService.deleteAllCart(jwtTokenProvider.getAccessToken(request));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 

@@ -8,9 +8,10 @@ import com.example.shinsekai.cart.dto.out.CartGroupedByProductTypeDto;
 import java.util.List;
 
 public interface CartService {
-    CartGroupedByProductTypeDto getAllCarts(String token); // memberUuid받아오기
+    CartGroupedByProductTypeDto getAllCarts(String memberUuid); // memberUuid받아오기
     void createCart(CartCreateRequestDto cartCreateRequestDto);
-    void updateCart(String token, CartUpdateRequestDto cartUpdateRequestDto);
-    void deleteCart(String token, List<CartDeleteRequestDto> cartDeleRequestDtoList); // deleteAllCartById
-    // 단일 삭제
+    void updateCart(String memberUuid, CartUpdateRequestDto cartUpdateRequestDto);
+    void deleteAllCart(String memberUuid);
+    void deleteSelectedAllCart (String memberUuid, List<CartDeleteRequestDto> cartDeleRequestDtoList); // deleteAllCartById
+    void deleteCart(String memberUuid, CartDeleteRequestDto cartDeleteRequestDto);// 단일 삭제
 }

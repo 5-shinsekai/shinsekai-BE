@@ -37,6 +37,35 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
+    public void createCart(CartCreateRequestDto cartCreateRequestDto) {
+        // 1. 유효한 상품 및 옵션인지 확인 (return 추가)
+        if(!validateProductAndOption(cartCreateRequestDto))
+            throw new BaseException(BaseResponseStatus.INVALID_INPUT);
+
+        // 2. 장바구니에 동일한 상품이 있는지 조회
+        cartCustomRepository.findCartByProductAndOption(
+                cartCreateRequestDto.getMemberUuid(),
+                cartCreateRequestDto.getProductCode(),
+                cartCreateRequestDto.getProductOptionListId()
+        ).ifPresentOrElse(
+                cart -> {
+                    if (!validateQuantityLimit(cartCreateRequestDto)) {
+                        throw new BaseException(BaseResponseStatus.CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED);
+                    }
+                    // 이미 존재 → 수량 증가
+                    cart.increaseQuantity(cartCreateRequestDto.getQuantity());
+                },
+                () -> {
+                    // 존재하지 않음 → 수량 종류 제한 검증 후 새로 저장
+                    if(!validateProductKindLimit(cartCreateRequestDto))
+                        throw new BaseException(BaseResponseStatus.CART_PRODUCT_KIND_LIMIT_EXCEEDED);
+                    cartRepository.save(cartCreateRequestDto.toEntity());
+                }
+        );
+    }
+
+    @Override
+    @Transactional
     public CartGroupedByProductTypeDto getAllCarts(String token) {
         String memberUuid;
         try {
@@ -65,14 +94,15 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void deleteCart(String token, List<CartDeleteRequestDto> cartDeleRequestDtoList) {
-        String memberUuid;
-        try { // controller에서 처리
-            memberUuid = jwtTokenProvider.extractAllClaims(token).getSubject();
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
-        }
+    public void deleteCart(String memberUuid, CartDeleteRequestDto cartDeleteRequestDto) {
+        cartRepository.findByMemberUuidAndId(memberUuid, cartDeleteRequestDto.getId()).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.INVALID_CART_ACCESS)
+        ).setDeleted();
+    }
 
+    @Override
+    @Transactional
+    public void deleteSelectedAllCart(String memberUuid, List<CartDeleteRequestDto> cartDeleRequestDtoList) {
         List<Cart> carts = cartRepository.findAllByMemberUuidAndIdIn(memberUuid,
                 cartDeleRequestDtoList.stream()
                         .map(CartDeleteRequestDto::getId)
@@ -87,31 +117,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void createCart(CartCreateRequestDto cartCreateRequestDto) {
-        // 1. 유효한 상품 및 옵션인지 확인 (return 추가)
-        if(!validateProductAndOption(cartCreateRequestDto))
-            throw new BaseException(BaseResponseStatus.INVALID_INPUT);
-
-        // 2. 장바구니에 동일한 상품이 있는지 조회
-        cartCustomRepository.findCartByProductAndOption(
-                cartCreateRequestDto.getMemberUuid(),
-                cartCreateRequestDto.getProductCode(),
-                cartCreateRequestDto.getProductOptionListId()
-        ).ifPresentOrElse(
-                cart -> {
-                    if (!validateQuantityLimit(cartCreateRequestDto)) {
-                        throw new BaseException(BaseResponseStatus.CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED);
-                    }
-                    // 이미 존재 → 수량 증가
-                    cart.increaseQuantity(cartCreateRequestDto.getQuantity());
-                },
-                () -> {
-                    // 존재하지 않음 → 수량 종류 제한 검증 후 새로 저장
-                    if(!validateProductKindLimit(cartCreateRequestDto))
-                        throw new BaseException(BaseResponseStatus.CART_PRODUCT_KIND_LIMIT_EXCEEDED);
-                    cartRepository.save(cartCreateRequestDto.toEntity());
-                }
-        );
+    public void deleteAllCart(String memberUuid) {
+        cartRepository.softDeleteAllByMemberUuid(memberUuid);
     }
 
     @Override
