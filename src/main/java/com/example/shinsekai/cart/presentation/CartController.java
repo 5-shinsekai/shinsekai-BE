@@ -30,8 +30,9 @@ public class CartController {
 
     @Operation(summary = "장바구니 생성")
     @PostMapping
-    public BaseResponseEntity<Void> createCart(@Valid @RequestBody CartCreateRequestVo cartCreateRequestVo){
-        cartService.createCart(CartCreateRequestDto.from(cartCreateRequestVo));
+    public BaseResponseEntity<Void> createCart(HttpServletRequest request,
+            @Valid @RequestBody CartCreateRequestVo cartCreateRequestVo){
+        cartService.createCart(CartCreateRequestDto.from(jwtTokenProvider.getAccessToken(request), cartCreateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
