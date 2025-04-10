@@ -8,7 +8,6 @@ import lombok.ToString;
 @ToString
 public class AddressResponseVo {
     private String addressUuid;
-    private String memberUuid;
     private String zipNo;
     private String addressNickname;
     private String deliveryMemo;
@@ -17,11 +16,9 @@ public class AddressResponseVo {
     private String firstPhoneNumber;
     private String secondPhoneNumber;
     private String receiverName;
-    private boolean isDeleted;
 
     @Builder
     public AddressResponseVo(String addressUuid,
-                             String memberUuid,
                              String zipNo,
                              String addressNickname,
                              String deliveryMemo,
@@ -32,7 +29,6 @@ public class AddressResponseVo {
                              String receiverName,
                              boolean isDeleted) {
         this.addressUuid = addressUuid;
-        this.memberUuid = memberUuid;
         this.zipNo = zipNo;
         this.addressNickname = addressNickname;
         this.deliveryMemo = deliveryMemo;
@@ -41,6 +37,5 @@ public class AddressResponseVo {
         this.firstPhoneNumber = firstPhoneNumber;
         this.secondPhoneNumber = secondPhoneNumber;
         this.receiverName = receiverName;
-        this.isDeleted = isDeleted;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.shinsekai.address.vo;
 
+import com.example.shinsekai.common.entity.BaseResponseStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -26,7 +27,7 @@ public class AddressCreateRequestVo {
     @NotBlank(message = "INVALID_TOTAL_ADDRESS_FORMAT")
     private String totalAddress;
 
-    private boolean isMainAddress;
+    private Boolean isMainAddress;
 
     @NotBlank(message = "INVALID_PHONE_FORMAT")
     @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "INVALID_PHONE_FORMAT")
@@ -37,6 +38,6 @@ public class AddressCreateRequestVo {
 
     @NotBlank(message = "INVALID_NAME_FORMAT")
     @Pattern(regexp = "^[a-zA-Z가-힣]+$", message = "INVALID_NAME_FORMAT")
+    @Size(max = 30)
     private String receiverName;
-    private boolean isDeleted;
 }

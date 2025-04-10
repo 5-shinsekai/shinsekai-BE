@@ -33,7 +33,7 @@ public class Address extends BaseEntity {
     private String deliveryMemo;
     @Column(nullable = false)
     private String totalAddress;
-    private boolean isMainAddress;
+    private Boolean isMainAddress;
     @Column(nullable = false, length = 30)
     private String firstPhoneNumber;
     @Column(nullable = false, length = 30)
@@ -53,10 +53,11 @@ public class Address extends BaseEntity {
                    String deliveryMemo,
                    String totalAddress,
                    boolean isMainAddress,
-                   String mainPhone,
-                   String subPhone,
+                   String firstPhoneNumber,
+                   String secondPhoneNumber,
                    String receiverName,
-                   boolean isDeleted) {
+                   boolean isDeleted,
+                   LocalDateTime deletedAt) {
         this.id = id;
         this.addressUuid = addressUuid;
         this.memberUuid = memberUuid;
@@ -65,14 +66,23 @@ public class Address extends BaseEntity {
         this.deliveryMemo = deliveryMemo;
         this.totalAddress = totalAddress;
         this.isMainAddress = isMainAddress;
-        this.firstPhoneNumber = mainPhone;
-        this.secondPhoneNumber = subPhone;
+        this.firstPhoneNumber = firstPhoneNumber;
+        this.secondPhoneNumber = secondPhoneNumber;
         this.receiverName = receiverName;
         this.isDeleted = isDeleted;
+        this.deletedAt = deletedAt;
     }
 
-    public void setDeleted() {
+    public void softDeleted() {
         isDeleted = true;
         deletedAt = LocalDateTime.now();
+    }
+
+    public void clearMainAddress() {
+        isMainAddress = false;
+    }
+
+    public void registerMainAddress() {
+        isMainAddress = true;
     }
 }

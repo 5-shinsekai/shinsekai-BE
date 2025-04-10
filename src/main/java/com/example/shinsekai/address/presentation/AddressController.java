@@ -1,7 +1,8 @@
 package com.example.shinsekai.address.presentation;
 
 import com.example.shinsekai.address.application.AddressService;
-import com.example.shinsekai.address.dto.in.AddressRequestDto;
+import com.example.shinsekai.address.dto.in.AddressCreateRequestDto;
+import com.example.shinsekai.address.dto.in.AddressUpdateRequestDto;
 import com.example.shinsekai.address.dto.out.AddressResponseDto;
 import com.example.shinsekai.address.vo.AddressDeleteRequestVo;
 import com.example.shinsekai.address.vo.AddressCreateRequestVo;
@@ -43,7 +44,7 @@ public class AddressController {
     public BaseResponseEntity<Void> createAddress(HttpServletRequest request,
                                                   @Valid @RequestBody AddressCreateRequestVo addressRequestVo) {
 
-        addressService.createAddress(AddressRequestDto.from(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
+        addressService.createAddress(AddressCreateRequestDto.of(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
@@ -51,7 +52,7 @@ public class AddressController {
     @PutMapping
     public BaseResponseEntity<Void> updateAddress(HttpServletRequest request,
                                                   @Valid @RequestBody AddressUpdateRequestVo addressRequestVo) {
-        addressService.updateAddress(AddressRequestDto.fromForUpdate(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
+        addressService.updateAddress(AddressUpdateRequestDto.of(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
     
