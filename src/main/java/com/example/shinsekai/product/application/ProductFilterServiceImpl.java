@@ -1,6 +1,6 @@
 package com.example.shinsekai.product.application;
 
-import com.example.shinsekai.product.infrastructure.ProductSearchRepositoryCustom;
+import com.example.shinsekai.product.infrastructure.ProductFilterRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,14 +10,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductSearchServiceImpl implements ProductSearchService {
+public class ProductFilterServiceImpl implements ProductFilterService {
 
-    private final ProductSearchRepositoryCustom productSearchRepository;
+    private final ProductFilterRepositoryCustom productFilterRepository;
 
     @Override
-    public Page<String> searchProducts(Long mainCategoryId, List<Long> subCategoryIds, List<Integer> seasonIds,
+    public Page<String> filterProducts(Long mainCategoryId, List<Long> subCategoryIds, List<Integer> seasonIds,
                                        List<Long> sizeIds, String priceRange, Pageable pageable) {
-        return productSearchRepository.searchProductCodes(
+        return productFilterRepository.filterProductCodes(
                 mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRange, pageable);
     }
 }

@@ -19,12 +19,12 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ProductSearchRepositoryImpl implements ProductSearchRepositoryCustom {
+public class ProductFilterRepositoryImpl implements ProductFilterRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<String> searchProductCodes(
+    public Page<String> filterProductCodes(
             Long mainCategoryId,
             List<Long> subCategoryIds,
             List<Integer> seasonIds,

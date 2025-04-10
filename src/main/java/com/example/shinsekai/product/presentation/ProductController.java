@@ -2,7 +2,7 @@ package com.example.shinsekai.product.presentation;
 
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
-import com.example.shinsekai.product.application.ProductSearchService;
+import com.example.shinsekai.product.application.ProductFilterService;
 import com.example.shinsekai.product.application.ProductService;
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
 import com.example.shinsekai.product.vo.in.ProductRequestVo;
@@ -29,7 +29,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductSearchService productSearchService;
+    private final ProductFilterService productfilterchService;
 
     @Operation(summary = "상품 생성")
     @PostMapping
@@ -89,8 +89,8 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 복합 조건 검색")
-    @GetMapping("/search")
-    public BaseResponseEntity<Page<String>> searchProductsByFilters(
+    @GetMapping("/filter")
+    public BaseResponseEntity<Page<String>> filterProductsByFilters(
             @RequestParam Long mainCategoryId,
             @RequestParam(required = false)List<Long> subCategoryIds,
             @RequestParam(required = false)List<Integer> seasonIds,
@@ -98,7 +98,7 @@ public class ProductController {
             @RequestParam(required = false)String priceRange,
             @PageableDefault(size = 10) Pageable pageable
             ) {
-        return new BaseResponseEntity<>(productSearchService.searchProducts(
+        return new BaseResponseEntity<>(productfilterchService.filterProducts(
                 mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRange, pageable
         ));
     }
