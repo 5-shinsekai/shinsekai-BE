@@ -29,7 +29,7 @@ public class AddressUpdateRequestVo {
     @NotBlank(message = "INVALID_TOTAL_ADDRESS_FORMAT")
     private String totalAddress;
 
-    private boolean isMainAddress;
+    private Boolean isMainAddress;
 
     @NotBlank(message = "INVALID_PHONE_FORMAT")
     @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "INVALID_PHONE_FORMAT")
@@ -41,5 +41,4 @@ public class AddressUpdateRequestVo {
     @NotBlank(message = "INVALID_NAME_FORMAT")
     @Pattern(regexp = "^[a-zA-Z가-힣]+$", message = "INVALID_NAME_FORMAT")
     private String receiverName;
-    private boolean isDeleted;
 }
