@@ -11,10 +11,11 @@ import com.example.shinsekai.option.infrastructure.SizeRepository;
 import com.example.shinsekai.product.infrastructure.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductOptionServiceImpl implements ProductOptionService {
@@ -22,25 +23,23 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     private final ProductOptionListRepository productOptionListRepository;
     private final SizeRepository sizeRepository;
     private final ColorRepository colorRepository;
-    private final ProductRepository productRepository;
 
     @Override
-    public List<ProductOptionResponseDto> getOptionsByProductCode(String productCode) {
-        List<ProductOptionList> optionLists = productOptionListRepository.findByProductCode(productCode);
-        return optionLists.stream()
-                .map(ProductOptionResponseDto::from)
-                .toList();
+    public ProductOptionResponseDto getProductOption(Long productOptionId) {
+        ProductOptionList optionLists = productOptionListRepository.findById(productOptionId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+        return ProductOptionResponseDto.from(optionLists);
     }
 
-    @Transactional
     @Override
-    public void createOption(String productCode, ProductOptionRequestDto dto) {
-        validateCreateOption(productCode, dto);
-        productOptionListRepository.save(dto.toEntity(productCode));
+    @Transactional
+    public void createOption(ProductOptionRequestDto dto) {
+        validateCreateOption(dto);
+        productOptionListRepository.save(dto.toEntity());
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteOption(Long id) {
         if (!productOptionListRepository.existsById(id)) {
             throw new BaseException(BaseResponseStatus.NO_EXIST_OPTION);
@@ -49,20 +48,20 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     }
 
     // 상품 옵션 생성 유효성 검사
-    private void validateCreateOption(String productCode, ProductOptionRequestDto dto) {
+    private void validateCreateOption(ProductOptionRequestDto dto) {
         boolean exists = productOptionListRepository.existsByProductCodeAndColorIdAndSizeId(
-                productCode,
+                dto.getProductCode(),
                 dto.getColorId(),
                 dto.getSizeId()
         );
         if (exists) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_OPTION);
         }
-        colorRepository.findById(dto.getColorId()).ifPresent(color -> {
+        if (!colorRepository.existsById(dto.getColorId())) {
             throw new BaseException(BaseResponseStatus.NO_EXIST_OPTION);
-        });
-        sizeRepository.findById(dto.getSizeId()).ifPresent(size -> {
+        }
+        if (!sizeRepository.existsById(dto.getSizeId())) {
             throw new BaseException(BaseResponseStatus.NO_EXIST_OPTION);
-        });
+        }
     }
 }

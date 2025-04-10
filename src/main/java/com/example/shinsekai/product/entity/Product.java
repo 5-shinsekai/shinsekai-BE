@@ -118,4 +118,8 @@ public class Product extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
+    public boolean isNewProduct() {
+        return this.getCreatedAt() != null && this.getCreatedAt().isAfter(LocalDateTime.now().minusDays(7));
+    }
+
 }
