@@ -133,6 +133,7 @@ public enum BaseResponseStatus {
     INVALID_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10003, "카드 정보가 일치하지 않습니다."),
     NO_CREATION_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10004, "카드 생성 중 오류가 발생했습니다."),
     NO_DELETE_STARBUCKS_CARD(HttpStatus.BAD_REQUEST, false, 10005, "카드 삭제 중 오류가 발생했습니다."),
+    NO_CHARGE_STARBUCKS_CARD(HttpStatus.NOT_FOUND, false, 10006, "카드 잔액이 부족합니다."),
 
     // 결제
     PAYMENT_VERIFICATION_FAILED(HttpStatus.BAD_REQUEST, false, 10010, "결제 인증에 실패했습니다."),

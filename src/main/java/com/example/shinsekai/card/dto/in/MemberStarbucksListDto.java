@@ -2,7 +2,6 @@ package com.example.shinsekai.card.dto.in;
 
 import com.example.shinsekai.card.entity.MemberStarbucksCardList;
 import com.example.shinsekai.card.entity.StarbucksCard;
-import lombok.AccessLevel;
 import lombok.*;
 
 import java.time.LocalDate;

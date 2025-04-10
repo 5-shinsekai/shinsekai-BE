@@ -1,7 +1,9 @@
 package com.example.shinsekai.card.presentation;
 
 import com.example.shinsekai.card.application.StarbucksCardService;
+import com.example.shinsekai.card.dto.in.MemberStarbucksListDto;
 import com.example.shinsekai.card.dto.in.StarbucksCardRequestDto;
+import com.example.shinsekai.card.dto.in.UseStarbucksCardRequestDto;
 import com.example.shinsekai.card.dto.out.StarbucksCardResponseDto;
 import com.example.shinsekai.card.vo.in.StarbucksCardRequestVo;
 import com.example.shinsekai.card.vo.out.StarbucksCardResponseVo;
@@ -46,10 +48,14 @@ public class StarbucksCardController {
     }
 
     @Operation(summary = "스타벅스 카드 삭제 (비활성화만 가능)")
-    @DeleteMapping("/{starbucksCardUuid}")
+    @DeleteMapping("/{memberStarbucksCardUuid}")
     public BaseResponseEntity<Void> deleteStarbucksCard(HttpServletRequest request,
-                                                        @PathVariable String starbucksCardUuid) {
-        starbucksCardService.deleteStarbucksCard(starbucksCardUuid,jwtTokenProvider.getAccessToken(request));
+                                                        @PathVariable String memberStarbucksCardUuid) {
+        starbucksCardService.deleteStarbucksCard(
+                MemberStarbucksListDto.builder()
+                        .memberStarbucksCardUuid(memberStarbucksCardUuid)
+                        .memberUuid(jwtTokenProvider.getAccessToken(request))
+                        .build());
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }
