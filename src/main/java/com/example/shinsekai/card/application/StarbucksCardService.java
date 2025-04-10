@@ -7,10 +7,8 @@ import com.example.shinsekai.card.entity.StarbucksCard;
 import java.util.List;
 
 public interface StarbucksCardService {
-    List<StarbucksCardResponseDto> getStarbucksCard(String memberUuid); //uuid
-    void createStarbucksCard(String memberUuid, StarbucksCardRequestDto starbucksCardRequestDto);
-    void saveStarbucksCard(StarbucksCard starbucksCard);
-    void saveMemberStarbucksCardList(String memberUuid, StarbucksCard starbucksCard);
-    void deleteStarbucksCard(String StarbucksCardUuid);
+    List<StarbucksCardResponseDto> getActiveStarbucksCards(String memberUuid);
+    void createStarbucksCard(StarbucksCardRequestDto starbucksCardRequestDto);
+    void deleteStarbucksCard(String StarbucksCardUuid, String memberUuid);
 }
 

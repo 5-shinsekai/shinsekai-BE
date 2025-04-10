@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface MemberStarbucksListRepository extends JpaRepository<MemberStarbucksCardList,Long> {
 
-    List<MemberStarbucksCardList> findMemberStarbucksCardListByMemberUuidAndActive(String memberUuid, boolean active);
-    Optional<MemberStarbucksCardList> findMemberStarbucksCardListByMemberStarbucksCardUuid(String memberStarbucksCardListUuid);
+    List<MemberStarbucksCardList> findMemberStarbucksCardListByMemberUuidAndActiveIsTrue(String memberUuid);
+    Optional<MemberStarbucksCardList> findMemberStarbucksCardListByMemberStarbucksCardUuidAndMemberUuid(String memberStarbucksCardListUuid, String memberUuid);
 }
