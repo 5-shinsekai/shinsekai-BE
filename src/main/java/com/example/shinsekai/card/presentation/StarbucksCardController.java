@@ -6,6 +6,11 @@ import com.example.shinsekai.card.dto.out.StarbucksCardResponseDto;
 import com.example.shinsekai.card.vo.in.StarbucksCardRequestVo;
 import com.example.shinsekai.card.vo.out.StarbucksCardResponseVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
+import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.jwt.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -14,38 +19,37 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/starbucksCard")
+@Tag(name = "starbucksCard", description = "스타벅스 카드 API")
+@RequestMapping("/api/v1/starbucks-card")
 public class StarbucksCardController {
 
     private final StarbucksCardService starbucksCardService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping()
-    public List<StarbucksCardResponseVo> getStarbucksCards() {
-        /*
-         * 임시 memberUuid 추가함
-         * */
-        String memberUuid = "temp-memberUuid";
-
-        return starbucksCardService.getStarbucksCard(memberUuid).stream()
+    @Operation(summary = "활성화된 스타벅스 카드 조회")
+    @GetMapping//파라미터를 통해서 active 값에 대해 따라 값 다르게 들고 올 수 잇음
+    public List<StarbucksCardResponseVo> getActiveStarbucksCards(HttpServletRequest request) {
+        return starbucksCardService.getActiveStarbucksCards(jwtTokenProvider.getAccessToken(request)).stream()
                 .map(StarbucksCardResponseDto::toVo)
                 .toList();
     }
 
-
-    @PostMapping()
-    public BaseResponseEntity<Void> createStarbucksCard(@RequestBody StarbucksCardRequestVo starbucksCardRequestVo) {
-        /*
-         * 임시 memberUuid 추가함
-         * */
-        String memberUuid = "temp-memberUuid";
-        starbucksCardService.createStarbucksCard(memberUuid, StarbucksCardRequestDto.from(starbucksCardRequestVo));
-        return new BaseResponseEntity<>();
+    @Operation(summary = "스타벅스 카드 등록")
+    @PostMapping
+    public BaseResponseEntity<Void> createStarbucksCard(HttpServletRequest request,
+                                                        @RequestBody StarbucksCardRequestVo starbucksCardRequestVo) {
+        starbucksCardService.createStarbucksCard(
+                StarbucksCardRequestDto.from( starbucksCardRequestVo,jwtTokenProvider.getAccessToken(request))
+        );
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
 
     }
 
+    @Operation(summary = "스타벅스 카드 삭제 (비활성화만 가능)")
     @DeleteMapping("/{starbucksCardUuid}")
-    public BaseResponseEntity<Void> deleteStarbucksCard(@PathVariable String starbucksCardUuid) {
-        starbucksCardService.deleteStarbucksCard(starbucksCardUuid);
-        return new BaseResponseEntity<>();
+    public BaseResponseEntity<Void> deleteStarbucksCard(HttpServletRequest request,
+                                                        @PathVariable String starbucksCardUuid) {
+        starbucksCardService.deleteStarbucksCard(starbucksCardUuid,jwtTokenProvider.getAccessToken(request));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }

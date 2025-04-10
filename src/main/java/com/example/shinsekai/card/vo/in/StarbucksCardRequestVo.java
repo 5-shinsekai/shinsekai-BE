@@ -8,5 +8,7 @@ import lombok.ToString;
 public class StarbucksCardRequestVo {
     private String cardName;
     private String cardNumber;
-    private String pinNumber;
+    private String cardImageUrl;
+    private String cardDescription;
+    private Double remainAmount;
 }
