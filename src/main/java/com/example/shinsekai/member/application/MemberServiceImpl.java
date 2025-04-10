@@ -4,10 +4,10 @@ import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.common.redis.RedisProvider;
+import com.example.shinsekai.email.application.EmailService;
 import com.example.shinsekai.member.dto.in.ChangePasswordRequestDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
-import com.example.shinsekai.member.dto.out.FindIdResponseDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
 import com.example.shinsekai.member.entity.Member;
 import com.example.shinsekai.member.infrastructure.MemberRepository;
@@ -26,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisProvider redisProvider;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -83,26 +84,27 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public FindIdResponseDto findId(String email, boolean emailVerified) {
-        if (!emailVerified) {
-            new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
+    public boolean checkId(String loginId) {
+        return memberRepository.findByLoginId(loginId).isEmpty();
+    }
+
+    @Override
+    public String findId(String email, String code) {
+
+        // 레디스에 저장된 값과 다른 경우
+        if (!redisProvider.getEmailVerificationCodeForLoginId(email).equals(code)) {
+            throw new BaseException(BaseResponseStatus.INVALID_VERIFICATION_CODE);
         }
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
-        return new FindIdResponseDto().from(member);
+        return member.getLoginId();
     }
 
     @Override
     @Transactional
     public void changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
-        try {
-            // 토큰 검증
-            jwtTokenProvider.extractAllClaims(changePasswordRequestDto.getAccessToken());
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
-        }
 
         // 로그인 아이디로 회원 조회
         Member member = memberRepository.findByLoginId(changePasswordRequestDto.getLoginId())
@@ -113,29 +115,29 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(BaseResponseStatus.DUPLICATED_PASSWORD);
         }
 
-        // 비밀번호 형식 검사
-        if (!validatePassword(changePasswordRequestDto.getNewPassword())) {
-            throw new BaseException(BaseResponseStatus.INVALID_PASSWORD_FORMAT);
-        }
+//        // 비밀번호 형식 검사
+//        if (!validatePassword(changePasswordRequestDto.getNewPassword())) {
+//            throw new BaseException(BaseResponseStatus.INVALID_PASSWORD_FORMAT);
+//        }
 
         // 인코딩된 패스워드를 entity에 전달 -> 더티체킹
         member.updatePassword(passwordEncoder.encode(changePasswordRequestDto.getNewPassword()));
     }
 
-    private boolean validatePassword(String password) {
-        // PASSWORD_REGEX → 유효성 체크할 정규식(Regex) 패턴 정의.
-        // 공백 허용 안 됨
-        // 소문자 (?=.*[a-z])
-        // 숫자 (?=.*\\d)
-        // 특수문자 (?=.*[@$!%*?&])
-        // 전체 길이 8~20자
-        final String PASSWORD_REGEX =
-                "^(?=\\S+$)(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[a-z\\d@$!%*?&]{8,20}$";
-
-        if (password == null) {
-            return false;
-        } else {
-            return password.matches(PASSWORD_REGEX);
-        }
-    }
+//    private boolean validatePassword(String password) {
+//        // PASSWORD_REGEX → 유효성 체크할 정규식(Regex) 패턴 정의.
+//        // 공백 허용 안 됨
+//        // 소문자 (?=.*[a-z])
+//        // 숫자 (?=.*\\d)
+//        // 특수문자 (?=.*[@$!%*?&])
+//        // 전체 길이 8~20자
+//        final String PASSWORD_REGEX =
+//                "^(?=\\S+$)(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[a-z\\d@$!%*?&]{8,20}$";
+//
+//        if (password == null) {
+//            return false;
+//        } else {
+//            return password.matches(PASSWORD_REGEX);
+//        }
+//    }
 }

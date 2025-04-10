@@ -36,6 +36,7 @@ public class SignUpRequestVo {
 
     @NotBlank(message = "INVALID_NAME_FORMAT")
     @Pattern(regexp = "^[a-zA-Z가-힣]+$", message = "INVALID_NAME_FORMAT")
+    @Size(max = 30, message = "INVALID_NAME_FORMAT")
     private String name;
 
     @Past(message = "INVALID_BIRTH_PAST")
