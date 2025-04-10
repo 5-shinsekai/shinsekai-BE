@@ -1,7 +1,7 @@
 package com.example.shinsekai.email.dto.in;
 
 import com.example.shinsekai.email.entity.EmailType;
-import com.example.shinsekai.email.vo.EmailVerificationVo;
+import com.example.shinsekai.email.vo.in.EmailVerificationRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,15 +10,13 @@ import lombok.ToString;
 @Builder
 @ToString
 public class EmailVerificationRequestDto {
-    private String name;
     private String email;
     private EmailType mailType;
 
-    public static EmailVerificationRequestDto from(EmailVerificationVo emailVerificationVo) {
+    public static EmailVerificationRequestDto from(EmailVerificationRequestVo emailVerificationRequestVo) {
         return EmailVerificationRequestDto.builder()
-                .name(emailVerificationVo.getName())
-                .email(emailVerificationVo.getEmail())
-                .mailType(emailVerificationVo.getMailType())
+                .email(emailVerificationRequestVo.getEmail())
+                .mailType(emailVerificationRequestVo.getMailType())
                 .build();
     }
 

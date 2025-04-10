@@ -112,5 +112,8 @@ public class Member extends BaseEntity implements UserDetails {
         return true;
     }
 
+    public void saveTempPassword(String tempPassword) {
+        this.password = tempPassword;
+    }
 
 }

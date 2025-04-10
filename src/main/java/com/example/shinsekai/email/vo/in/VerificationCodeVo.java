@@ -1,4 +1,4 @@
-package com.example.shinsekai.email.vo;
+package com.example.shinsekai.email.vo.in;
 
 import com.example.shinsekai.email.entity.EmailType;
 import lombok.Getter;
