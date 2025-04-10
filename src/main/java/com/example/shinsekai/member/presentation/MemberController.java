@@ -12,7 +12,6 @@ import com.example.shinsekai.member.vo.in.ChangePasswordVo;
 import com.example.shinsekai.member.vo.in.SignInRequestVo;
 import com.example.shinsekai.member.vo.in.SignInResponseVo;
 import com.example.shinsekai.member.vo.in.SignUpRequestVo;
-import com.example.shinsekai.member.vo.out.FindIdResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -60,20 +59,24 @@ public class MemberController {
         return new BaseResponseEntity<>(response);
     }
 
+    @Operation(summary = "아이디 중복 체크")
+    @GetMapping("/check-id")
+    public BaseResponseEntity<Boolean> checkId(@RequestParam String loginId) {
+        return new BaseResponseEntity<>(memberService.checkId(loginId));
+    }
+
     @Operation(summary = "아이디 찾기")
-    @GetMapping("/findId")
-    public BaseResponseEntity<FindIdResponseVo> findId(@RequestParam String email,
-                                                       @RequestParam boolean emailVerified) {
-        FindIdResponseVo result = memberService.findId(email, emailVerified).toVo();
-        return new BaseResponseEntity<>(result);
+    @GetMapping("/find-id")
+    public BaseResponseEntity<String> findId(@RequestParam String email, @RequestParam String code) {
+        return new BaseResponseEntity<>(memberService.findId(email, code));
     }
 
     @Operation(summary = "비밀번호 변경")
-    @PutMapping("/changePw")
+    @PutMapping("/change-pw")
     public BaseResponseEntity<Void> changePassword(HttpServletRequest request,
-                                                   @RequestBody ChangePasswordVo changePasswordVo) {
+                                                   @Valid @RequestBody ChangePasswordVo changePasswordVo) {
 
-        String accessToken = request.getHeader("Authorization").substring(7);
+        String accessToken = jwtTokenProvider.getAccessToken(request);
         memberService.changePassword(ChangePasswordRequestDto.from(changePasswordVo, accessToken));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
