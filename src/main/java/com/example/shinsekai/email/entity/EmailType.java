@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum EmailType {
     FIND_LOGIN_ID("아이디찾기"),
-    CHANGE_PASSWORD("비밀번호변경"),
-    SIGN_UP("회원가입");
+    SIGN_UP("회원가입"),
+    TEMP_PW("임시비밀번호");
 
     private final String mailType;
 

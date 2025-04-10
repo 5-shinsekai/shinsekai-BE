@@ -1,10 +1,10 @@
-package com.example.shinsekai.email.application;
+package com.example.shinsekai.email.templete;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class VerificationEmailBuilder {
-    public String buildVerificationEmail(String name, String code) {
+    public String buildVerificationEmail(String code) {
         return """
             <html lang="ko">
                 <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
@@ -14,7 +14,6 @@ public class VerificationEmailBuilder {
                         <p style="font-size: 24px; font-weight: bold; color: #00704A;">스타벅스 인증 코드 안내</p>
                         
                         <p style="font-size: 16px; color: #333333; margin: 20px 0;">
-                            안녕하세요, <strong>%s</strong> 님!<br />
                             본인 확인을 위해 아래 인증 코드를 입력해주세요.
                         </p>
                         
@@ -36,6 +35,6 @@ public class VerificationEmailBuilder {
                     </div>
                 </body>
             </html>
-            """.formatted(name, code);
+            """.formatted(code);
     }
 }

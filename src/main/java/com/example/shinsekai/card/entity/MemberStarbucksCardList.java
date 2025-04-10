@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class MemberStarbucksCardList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String memberStarbucksCardUuid;
     private String memberUuid;
 
@@ -21,15 +21,17 @@ public class MemberStarbucksCardList {
     private StarbucksCard starbucksCard;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean active = true;
+    private Boolean active = true;
 
     @Builder
-    public MemberStarbucksCardList(long id, String memberStarbucksCardUuid, String memberUuid, StarbucksCard starbucksCard, boolean active){
-        this.id = id;
+    public MemberStarbucksCardList(
+            String memberStarbucksCardUuid,
+            String memberUuid,
+            StarbucksCard starbucksCard
+    ){
         this.memberStarbucksCardUuid = memberStarbucksCardUuid;
         this.memberUuid = memberUuid;
         this.starbucksCard = starbucksCard;
-        this.active = active;
     }
 
     public void changeActive(){

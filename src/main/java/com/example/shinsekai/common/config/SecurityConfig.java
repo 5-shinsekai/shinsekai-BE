@@ -48,7 +48,7 @@ public class SecurityConfig {
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(
                                         "/redis/**",
-                                        "/api/v1/emailVerify/**",
+                                        "/api/v1/email/**",
                                         "/api/v1/member/**",
                                         "/api/v1/cart/**",
                                         "/api/v1/size/**",
@@ -58,7 +58,8 @@ public class SecurityConfig {
                                         "/api/v1/category/**",
                                         "/api/v1/product-category/**",
                                         "/api/v1/vendor/**",
-                                        "/api/v1/starbucksCard/**",
+                                        "/api/v1/starbucks-card/**",
+                                        "/api/v1/external/starbucks-card/**",
                                         "/api/v1/purchase/**",
                                         "/api/v1/payment/**",
                                         "/swagger-ui/**",
