@@ -18,7 +18,7 @@ public class Payment extends BaseEntity {
     @Column(unique = true, nullable = false, updatable = false)
     private String paymentCode;
 
-    @Column(unique = true, nullable = false, updatable = false)
+    @Column(updatable = false)
     private String paymentKey;
 
     @Column(nullable = false, updatable = false)
@@ -42,5 +42,8 @@ public class Payment extends BaseEntity {
     private boolean isInterestFree;
     private int installmentPlanMonths;
     private boolean useCardPoint;
+
+    //스타벅스 카드 uuid
+    private String starbucksCardUuid;
 
 }
