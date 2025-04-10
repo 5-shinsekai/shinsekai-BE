@@ -2,7 +2,6 @@ package com.example.shinsekai.address.dto.in;
 
 import com.example.shinsekai.address.entity.Address;
 import com.example.shinsekai.address.vo.AddressCreateRequestVo;
-import com.example.shinsekai.address.vo.AddressUpdateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,7 +14,7 @@ import java.util.UUID;
 @Getter
 @Builder
 @ToString
-public class AddressRequestDto {
+public class AddressCreateRequestDto {
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -25,41 +24,23 @@ public class AddressRequestDto {
     private String addressNickname;
     private String deliveryMemo;
     private String totalAddress;
-    private boolean isMainAddress;
+    private Boolean isMainAddress;
     private String firstPhoneNumber;
     private String secondPhoneNumber;
     private String receiverName;
-    private boolean isDeleted;
 
-    public static AddressRequestDto from(AddressCreateRequestVo addressRequestVo, String memberUuid) {
-        return AddressRequestDto.builder()
+    public static AddressCreateRequestDto of(AddressCreateRequestVo addressRequestVo, String memberUuid) {
+        return AddressCreateRequestDto.builder()
                 .memberUuid(memberUuid)
                 .addressUuid(generateAddressUuid())
                 .zipNo(addressRequestVo.getZipNo())
                 .addressNickname(addressRequestVo.getAddressNickname())
                 .deliveryMemo(addressRequestVo.getDeliveryMemo())
                 .totalAddress(addressRequestVo.getTotalAddress())
-                .isMainAddress(addressRequestVo.isMainAddress())
+                .isMainAddress(addressRequestVo.getIsMainAddress())
                 .firstPhoneNumber(addressRequestVo.getFirstPhoneNumber())
                 .secondPhoneNumber(addressRequestVo.getSecondPhoneNumber())
                 .receiverName(addressRequestVo.getReceiverName())
-                .isDeleted(addressRequestVo.isDeleted())
-                .build();
-    }
-
-    public static AddressRequestDto fromForUpdate(AddressUpdateRequestVo addressRequestVo, String memberUuid) {
-        return AddressRequestDto.builder()
-                .memberUuid(memberUuid)
-                .addressUuid(addressRequestVo.getAddressUuid())
-                .zipNo(addressRequestVo.getZipNo())
-                .addressNickname(addressRequestVo.getAddressNickname())
-                .deliveryMemo(addressRequestVo.getDeliveryMemo())
-                .totalAddress(addressRequestVo.getTotalAddress())
-                .isMainAddress(addressRequestVo.isMainAddress())
-                .firstPhoneNumber(addressRequestVo.getFirstPhoneNumber())
-                .secondPhoneNumber(addressRequestVo.getSecondPhoneNumber())
-                .receiverName(addressRequestVo.getReceiverName())
-                .isDeleted(addressRequestVo.isDeleted())
                 .build();
     }
 
@@ -72,10 +53,9 @@ public class AddressRequestDto {
                 .deliveryMemo(deliveryMemo)
                 .totalAddress(totalAddress)
                 .isMainAddress(isMainAddress)
-                .mainPhone(firstPhoneNumber)
-                .subPhone(secondPhoneNumber)
+                .firstPhoneNumber(firstPhoneNumber)
+                .secondPhoneNumber(secondPhoneNumber)
                 .receiverName(receiverName)
-                .isDeleted(isDeleted)
                 .build();
     }
 

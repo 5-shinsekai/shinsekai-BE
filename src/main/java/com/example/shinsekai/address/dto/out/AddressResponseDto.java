@@ -13,7 +13,6 @@ import lombok.ToString;
 public class AddressResponseDto {
     private Long id;
     private String addressUuid;
-    private String memberUuid;
     private String zipNo;
     private String addressNickname;
     private String deliveryMemo;
@@ -27,7 +26,6 @@ public class AddressResponseDto {
     @Builder
     public AddressResponseDto(Long id,
                               String addressUuid,
-                              String memberUuid,
                               String zipNo,
                               String addressNickname,
                               String deliveryMemo,
@@ -39,7 +37,6 @@ public class AddressResponseDto {
                               boolean isDeleted) {
         this.id = id;
         this.addressUuid = addressUuid;
-        this.memberUuid = memberUuid;
         this.zipNo = zipNo;
         this.addressNickname = addressNickname;
         this.deliveryMemo = deliveryMemo;
@@ -54,12 +51,11 @@ public class AddressResponseDto {
     public static AddressResponseDto from(Address address) {
         return AddressResponseDto.builder()
                 .addressUuid(address.getAddressUuid())
-                .memberUuid(address.getMemberUuid())
                 .zipNo(address.getZipNo())
                 .addressNickname(address.getAddressNickname())
                 .deliveryMemo(address.getDeliveryMemo())
                 .totalAddress(address.getTotalAddress())
-                .isMainAddress(address.isMainAddress())
+                .isMainAddress(address.getIsMainAddress())
                 .firstPhoneNumber(address.getFirstPhoneNumber())
                 .secondPhoneNumber(address.getSecondPhoneNumber())
                 .receiverName(address.getReceiverName())
@@ -70,7 +66,6 @@ public class AddressResponseDto {
     public AddressResponseVo toVo() {
         return AddressResponseVo.builder()
                 .addressUuid(addressUuid)
-                .memberUuid(memberUuid)
                 .zipNo(zipNo)
                 .addressNickname(addressNickname)
                 .deliveryMemo(deliveryMemo)
