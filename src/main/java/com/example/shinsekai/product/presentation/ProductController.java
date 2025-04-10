@@ -2,10 +2,9 @@ package com.example.shinsekai.product.presentation;
 
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.product.application.ProductSearchService;
 import com.example.shinsekai.product.application.ProductService;
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
-import com.example.shinsekai.product.dto.out.ProductOutlineResponseDto;
-import com.example.shinsekai.product.dto.out.ProductResponseDto;
 import com.example.shinsekai.product.vo.in.ProductRequestVo;
 import com.example.shinsekai.product.vo.out.ProductOutlineResponseVo;
 import com.example.shinsekai.product.vo.out.ProductResponseVo;
@@ -19,6 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Tag(name = "Product", description = "상품 관련 API")
 @RequestMapping("/api/v1/product")
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductSearchService productSearchService;
 
     @Operation(summary = "상품 생성")
     @PostMapping
@@ -72,7 +74,7 @@ public class ProductController {
         return new BaseResponseEntity<>(productService.getSellingProduct(productCode).toVo());
     }
 
-    @Operation(summary = "판매 중인 상품 코드만 페이징 조회")
+    @Operation(summary = "전체 판매 중인 상품 코드만 페이징 조회")
     @GetMapping("/product-code/page")
     public BaseResponseEntity<Page<String>> getSellingProductCodes(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
@@ -80,9 +82,24 @@ public class ProductController {
         return new BaseResponseEntity<>(productService.getAllSellingProductCodes(pageable));
     }
 
-    @Operation(summary = "상품 요약 정보 조회")
+    @Operation(summary = "전체 상품 요약 정보 조회")
     @GetMapping("/{productCode}/outline")
     public BaseResponseEntity<ProductOutlineResponseVo> getProductSummary(@PathVariable String productCode) {
         return new BaseResponseEntity<>(productService.getSellingProductOutline(productCode).toVo());
+    }
+
+    @Operation(summary = "상품 복합 조건 검색")
+    @GetMapping("/search")
+    public BaseResponseEntity<Page<String>> searchProductsByFilters(
+            @RequestParam Long mainCategoryId,
+            @RequestParam(required = false)List<Long> subCategoryIds,
+            @RequestParam(required = false)List<Integer> seasonIds,
+            @RequestParam(required = false)List<Long> sizeIds,
+            @RequestParam(required = false)String priceRange,
+            @PageableDefault(size = 10) Pageable pageable
+            ) {
+        return new BaseResponseEntity<>(productSearchService.searchProducts(
+                mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRange, pageable
+        ));
     }
 }

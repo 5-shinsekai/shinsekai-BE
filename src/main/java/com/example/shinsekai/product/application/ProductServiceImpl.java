@@ -1,6 +1,5 @@
 package com.example.shinsekai.product.application;
 
-import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.option.entity.ProductOptionList;
@@ -43,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
         List<ProductOptionList> optionLists = productOptionListRepository.findAllByProductCode(productCode);
-        return ProductResponseDto.from(product,optionLists);
+        return ProductResponseDto.from(product, optionLists);
     }
 
     //  ProductCode 페이징 조회
