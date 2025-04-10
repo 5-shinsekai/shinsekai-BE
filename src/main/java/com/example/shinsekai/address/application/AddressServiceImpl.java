@@ -41,13 +41,13 @@ public class AddressServiceImpl implements AddressService{
     public void createAddress(AddressCreateRequestDto addressRequestDto) {
 
         // 최초 배송지인지 검사
-        List<Address> addressList = addressRepository.findByMemberUuid(addressRequestDto.getMemberUuid());
+        int addressCount = addressRepository.countByMemberUuid(addressRequestDto.getMemberUuid());
         boolean isFirstAddress = false;
-        if (addressList.size() == 0) {
+        if (addressCount == 0) {
             isFirstAddress = true;
         }
         // 10개까지만 저장가능
-        else if(addressList.size() >= 10) {
+        else if(addressCount >= 10) {
             throw new BaseException(BaseResponseStatus.ADDRESS_QUANTITY_LIMIT_EXCEEDED);
         }
 
