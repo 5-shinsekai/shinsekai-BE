@@ -56,6 +56,7 @@ public class SecurityConfig {
                                         "/api/v1/option/**",
                                         "/api/v1/product/**",
                                         "/api/v1/category/**",
+                                        "/api/v1/product-category/**",
                                         "/api/v1/vendor/**",
                                         "/api/v1/starbucksCard/**",
                                         "/api/v1/purchase/**",
