@@ -2,7 +2,9 @@ package com.example.shinsekai.payment.application;
 
 import com.example.shinsekai.card.application.StarbucksCardService;
 import com.example.shinsekai.card.dto.in.UseStarbucksCardRequestDto;
+import com.example.shinsekai.payment.dto.in.PaymentDeleteRequestDto;
 import com.example.shinsekai.payment.dto.in.PaymentRequestDto;
+import com.example.shinsekai.payment.entity.Payment;
 import com.example.shinsekai.payment.infrastructure.PaymentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,13 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void deletePayment(PaymentRequestDto paymentRequestDto) {
+    @Transactional
+    public void deletePayment(PaymentDeleteRequestDto paymentDeleteRequestDto) {
+        Payment payment = paymentRepository.findByPaymentCodeAndMemberUuid(
+                paymentDeleteRequestDto.getPaymentCode(), paymentDeleteRequestDto.getMemberUuid()
+        );
+        payment.cancelPayment();
 
+        //Starbucks 카드 결제 취소(잔여금액 ++)
     }
 }

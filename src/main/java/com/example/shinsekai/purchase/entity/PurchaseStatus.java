@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PurchaseStatus {
     PURCHASE_OK("주문 완료"),
-    PURCHASE_CANCLE("주문 취소");
+    PURCHASE_CANCEL("주문 취소");
 
     private final String purchaseStatus;
 

@@ -22,11 +22,11 @@ public class PurchaseRequestDto {
     private int shipmentFee;
     private double productTotalPrice;
 
-    public Purchase toEntity(String memberUuid){
+    public Purchase toEntity(){
         return Purchase.builder()
                 .purchaseCode(this.purchaseCode)
                 .paymentCode(this.paymentCode)
-                .memberUuid(memberUuid)
+                .memberUuid(this.memberUuid)
                 .purchaseStatus(this.purchaseStatus)
                 .receiver(this.receiver)
                 .address(this.address)
@@ -37,11 +37,11 @@ public class PurchaseRequestDto {
                 .build();
     }
 
-    public static PurchaseRequestDto from(PurchaseRequestVo purchaseRequestVo){
+    public static PurchaseRequestDto from(PurchaseRequestVo purchaseRequestVo, String memberUuid){
         return PurchaseRequestDto.builder()
                 .purchaseCode(purchaseRequestVo.getPurchaseCode())
                 .paymentCode(purchaseRequestVo.getPaymentCode())
-                .memberUuid(purchaseRequestVo.getMemberUuid())
+                .memberUuid(memberUuid)
                 .purchaseStatus(purchaseRequestVo.getPurchaseStatus())
                 .receiver(purchaseRequestVo.getReceiver())
                 .address(purchaseRequestVo.getAddress())
