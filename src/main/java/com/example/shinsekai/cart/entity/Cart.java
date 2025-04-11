@@ -35,7 +35,7 @@ public class Cart extends BaseEntity {
 
     @Column(nullable = false)
     @Builder.Default
-    private boolean checked = true;
+    private Boolean checked = true;
 
     @Column(length = 10)
     private String engravingMessage;

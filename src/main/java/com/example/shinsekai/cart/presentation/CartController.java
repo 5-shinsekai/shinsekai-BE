@@ -3,8 +3,10 @@ package com.example.shinsekai.cart.presentation;
 import com.example.shinsekai.cart.application.CartServiceImpl;
 import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartDeleteRequestDto;
+import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
 import com.example.shinsekai.cart.vo.in.CartCreateRequestVo;
 import com.example.shinsekai.cart.vo.in.CartDeleteRequestVo;
+import com.example.shinsekai.cart.vo.in.CartUpdateRequestVo;
 import com.example.shinsekai.cart.vo.out.CartGetResponseVo;
 import com.example.shinsekai.cart.vo.out.CartGroupedByProductTypeVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
@@ -43,6 +45,15 @@ public class CartController {
                 .toVo());
     }
 
+    @Operation(summary = "장바구니 수정")
+    @PutMapping
+    public BaseResponseEntity<Void> updateCart(HttpServletRequest request,
+                                               @Valid @RequestBody CartUpdateRequestVo cartUpdateRequestVo){
+        cartService.updateCart(CartUpdateRequestDto
+                .from(jwtTokenProvider.getAccessToken(request), cartUpdateRequestVo));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
     @Operation(summary = "선택된 장바구니 단일 삭제")
     @DeleteMapping("/{id}")
     public BaseResponseEntity<Void> deleteCart(HttpServletRequest request, @PathVariable Long id){
@@ -65,12 +76,4 @@ public class CartController {
         cartService.deleteAllCart(jwtTokenProvider.getAccessToken(request));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
-
-//    @Operation(summary = "장바구니 수정")
-//    @GetMapping
-//    public BaseResponseEntity<> updateCart(HttpServletRequest request){
-//
-//        return new BaseResponseEntity<>(cartService.getAllCarts(request.getHeader("Authorization").substring(7))
-//                .toVo());
-//    }
 }

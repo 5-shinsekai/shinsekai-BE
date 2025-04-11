@@ -18,10 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +37,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public void createCart(CartCreateRequestDto cartCreateRequestDto) {
         // 1. 유효한 상품 및 옵션인지 확인
-        if(!validateProductAndOption(cartCreateRequestDto))
+        if (!validateProductAndOption(cartCreateRequestDto))
             throw new BaseException(BaseResponseStatus.INVALID_INPUT);
 
         // 2. 장바구니에 동일한 상품이 있는지 조회
@@ -56,7 +54,7 @@ public class CartServiceImpl implements CartService {
             cartRepository.save(cartCreateRequestDto.toEntity());
         } else {
             // 4. 동일한 상품이 있으면 상품별 수량 확인
-            if(!validateQuantityLimit(carts, cartCreateRequestDto))
+            if (!validateQuantityLimit(carts, cartCreateRequestDto.getProductCode(), cartCreateRequestDto.getQuantity()))
                 throw new BaseException(BaseResponseStatus.CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED);
 
             carts.stream()
@@ -124,8 +122,30 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void updateCart(String authorization, CartUpdateRequestDto cartUpdateRequestDto) {
+    public void updateCart(CartUpdateRequestDto cartUpdateRequestDto) {
+        Cart cart = cartRepository.findByMemberUuidAndCartUuid(
+                cartUpdateRequestDto.getMemberUuid(), cartUpdateRequestDto.getCartUuid()).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.INVALID_CART_ACCESS)
+        );
 
+        List<Cart> cartList = cartCustomRepository.findAllCartByProduct(cartUpdateRequestDto.getMemberUuid(),
+                cart.getProductCode());
+
+        if (cartUpdateRequestDto.getProductOptionListId() != null) {
+            cartList.stream()
+                    .filter(c -> Objects.equals(c.getProductOptionListId(),
+                            cartUpdateRequestDto.getProductOptionListId()))
+                    .findFirst()
+                    .ifPresent(existingCart -> {
+                        throw new BaseException(BaseResponseStatus.DUPLICATE_CART_OPTION);
+                    });
+        }
+
+        // 4. 동일한 상품이 있으면 상품별 수량 확인
+        if (!validateQuantityLimit(cartList, cart.getProductCode(), cartUpdateRequestDto.getQuantity()))
+            throw new BaseException(BaseResponseStatus.CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED);
+
+        cartRepository.save(cartUpdateRequestDto.toEntity(cart));
     }
 
     // 상품 코드, 옵션 유효성 검사
@@ -140,15 +160,15 @@ public class CartServiceImpl implements CartService {
     }
 
     // 상품별 구매 갯수 확인
-    private boolean validateQuantityLimit(List<Cart> cartList, CartCreateRequestDto dto) {
+    private boolean validateQuantityLimit(List<Cart> cartList, String productCode, int quantity) {
         int carttTotalQuantity = cartList.stream()
                 .mapToInt(Cart::getQuantity)
                 .sum();
-        int limitQuantity = productRepository.findByProductCode(dto.getProductCode())
+        int limitQuantity = productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT))
                 .getUserPurchaseLimit();
 
-        return carttTotalQuantity + dto.getQuantity() <= limitQuantity;
+        return carttTotalQuantity + quantity <= limitQuantity;
     }
 
     // 장바구니 상품 추가 가능여부 확인
