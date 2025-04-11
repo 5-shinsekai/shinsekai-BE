@@ -31,7 +31,7 @@ public class CartGetResponseDto {
                 .productCode(cart.getProductCode())
                 .productOptionListId(cart.getProductOptionListId())
                 .quantity(cart.getQuantity())
-                .checked(cart.isChecked())
+                .checked(cart.getChecked())
                 .engravingMessage(cart.getEngravingMessage())
                 .build();
     }
