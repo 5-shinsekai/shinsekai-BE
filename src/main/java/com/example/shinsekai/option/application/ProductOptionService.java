@@ -6,9 +6,9 @@ import com.example.shinsekai.option.dto.out.ProductOptionResponseDto;
 import java.util.List;
 
 public interface ProductOptionService {
-    void createOption(String productCode, ProductOptionRequestDto dto);
+    void createOption(ProductOptionRequestDto dto);
 
-    List<ProductOptionResponseDto> getOptionsByProductCode(String productCode);
+    ProductOptionResponseDto getProductOption(Long productOptionId);
 
-    void deleteOption(Long id);
+    void deleteOption(Long productOptionId);
 }

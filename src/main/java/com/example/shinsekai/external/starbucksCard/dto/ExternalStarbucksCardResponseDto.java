@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExternalStarbucksCardResponseDto {
+    private String cardName;
     private String cardNumber;
     private Double remainAmount;
     private String cardImageUrl;
@@ -15,6 +16,7 @@ public class ExternalStarbucksCardResponseDto {
 
     public ExternalStarbucksCardResponseVo toVo(){
         return ExternalStarbucksCardResponseVo.builder()
+                .cardName(cardName)
                 .cardNumber(cardNumber)
                 .remainAmount(remainAmount)
                 .cardImageUrl(cardImageUrl)

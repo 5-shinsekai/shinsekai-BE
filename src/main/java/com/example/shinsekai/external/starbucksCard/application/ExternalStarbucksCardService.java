@@ -12,6 +12,7 @@ public class ExternalStarbucksCardService {
         int randomImage = (int)(Math.random() * 3) + 1;
 
         return ExternalStarbucksCardResponseDto.builder()
+                .cardName(externalStarbucksCardRequestVo.getCardName())
                 .cardNumber(externalStarbucksCardRequestVo.getCardNumber())
                 .remainAmount(randomRemainAmount * 10000.0)
                 .cardImageUrl("/images/cards/starbucksCard" + randomImage + ".png")

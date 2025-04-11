@@ -3,10 +3,11 @@ package com.example.shinsekai.card.entity;
 import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StarbucksCard extends BaseEntity {
@@ -26,26 +27,9 @@ public class StarbucksCard extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String cardImageUrl;
     private String cardDescription;
-    private Double remainAmount; //Wrapper?
+    private Double remainAmount;
 
-    @Builder
-    public StarbucksCard(
-            Long id,
-            String cardUuid,
-            String cardName,
-            String cardNumber,
-            String cardImageUrl,
-            String cardDescription,
-            Double remainAmount
-    ) {
-
-        this.id = id;
-        this.cardUuid = cardUuid;
-        this.cardName = cardName;
-        this.cardNumber = cardNumber;
-        this.cardImageUrl = cardImageUrl;
-        this.cardDescription = cardDescription;
-        this.remainAmount = remainAmount;
+    public void useRemainAmount(Double price) {
+        this.remainAmount -= price;
     }
-
 }

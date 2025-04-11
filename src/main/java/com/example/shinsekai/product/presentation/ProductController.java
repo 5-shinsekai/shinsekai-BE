@@ -2,17 +2,24 @@ package com.example.shinsekai.product.presentation;
 
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.product.application.ProductFilterService;
 import com.example.shinsekai.product.application.ProductService;
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
-import com.example.shinsekai.product.dto.out.ProductResponseDto;
 import com.example.shinsekai.product.vo.in.ProductRequestVo;
+import com.example.shinsekai.product.vo.out.ProductOutlineResponseVo;
+import com.example.shinsekai.product.vo.out.ProductResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @Tag(name = "Product", description = "상품 관련 API")
 @RequestMapping("/api/v1/product")
@@ -22,6 +29,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductFilterService productfilterchService;
 
     @Operation(summary = "상품 생성")
     @PostMapping
@@ -29,20 +37,6 @@ public class ProductController {
         productService.createProduct(ProductRequestDto.from(productRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
-
-    /*
-    @Operation(summary = "상품 생성")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BaseResponseEntity<Void> createProduct(
-            @RequestPart("product") ProductRequestVo productVo,
-            @RequestPart("thumbnail") MultipartFile thumbnailFile,
-            @RequestPart("contentImage") MultipartFile contentImageFile) {
-
-        ProductRequestDto dto = ProductRequestDto.from(productVo);
-        productService.createProduct(dto, thumbnailFile, contentImageFile);
-        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
-    }
-    */
 
     @Operation(summary = "상품 수정")
     @PutMapping("/{productCode}")
@@ -76,13 +70,36 @@ public class ProductController {
 
     @Operation(summary = "판매 중인 상품 상세 조회")
     @GetMapping("/{productCode}")
-    public BaseResponseEntity<ProductResponseDto> getSellingProduct(@PathVariable String productCode) {
-        return new BaseResponseEntity<>(productService.getSellingProduct(productCode));
+    public BaseResponseEntity<ProductResponseVo> getSellingProduct(@PathVariable String productCode) {
+        return new BaseResponseEntity<>(productService.getSellingProduct(productCode).toVo());
     }
 
-    @Operation(summary = "판매 중인 상품 전체 조회")
-    @GetMapping
-    public BaseResponseEntity<List<ProductResponseDto>> getAllSellingProducts() {
-        return new BaseResponseEntity<>(productService.getAllSellingProducts());
+    @Operation(summary = "전체 판매 중인 상품 코드만 페이징 조회")
+    @GetMapping("/product-code/page")
+    public BaseResponseEntity<Page<String>> getSellingProductCodes(
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return new BaseResponseEntity<>(productService.getAllSellingProductCodes(pageable));
+    }
+
+    @Operation(summary = "전체 상품 요약 정보 조회")
+    @GetMapping("/{productCode}/outline")
+    public BaseResponseEntity<ProductOutlineResponseVo> getProductSummary(@PathVariable String productCode) {
+        return new BaseResponseEntity<>(productService.getSellingProductOutline(productCode).toVo());
+    }
+
+    @Operation(summary = "상품 복합 조건 검색")
+    @GetMapping("/filter")
+    public BaseResponseEntity<Page<String>> filterProductsByFilters(
+            @RequestParam Long mainCategoryId,
+            @RequestParam(required = false)List<Long> subCategoryIds,
+            @RequestParam(required = false)List<Integer> seasonIds,
+            @RequestParam(required = false)List<Long> sizeIds,
+            @RequestParam(required = false)String priceRange,
+            @PageableDefault(size = 10) Pageable pageable
+            ) {
+        return new BaseResponseEntity<>(productfilterchService.filterProducts(
+                mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRange, pageable
+        ));
     }
 }

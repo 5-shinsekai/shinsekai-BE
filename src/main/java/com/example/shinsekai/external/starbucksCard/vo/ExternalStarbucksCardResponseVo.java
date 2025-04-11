@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class ExternalStarbucksCardResponseVo {
+    private String cardName;
     private String cardNumber;
     private Double remainAmount;
     private String cardImageUrl;
