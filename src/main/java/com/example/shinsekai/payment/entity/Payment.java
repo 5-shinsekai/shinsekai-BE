@@ -46,4 +46,8 @@ public class Payment extends BaseEntity {
     //스타벅스 카드 uuid
     private String starbucksCardUuid;
 
+
+    public void cancelPayment() {
+        this.status = PaymentStatus.PAYMENT_CANCEL.getPaymentStatus();
+    }
 }
