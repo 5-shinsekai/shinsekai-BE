@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 public class SignUpRequestVo {
@@ -43,4 +44,6 @@ public class SignUpRequestVo {
     @NotNull(message = "INVALID_BIRTH_FORMAT")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birth;
+
+    private List<Long> agreementIdList;
 }

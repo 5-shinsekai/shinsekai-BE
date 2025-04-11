@@ -159,6 +159,7 @@ public enum BaseResponseStatus {
     
     // 약관
     NO_EXIST_AGREEMENT(HttpStatus.NOT_FOUND, false, 10040, "존재하지 않는 약관입니다."),
+    FAILED_TO_DELETE_AGREEMENT(HttpStatus.BAD_REQUEST, false, 10041, "삭제할 수 없는 약관입니다."),
 
     //구매
     PURCHASE_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, 20010, "구매 정보 생성에 실패했습니다."),

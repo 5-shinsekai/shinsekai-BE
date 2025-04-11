@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,6 +19,7 @@ import java.util.UUID;
 @ToString
 public class SignUpRequestDto {
 
+    private String memberUuid;
     private String loginId;
     private String email;
     private String password;
@@ -26,10 +28,11 @@ public class SignUpRequestDto {
     private Gender gender;
     private String name;
     private LocalDate birth;
+    private List<Long> agreementIdList;
 
     public Member toEntity(PasswordEncoder passwordEncoder) {
         return Member.builder()
-                .memberUuid(generateMemberUuid())
+                .memberUuid(memberUuid)
                 .loginId(loginId)
                 .email(email)
                 .password(passwordEncoder.encode(password))
@@ -44,6 +47,7 @@ public class SignUpRequestDto {
 
     @Builder
     public SignUpRequestDto(
+                String memberUuid,
                 String loginId,
                 String email,
                 String password,
@@ -51,8 +55,10 @@ public class SignUpRequestDto {
                 String phone,
                 Gender gender,
                 String name,
-                LocalDate birth
+                LocalDate birth,
+                List<Long> agreementIdList
     ) {
+        this.memberUuid = memberUuid;
         this.loginId = loginId;
         this.email = email;
         this.password = password;
@@ -61,10 +67,12 @@ public class SignUpRequestDto {
         this.gender = gender;
         this.name = name;
         this.birth = birth;
+        this.agreementIdList = agreementIdList;
     }
 
     public static SignUpRequestDto from(SignUpRequestVo signUpRequestVo) {
         return SignUpRequestDto.builder()
+                .memberUuid(generateMemberUuid())
                 .loginId(signUpRequestVo.getLoginId())
                 .email(signUpRequestVo.getEmail())
                 .password(signUpRequestVo.getPassword())
@@ -73,6 +81,7 @@ public class SignUpRequestDto {
                 .gender(signUpRequestVo.getGender())
                 .name(signUpRequestVo.getName())
                 .birth(signUpRequestVo.getBirth())
+                .agreementIdList(signUpRequestVo.getAgreementIdList())
                 .build();
     }
 

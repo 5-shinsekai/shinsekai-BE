@@ -3,8 +3,8 @@ package com.example.shinsekai.agreement.vo.in;
 import lombok.Getter;
 import lombok.ToString;
 
-@ToString
 @Getter
+@ToString
 public class AgreementCreateRequestVo {
 
     private String agreementTitle;

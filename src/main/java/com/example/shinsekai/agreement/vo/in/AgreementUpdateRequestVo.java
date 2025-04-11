@@ -6,8 +6,8 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 
-@ToString
 @Getter
+@ToString
 public class AgreementUpdateRequestVo {
 
     private Long agreementId;
