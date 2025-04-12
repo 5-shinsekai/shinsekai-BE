@@ -38,33 +38,47 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     @Transactional
-    public void createAddress(AddressCreateRequestDto addressRequestDto) {
+    public void createAddress(AddressCreateRequestDto addressCreateRequestDto) {
 
         // 최초 배송지인지 검사
-        int addressCount = addressRepository.countByMemberUuid(addressRequestDto.getMemberUuid());
-        boolean isFirstAddress = false;
+        int addressCount = addressRepository.countByMemberUuid(addressCreateRequestDto.getMemberUuid());
+        boolean isMainAddress = false;
+        // 최초 등록인 경우
         if (addressCount == 0) {
-            isFirstAddress = true;
+            isMainAddress = true;
+        } 
+        // 최초 등록이 아닌 경우
+        else if (addressCount > 0 && addressCount < 10) {
+            if (addressCreateRequestDto.getIsMainAddress()) {
+                List<Address> addressList = addressRepository.findByMemberUuid(addressCreateRequestDto.getMemberUuid())
+                        .stream()
+                        .filter(Address::getIsMainAddress)
+                        .collect(Collectors.toList());
+
+                Address prevMainAddress = addressList.get(0);       // 메인 주소지는 하나만 존재
+                prevMainAddress.clearMainAddress();                 // 기존 주소의 메인주소지 해제
+                isMainAddress = true;
+            }
         }
-        // 10개까지만 저장가능
-        else if(addressCount >= 10) {
+        // 10개까지만 저장가능  // addressCount >= 10
+        else {
             throw new BaseException(BaseResponseStatus.ADDRESS_QUANTITY_LIMIT_EXCEEDED);
         }
 
         // 최초 배송지인지를 전달하여 isMainAddress 셋팅
-        addressRepository.save(addressRequestDto.toEntity(isFirstAddress));
+        addressRepository.save(addressCreateRequestDto.toEntity(isMainAddress));
     }
 
     @Override
     @Transactional
-    public void updateAddress(AddressUpdateRequestDto addressRequestDto) {
+    public void updateAddress(AddressUpdateRequestDto addressUpdateRequestDto) {
         Address address = addressRepository
-                .findByMemberUuidAndAddressUuid(addressRequestDto.getMemberUuid(), addressRequestDto.getAddressUuid())
+                .findByMemberUuidAndAddressUuid(addressUpdateRequestDto.getMemberUuid(), addressUpdateRequestDto.getAddressUuid())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
 
         // 메인 주소지로 저장한다면
-        if (addressRequestDto.getIsMainAddress()) {
-            List<Address> addressList = addressRepository.findByMemberUuid(addressRequestDto.getMemberUuid())
+        if (addressUpdateRequestDto.getIsMainAddress()) {
+            List<Address> addressList = addressRepository.findByMemberUuid(addressUpdateRequestDto.getMemberUuid())
                     .stream()
                     .filter(Address::getIsMainAddress)
                     .collect(Collectors.toList());
@@ -73,7 +87,7 @@ public class AddressServiceImpl implements AddressService{
             prevMainAddress.clearMainAddress();                 // 기존 주소의 메인주소지 해제
         }
 
-        addressRepository.save(addressRequestDto.toEntity(address, addressRequestDto));
+        addressRepository.save(addressUpdateRequestDto.toEntity(address, addressUpdateRequestDto));
     }
 
     @Override

@@ -15,6 +15,7 @@ public class MemberAgreementListCreateRequestDto {
     public MemberAgreementList toEntity() {
         return MemberAgreementList.builder()
                 .memberUuid(memberUuid)
+                .isAgree(true)
                 .agreement(agreement)
                 .build();
     }

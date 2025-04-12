@@ -2,11 +2,8 @@ package com.example.shinsekai.agreement.application;
 
 import com.example.shinsekai.agreement.dto.in.AgreementCreateRequestDto;
 import com.example.shinsekai.agreement.dto.in.AgreementUpdateRequestDto;
-import com.example.shinsekai.agreement.dto.in.MemberAgreementListCreateRequestDto;
-import com.example.shinsekai.agreement.dto.in.MemberAgreementListUpdateRequestDto;
 import com.example.shinsekai.agreement.dto.out.AgreementResponseDto;
 import com.example.shinsekai.agreement.entity.Agreement;
-import com.example.shinsekai.agreement.entity.MemberAgreementList;
 import com.example.shinsekai.agreement.infrastructure.AgreementRepository;
 import com.example.shinsekai.agreement.infrastructure.MemberAgreementListRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
@@ -90,25 +87,5 @@ public class AgreementServiceImpl implements AgreementService{
                 .map(memberAgreementList
                         -> AgreementResponseDto.from(memberAgreementList.getAgreement()))
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_AGREEMENT));
-    }
-
-    @Override
-    @Transactional
-    public void createMemberAgreementList(MemberAgreementListCreateRequestDto memberAgreementListRequestDto) {
-        memberAgreementListRepository.save(memberAgreementListRequestDto.toEntity());
-    }
-
-    @Override
-    @Transactional
-    public void updateMemberAgreementList(MemberAgreementListUpdateRequestDto memberAgreementListUpdateRequestDto) {
-        MemberAgreementList savedMemberAgreementList =
-                memberAgreementListRepository.findById(memberAgreementListUpdateRequestDto.getMemberAgreementId())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_AGREEMENT));
-
-        // 기존에 저장된 데이터를 toEntity에 넣음
-        // 삼항연산자로 인자로 들어온 dto의 값만 업데이트
-        // dto에 빈 값으로 들어오면 db에 저장된 데이터로 셋팅
-        memberAgreementListRepository.save(memberAgreementListUpdateRequestDto.toEntity(savedMemberAgreementList));
-
     }
 }

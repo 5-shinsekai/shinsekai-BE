@@ -26,7 +26,7 @@ public class MemberAgreementList extends BaseEntity {
     private Agreement agreement;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isAgree;
+    private Boolean isAgree = true;
 
     private LocalDate expiredDate;
 
