@@ -156,6 +156,10 @@ public enum BaseResponseStatus {
     INVALID_ADDRESS_UUID(HttpStatus.BAD_REQUEST, false, 10028, "잘못된 형식의 배송지 UUID 입니다."),
     ADDRESS_QUANTITY_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 10029, "저장 가능한 배송지 개수를 초과했습니다."),
     FAILED_TO_DELETE_MAIN_ADDRESS(HttpStatus.BAD_REQUEST, false, 10030, "기본 배송지는 삭제가 불가능합니다."),
+    
+    // 약관
+    NO_EXIST_AGREEMENT(HttpStatus.NOT_FOUND, false, 10040, "존재하지 않는 약관입니다."),
+    FAILED_TO_DELETE_AGREEMENT(HttpStatus.BAD_REQUEST, false, 10041, "삭제할 수 없는 약관입니다."),
 
     //구매
     PURCHASE_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, 20010, "구매 정보 생성에 실패했습니다."),
