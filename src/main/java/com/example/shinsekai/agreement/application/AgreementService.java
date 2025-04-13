@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AgreementService {
 
-    List<AgreementResponseDto> getAllAgreement();
+    List<AgreementResponseDto> getAllAgreements();
     AgreementResponseDto getAgreement(Long agreementId);
     void createAgreement(AgreementCreateRequestDto agreementCreateRequestDto);
     void updateAgreement(AgreementUpdateRequestDto agreementUpdateRequestDto);

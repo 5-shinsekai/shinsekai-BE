@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
+
 import java.util.Comparator;
 
 import java.util.List;
@@ -49,13 +51,13 @@ public class AddressServiceImpl implements AddressService{
         } 
         // 최초 등록이 아닌 경우
         else if (addressCount > 0 && addressCount < 10) {
-            if (addressCreateRequestDto.getIsMainAddress()) {
-                List<Address> addressList = addressRepository.findByMemberUuid(addressCreateRequestDto.getMemberUuid())
-                        .stream()
-                        .filter(Address::getIsMainAddress)
-                        .collect(Collectors.toList());
 
-                Address prevMainAddress = addressList.get(0);       // 메인 주소지는 하나만 존재
+            Boolean requestedDtoIsMain = addressCreateRequestDto.getIsMainAddress() == null ? false : true;
+            if (requestedDtoIsMain) {
+                Address prevMainAddress = addressRepository
+                        .findByMemberUuidAndIsMainAddressIsTrue(addressCreateRequestDto.getMemberUuid())
+                        .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_SAVE_ADDRESS));
+
                 prevMainAddress.clearMainAddress();                 // 기존 주소의 메인주소지 해제
                 isMainAddress = true;
             }
@@ -81,13 +83,13 @@ public class AddressServiceImpl implements AddressService{
             List<Address> addressList = addressRepository.findByMemberUuid(addressUpdateRequestDto.getMemberUuid())
                     .stream()
                     .filter(Address::getIsMainAddress)
-                    .collect(Collectors.toList());
+                    .toList();
 
             Address prevMainAddress = addressList.get(0);       // 메인 주소지는 하나만 존재
             prevMainAddress.clearMainAddress();                 // 기존 주소의 메인주소지 해제
         }
 
-        addressRepository.save(addressUpdateRequestDto.toEntity(address, addressUpdateRequestDto));
+        addressRepository.save(addressUpdateRequestDto.toEntity(address));
     }
 
     @Override

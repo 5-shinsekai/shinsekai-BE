@@ -25,12 +25,12 @@ public class AgreementServiceImpl implements AgreementService{
     private final MemberAgreementListRepository memberAgreementListRepository;
 
     @Override
-    public List<AgreementResponseDto> getAllAgreement() {
+    public List<AgreementResponseDto> getAllAgreements() {
         return agreementRepository.findAll()
                 .stream()
                 .map(AgreementResponseDto::from)
                 .filter(agreement -> agreement.getStoredExpiredDate() == null)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

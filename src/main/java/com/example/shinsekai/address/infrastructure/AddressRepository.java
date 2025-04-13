@@ -15,4 +15,6 @@ public interface AddressRepository extends JpaRepository<Address,Long> {
     int countByMemberUuid(String memberUuid);
     Optional<Address> findByMemberUuidAndAddressUuid(String memberUuid, String addressUuid);
     Optional<Address> findByAddressUuid(String addressUuid);
+    Optional<Address> findByMemberUuidAndIsMainAddressIsTrue(String memberUuid);
+
 }

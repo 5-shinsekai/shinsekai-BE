@@ -29,7 +29,7 @@ public class AgreementController {
     @GetMapping
     public BaseResponseEntity<List<AgreementResponseVo>> getAllAgreements() {
         return new BaseResponseEntity<>(
-                agreementService.getAllAgreement()
+                agreementService.getAllAgreements()
                         .stream()
                         .map(AgreementResponseDto::toVo)
                         .toList());
