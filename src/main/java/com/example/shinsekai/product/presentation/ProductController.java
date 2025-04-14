@@ -3,6 +3,7 @@ package com.example.shinsekai.product.presentation;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.product.application.ProductFilterService;
+import com.example.shinsekai.product.application.ProductSearchService;
 import com.example.shinsekai.product.application.ProductService;
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
 import com.example.shinsekai.product.vo.in.ProductRequestVo;
@@ -29,7 +30,8 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductFilterService productfilterchService;
+    private final ProductFilterService productFilterService;
+    private final ProductSearchService productSearchService;
 
     @Operation(summary = "상품 생성")
     @PostMapping
@@ -92,14 +94,22 @@ public class ProductController {
     @GetMapping("/filter")
     public BaseResponseEntity<Page<String>> filterProductsByFilters(
             @RequestParam Long mainCategoryId,
-            @RequestParam(required = false)List<Long> subCategoryIds,
-            @RequestParam(required = false)List<Integer> seasonIds,
-            @RequestParam(required = false)List<Long> sizeIds,
-            @RequestParam(required = false)String priceRange,
+            @RequestParam(required = false) List<Long> subCategoryIds,
+            @RequestParam(required = false) List<Integer> seasonIds,
+            @RequestParam(required = false) List<Long> sizeIds,
+            @RequestParam(required = false) String priceRange,
             @PageableDefault(size = 10) Pageable pageable
-            ) {
-        return new BaseResponseEntity<>(productfilterchService.filterProducts(
+    ) {
+        return new BaseResponseEntity<>(productFilterService.filterProducts(
                 mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRange, pageable
         ));
+    }
+
+    @Operation(summary = "상품명  검색")
+    @GetMapping("/search")
+    public BaseResponseEntity<Page<String>> searchProducts(
+            @RequestParam String keyword,
+            @PageableDefault(size = 10) Pageable pageable) {
+        return new BaseResponseEntity<>(productSearchService.searchByKeyword(keyword,pageable));
     }
 }
