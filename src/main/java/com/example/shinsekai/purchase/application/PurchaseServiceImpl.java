@@ -37,21 +37,15 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     @Transactional
     public void createPurchase(PurchaseRequestDto purchaseRequestDto, List<PurchaseProductListRequestDto> purchaseProductListRequestDtoList) {
-        try {
-            purchaseRepository.save(purchaseRequestDto.toEntity());
-            purchaseProductListRepository.saveAll(purchaseProductListRequestDtoList.stream()
-                    .map(PurchaseProductListRequestDto::toEntity).toList()
-            );
-        }catch (Exception e){
-            //결제 취소
-
-            throw new BaseException(BaseResponseStatus.PURCHASE_CREATION_FAILED);
-        }
+        purchaseRepository.save(purchaseRequestDto.toEntity());
+        purchaseProductListRepository.saveAll(purchaseProductListRequestDtoList.stream()
+                .map(PurchaseProductListRequestDto::toEntity).toList()
+        );
     }
 
     @Override
     @Transactional
     public void deletePurchase(PurchaseDeleteRequestDto purchaseDeleteRequestDto) {
-
+//        purchaseRepository.findBy
     }
 }

@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum PurchaseStatus {
-    PURCHASE_OK("주문 완료"),
-    PURCHASE_CANCEL("주문 취소");
+    PURCHASE_OK("DONE"),
+    PURCHASE_CANCEL("CANCEL");
 
     private final String purchaseStatus;
 

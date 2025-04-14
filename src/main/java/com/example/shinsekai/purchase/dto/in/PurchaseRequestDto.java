@@ -52,4 +52,19 @@ public class PurchaseRequestDto {
                 .build();
     }
 
+    public static PurchaseRequestDto fromOrder(OrderRequestDto orderRequestDto, String paymentCode){
+        return PurchaseRequestDto.builder()
+                .purchaseCode(orderRequestDto.getPurchaseCode())
+                .paymentCode(paymentCode)
+                .memberUuid(orderRequestDto.getMemberUuid())
+                .purchaseStatus(orderRequestDto.getPurchaseStatus())
+                .receiver(orderRequestDto.getReceiver())
+                .address(orderRequestDto.getAddress())
+                .giftCertificationUuid(orderRequestDto.getGiftCertificationUuid())
+                .couponUuid(orderRequestDto.getCouponUuid())
+                .shipmentFee(orderRequestDto.getShipmentFee())
+                .productTotalPrice(orderRequestDto.getProductTotalPrice())
+                .build();
+    }
+
 }

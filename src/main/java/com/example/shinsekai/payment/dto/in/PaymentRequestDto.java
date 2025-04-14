@@ -2,6 +2,7 @@ package com.example.shinsekai.payment.dto.in;
 
 import com.example.shinsekai.payment.entity.Payment;
 import com.example.shinsekai.payment.vo.in.PaymentRequestVo;
+import com.example.shinsekai.purchase.dto.in.OrderRequestDto;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -75,6 +76,27 @@ public class PaymentRequestDto {
                 .installmentPlanMonths(paymentRequestVo.getInstallmentPlanMonths())
                 .useCardPoint(paymentRequestVo.isUseCardPoint())
                 .memberStarbucksCardUuid(paymentRequestVo.getMemberStarbucksCardUuid())
+                .build();
+    }
+
+    public static PaymentRequestDto fromOrder(OrderRequestDto orderRequestDto){
+        return PaymentRequestDto.builder()
+                .memberUuid(orderRequestDto.getMemberUuid())
+                .paymentCode(generatePaymentCode())
+                .paymentKey(orderRequestDto.getPaymentKey())
+                .purchaseName(orderRequestDto.getPurchaseName())
+                .paymentPrice(orderRequestDto.getPaymentPrice())
+                .paymentMethod(orderRequestDto.getPaymentMethod())
+                .status(orderRequestDto.getStatus())
+                .receiptUrl(orderRequestDto.getReceiptUrl())
+                .approvedAt(orderRequestDto.getApprovedAt())
+                .cardName(orderRequestDto.getCardName())
+                .cardNumber(orderRequestDto.getCardNumber())
+                .approveNo(orderRequestDto.getApproveNo())
+                .isInterestFree(orderRequestDto.isInterestFree())
+                .installmentPlanMonths(orderRequestDto.getInstallmentPlanMonths())
+                .useCardPoint(orderRequestDto.isUseCardPoint())
+                .memberStarbucksCardUuid(orderRequestDto.getMemberStarbucksCardUuid())
                 .build();
     }
 

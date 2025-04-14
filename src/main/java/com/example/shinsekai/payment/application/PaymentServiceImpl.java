@@ -21,17 +21,17 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public void createPayment(PaymentRequestDto paymentRequestDto) {
-        paymentRepository.save(paymentRequestDto.toEntity());
+    public String createPayment(PaymentRequestDto paymentRequestDto) {
+        return paymentRepository.save(paymentRequestDto.toEntity()).getPaymentCode();
 
-        //스타벅스 카드 결제
-        if(paymentRequestDto.getMemberStarbucksCardUuid() != null){
-            starbucksCardService.useRemainAmount(UseStarbucksCardRequestDto.builder()
-                    .memberStarbucksCardUuid(paymentRequestDto.getMemberStarbucksCardUuid())
-                    .memberUuid(paymentRequestDto.getMemberUuid())
-                    .price(paymentRequestDto.getPaymentPrice())
-                    .build());
-        }
+//        //스타벅스 카드 결제
+//        if(paymentRequestDto.getMemberStarbucksCardUuid() != null){
+//            starbucksCardService.useRemainAmount(UseStarbucksCardRequestDto.builder()
+//                    .memberStarbucksCardUuid(paymentRequestDto.getMemberStarbucksCardUuid())
+//                    .memberUuid(paymentRequestDto.getMemberUuid())
+//                    .price(paymentRequestDto.getPaymentPrice())
+//                    .build());
+//        }
     }
 
     @Override
