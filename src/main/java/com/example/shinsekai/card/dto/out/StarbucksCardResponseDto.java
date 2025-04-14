@@ -15,6 +15,7 @@ public class StarbucksCardResponseDto {
     private String cardName;
     private String cardImageUrl;
     private Double remainAmount;
+    private Boolean agreed;
 
     public static StarbucksCardResponseDto from(StarbucksCard starbucksCard, String memberStarbucksCardListUuid){
         return StarbucksCardResponseDto.builder()
@@ -23,6 +24,7 @@ public class StarbucksCardResponseDto {
                 .cardNumber(starbucksCard.getCardNumber())
                 .cardImageUrl(starbucksCard.getCardImageUrl())
                 .remainAmount(starbucksCard.getRemainAmount())
+                .agreed(starbucksCard.getAgreed())
                 .build();
     }
 
@@ -33,6 +35,7 @@ public class StarbucksCardResponseDto {
                 .cardNumber(cardNumber.substring(cardNumber.length() - 6))
                 .cardImageUrl(cardImageUrl)
                 .remainAmount(remainAmount)
+
                 .build();
     }
 }

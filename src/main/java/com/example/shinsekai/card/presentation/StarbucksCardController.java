@@ -29,7 +29,7 @@ public class StarbucksCardController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "활성화된 스타벅스 카드 조회")
-    @GetMapping//파라미터를 통해서 active 값에 대해 따라 값 다르게 들고 올 수 잇음
+    @GetMapping
     public List<StarbucksCardResponseVo> getActiveStarbucksCards(HttpServletRequest request) {
         return starbucksCardService.getActiveStarbucksCards(jwtTokenProvider.getAccessToken(request)).stream()
                 .map(StarbucksCardResponseDto::toVo)
@@ -44,10 +44,9 @@ public class StarbucksCardController {
                 StarbucksCardRequestDto.from( starbucksCardRequestVo,jwtTokenProvider.getAccessToken(request))
         );
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
-
     }
 
-    @Operation(summary = "스타벅스 카드 삭제 (비활성화만 가능)")
+    @Operation(summary = "스타벅스 카드 삭제", description = "비활성화만 가능")
     @DeleteMapping("/{memberStarbucksCardUuid}")
     public BaseResponseEntity<Void> deleteStarbucksCard(HttpServletRequest request,
                                                         @PathVariable String memberStarbucksCardUuid) {

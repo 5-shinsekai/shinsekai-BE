@@ -16,7 +16,11 @@ public class StarbucksCardResponseVo {
     private Double remainAmount;
 
     @Builder
-    public StarbucksCardResponseVo(String memberStarbucksCardListUuid, String cardName, String cardNumber, String cardImageUrl, double remainAmount) {
+    public StarbucksCardResponseVo(String memberStarbucksCardListUuid,
+                                   String cardName,
+                                   String cardNumber,
+                                   String cardImageUrl,
+                                   Double remainAmount) {
         this.memberStarbucksCardListUuid = memberStarbucksCardListUuid;
         this.cardName = cardName;
         this.cardNumber = cardNumber;
