@@ -76,6 +76,8 @@ jobs:
             echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
             echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+            echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
+            echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
             
             docker pull ${{ steps.login-ecr.outputs.registry }}/shinsekai-server:latest
             docker-compose down
