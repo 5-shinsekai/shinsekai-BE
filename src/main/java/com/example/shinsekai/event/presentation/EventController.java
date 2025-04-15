@@ -52,7 +52,7 @@ public class EventController {
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
-    @Operation(summary = "시즌 하드 삭제")
+    @Operation(summary = "기획전 하드 삭제")
     @DeleteMapping("/{eventId}")
     public BaseResponseEntity<Void> deleteEvent(@PathVariable Integer eventId) {
         eventService.deleteEvent(eventId);
