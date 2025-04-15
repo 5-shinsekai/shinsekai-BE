@@ -129,6 +129,9 @@ public class EmailServiceImpl implements EmailService{
 
             helper.setText(html, true);
 
+            log.info("=== MAIL CONFIG CHECK ===");
+            log.info("MAIL_USERNAME from MailProperties: {}", mailProperties.getUsername());
+            log.info("MAIL_PASSWORD from MailProperties: {}", mailProperties.getPassword());
             mailSender.send(message);
 
         } catch (Exception e) {
