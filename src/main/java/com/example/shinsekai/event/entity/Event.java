@@ -3,11 +3,13 @@ package com.example.shinsekai.event.entity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Event {
 
     @Id
@@ -30,18 +32,14 @@ public class Event {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    @Column(nullable = false)
-    private Long categoryId;
-
     @Builder
     public Event(int id, String eventName, String eventImage, String eventImageAltText,
-                 LocalDate startDate, LocalDate endDate, Long categoryId) {
+                 LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.eventName = eventName;
         this.eventImage = eventImage;
         this.eventImageAltText = eventImageAltText;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.categoryId = categoryId;
     }
 }

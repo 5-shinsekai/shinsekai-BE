@@ -171,7 +171,10 @@ public enum BaseResponseStatus {
     PURCHASE_DUPLICATE(HttpStatus.NOT_FOUND, false, 20019, "이미 처리된 구매 요청입니다."),
 
     //시즌
-    NO_EXIST_SEASON(HttpStatus.NOT_FOUND, false, 20030, "시즌 정보가 존재하지 않습니다.");
+    NO_EXIST_SEASON(HttpStatus.NOT_FOUND, false, 20030, "시즌 정보가 존재하지 않습니다."),
+
+    // 기획전(이벤트)
+    NO_EXIST_EVENT(HttpStatus.NOT_FOUND, false, 20040, "기획전 정보가 존재하지 않습니다.");
 
     private final HttpStatusCode httpStatusCode;
     private final boolean isSuccess;
