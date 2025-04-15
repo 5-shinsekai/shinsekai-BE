@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class CartDeleteRequestVo {
-    private Long id;
+    private String cartUuid;
 }

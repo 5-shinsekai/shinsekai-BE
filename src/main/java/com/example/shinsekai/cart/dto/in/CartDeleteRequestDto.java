@@ -6,22 +6,22 @@ import lombok.Getter;
 
 @Getter
 public class CartDeleteRequestDto {
-    private Long id;
+    private String cartUuid;
 
     @Builder
-    public CartDeleteRequestDto(Long id) {
-        this.id = id;
+    public CartDeleteRequestDto(String cartUuid) {
+        this.cartUuid = cartUuid;
     }
 
     public static CartDeleteRequestDto from(CartDeleteRequestVo cartDeleteRequestVo) {
         return CartDeleteRequestDto.builder()
-                .id(cartDeleteRequestVo.getId())
+                .cartUuid(cartDeleteRequestVo.getCartUuid())
                 .build();
     }
 
-    public static CartDeleteRequestDto from(Long id) {
+    public static CartDeleteRequestDto from(String cartUuid) {
         return CartDeleteRequestDto.builder()
-                .id(id)
+                .cartUuid(cartUuid)
                 .build();
     }
 }

@@ -6,12 +6,9 @@ import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
 import com.example.shinsekai.cart.dto.out.CartGetResponseDto;
 import com.example.shinsekai.cart.dto.out.CartGroupedByProductTypeDto;
 import com.example.shinsekai.cart.entity.Cart;
-import com.example.shinsekai.cart.infrastructure.CartCustomRepoImpl;
 import com.example.shinsekai.cart.infrastructure.CartRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
-import com.example.shinsekai.common.jwt.JwtTokenProvider;
-import com.example.shinsekai.option.infrastructure.ProductOptionListRepository;
 import com.example.shinsekai.product.infrastructure.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,33 +24,27 @@ import java.util.Objects;
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
-    private final CartCustomRepoImpl cartCustomRepository;
-    private final ProductOptionListRepository productOptionListRepository;
     private final ProductRepository productRepository;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private static final int MAX_CART_PRODUCT_KINDS_PER_USER = 20;
 
     @Override
     @Transactional
     public void createCart(CartCreateRequestDto cartCreateRequestDto) {
-        // 1. 유효한 상품 및 옵션인지 확인
-        if (!validateProductAndOption(cartCreateRequestDto))
-            throw new BaseException(BaseResponseStatus.INVALID_INPUT);
-
-        // 2. 장바구니에 동일한 상품이 있는지 조회
-        List<Cart> carts = cartCustomRepository.findAllCartByProduct(
+        // 1. 장바구니에 동일한 상품이 있는지 조회
+        List<Cart> carts = cartRepository.findAllByMemberUuidAndProductCodeAndIsDeletedFalse(
                 cartCreateRequestDto.getMemberUuid(),
                 cartCreateRequestDto.getProductCode()
         );
 
-        // 3. 동일한 상품이 없으면
+        // 2. 동일한 상품이 없으면
         if (carts.isEmpty()) {
             // 장바구니 상품 최대 20개
-            if (!validateProductKindLimit(cartCreateRequestDto))
+            if (!validateProductKindLimit(cartCreateRequestDto.getMemberUuid()))
                 throw new BaseException(BaseResponseStatus.CART_PRODUCT_KIND_LIMIT_EXCEEDED);
             cartRepository.save(cartCreateRequestDto.toEntity());
         } else {
-            // 4. 동일한 상품이 있으면 상품별 수량 확인
+            // 3. 동일한 상품이 있으면 상품별 수량 확인
             if (!validateQuantityLimit(carts, cartCreateRequestDto.getProductCode(), cartCreateRequestDto.getQuantity()))
                 throw new BaseException(BaseResponseStatus.CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED);
 
@@ -73,7 +64,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public CartGroupedByProductTypeDto getAllCarts(String memberUuid) {
-        List<Cart> cartList = cartCustomRepository.findByMemberUuid(memberUuid);
+        List<Cart> cartList = cartRepository.findAllByMemberUuidAndIsDeletedFalse(memberUuid);
 
         List<CartGetResponseDto> frozen = cartList.stream()
                 .filter(Cart::getIsFrozen)
@@ -94,7 +85,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void deleteCart(String memberUuid, CartDeleteRequestDto cartDeleteRequestDto) {
-        cartRepository.findByMemberUuidAndId(memberUuid, cartDeleteRequestDto.getId()).orElseThrow(
+        cartRepository.findByMemberUuidAndCartUuidAndIsDeletedFalse(memberUuid, cartDeleteRequestDto.getCartUuid()).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.INVALID_CART_ACCESS)
         ).setDeleted();
     }
@@ -102,9 +93,9 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void deleteSelectedAllCart(String memberUuid, List<CartDeleteRequestDto> cartDeleRequestDtoList) {
-        List<Cart> carts = cartRepository.findAllByMemberUuidAndIdIn(memberUuid,
+        List<Cart> carts = cartRepository.findAllByMemberUuidAndCartUuidInAndIsDeletedFalse(memberUuid,
                 cartDeleRequestDtoList.stream()
-                        .map(CartDeleteRequestDto::getId)
+                        .map(CartDeleteRequestDto::getCartUuid)
                         .toList());
 
         if (carts.size() != cartDeleRequestDtoList.size()) {
@@ -123,12 +114,14 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void updateCart(CartUpdateRequestDto cartUpdateRequestDto) {
-        Cart cart = cartRepository.findByMemberUuidAndCartUuid(
+        Cart cart = cartRepository.findByMemberUuidAndCartUuidAndIsDeletedFalse(
                 cartUpdateRequestDto.getMemberUuid(), cartUpdateRequestDto.getCartUuid()).orElseThrow(
                 () -> new BaseException(BaseResponseStatus.INVALID_CART_ACCESS)
         );
 
-        List<Cart> cartList = cartCustomRepository.findAllCartByProduct(cartUpdateRequestDto.getMemberUuid(),
+
+        List<Cart> cartList = cartRepository.findAllByMemberUuidAndProductCodeAndIsDeletedFalse(
+                cartUpdateRequestDto.getMemberUuid(),
                 cart.getProductCode());
 
         if (cartUpdateRequestDto.getProductOptionListId() != null) {
@@ -148,32 +141,22 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cartUpdateRequestDto.toEntity(cart));
     }
 
-    // 상품 코드, 옵션 유효성 검사
-    private boolean validateProductAndOption(CartCreateRequestDto dto) {
-        if (!productRepository.existsByProductCode(dto.getProductCode()))
-            return false;
-
-        if (!productOptionListRepository.existsById(dto.getProductOptionListId()))
-            return false;
-
-        return true;
-    }
-
     // 상품별 구매 갯수 확인
     private boolean validateQuantityLimit(List<Cart> cartList, String productCode, int quantity) {
-        int carttTotalQuantity = cartList.stream()
+        int cartTotalQuantity = cartList.stream()
                 .mapToInt(Cart::getQuantity)
                 .sum();
         int limitQuantity = productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT))
                 .getUserPurchaseLimit();
 
-        return carttTotalQuantity + quantity <= limitQuantity;
+        return cartTotalQuantity + quantity <= limitQuantity;
     }
 
     // 장바구니 상품 추가 가능여부 확인
-    private boolean validateProductKindLimit(CartCreateRequestDto dto) {
-        return cartCustomRepository.canAddMoreProductKindToCart(dto.getMemberUuid());
+    private boolean validateProductKindLimit(String memberUuid) {
+        Long count = cartRepository.countDistinctProductCodeByMemberUuid(memberUuid);
+        return count == null || count < MAX_CART_PRODUCT_KINDS_PER_USER;
     }
 
 }
