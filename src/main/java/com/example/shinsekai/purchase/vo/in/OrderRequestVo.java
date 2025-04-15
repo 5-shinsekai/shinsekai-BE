@@ -1,5 +1,6 @@
 package com.example.shinsekai.purchase.vo.in;
 
+import com.example.shinsekai.payment.entity.PaymentStatus;
 import com.example.shinsekai.purchase.entity.PurchaseStatus;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,8 +12,6 @@ import java.util.List;
 @ToString
 public class OrderRequestVo {
     //구매
-    private String purchaseCode;
-
     private PurchaseStatus purchaseStatus;
     private String receiver;
     private String address;
@@ -24,21 +23,11 @@ public class OrderRequestVo {
     private List<PurchaseProductRequestVo> orderProductList;
 
     //결제
-    private String paymentKey;
     private String orderName;
     private Double paymentPrice;
     private String paymentMethod;
-    private String status;
+    private PaymentStatus paymentStatus;
     private String receiptUrl;
-    private LocalDateTime approvedAt;
-
-    //간편결제
-    private String cardName;
-    private String cardNumber;
-    private String approveNo;
-    private boolean isInterestFree;
-    private int installmentPlanMonths;
-    private boolean useCardPoint;
 
     //스타벅스 카드
     private String memberStarbucksCardUuid;

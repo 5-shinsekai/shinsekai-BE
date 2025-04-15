@@ -24,15 +24,8 @@ import static com.example.shinsekai.purchase.dto.in.PurchaseTemporaryRequestDto.
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
 
-    private final RedisProvider redisProvider;
-    private final JwtTokenProvider jwtTokenProvider;
     private final PurchaseRepository purchaseRepository;
     private final PurchaseProductListRepository purchaseProductListRepository;
-
-    @Override
-    public String createTemporaryPurchase(PurchaseTemporaryRequestDto purchaseTemporaryRequestDto) {
-        return redisProvider.setTemporaryPayment(generateOrderCode(),purchaseTemporaryRequestDto,10);
-    }
 
     @Override
     @Transactional
@@ -45,7 +38,13 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     @Transactional
-    public void deletePurchase(PurchaseDeleteRequestDto purchaseDeleteRequestDto) {
-//        purchaseRepository.findBy
+    public void deletePurchase(PurchaseDeleteRequestDto purchaseDeleteDto) {
+        purchaseRepository.findByPurchaseCodeAndMemberUuid(purchaseDeleteDto.getPurchaseCode(), purchaseDeleteDto.getMemberUuid())
+                .orElseThrow(()-> new BaseException(BaseResponseStatus.PURCHASE_NOT_FOUND)).cancelPurchase(purchaseDeleteDto.getCancelReason());
+    }
+
+    @Override
+    public List<PurchaseProductList> findPurchaseProductListByPurchaseCode(String purchaseCode) {
+        return purchaseProductListRepository.findByPurchaseCode(purchaseCode);
     }
 }

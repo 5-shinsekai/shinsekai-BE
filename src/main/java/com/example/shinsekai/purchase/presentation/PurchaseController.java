@@ -27,39 +27,19 @@ import java.util.stream.Collectors;
 @RestController
 public class PurchaseController {
 
-    private final PurchaseService purchaseService;
     private final OrderService orderService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    //Todo: 간편결제 의논 후 스타벅스카드만 사용시 주문번호 자동생성 위치 변경 및 api 삭제
-    @Operation(summary = "주문 번호 생성", description = "간편결제 이용 시 주문 번호 생성 후 레디스에 임시저장/ 스벅카드만 사용 시 필요없음요....")
-    @PostMapping("/orderId")
-    public String createTemporaryPurchase(
-            HttpServletRequest request,
-            @RequestBody PurchaseTemporaryRequestVo purchaseTemporaryRequestVo) {
-        return purchaseService.createTemporaryPurchase(
-                PurchaseTemporaryRequestDto.from(purchaseTemporaryRequestVo, jwtTokenProvider.getAccessToken(request))
-        );
-    }
-
-//    @Operation(summary = "구매 정보 저장")
-//    @PostMapping()
-//    public BaseResponseEntity<Boolean> createPurchase(HttpServletRequest request,
-//                                                      @RequestBody PurchaseRequestVo purchaseRequestVo) {
-//        purchaseService.createPurchase(PurchaseRequestDto.from(purchaseRequestVo, jwtTokenProvider.getAccessToken(request))
-//                , purchaseRequestVo.getOrderProductList().stream().map(PurchaseProductListRequestDto::from).toList()
-//        );
-//        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
-//    }
 
     @Operation(summary = "구매 정보 저장")
     @PostMapping
     public BaseResponseEntity<Boolean> createPurchase(HttpServletRequest request,
                                                       @RequestBody OrderRequestVo orderRequestVo) {
 
-        log.info("OrderRequestVo: {}", orderRequestVo);
-        orderService.createOrder(OrderRequestDto.from(orderRequestVo, jwtTokenProvider.getAccessToken(request))
-                , orderRequestVo.getOrderProductList().stream().map(PurchaseProductListRequestDto::from).toList()
+        OrderRequestDto orderDto = OrderRequestDto.from(orderRequestVo, jwtTokenProvider.getAccessToken(request));
+        orderService.createOrder(orderDto, orderRequestVo.getOrderProductList().stream()
+                        .map(listVo->PurchaseProductListRequestDto.from(listVo,orderDto.getPurchaseCode()))
+                        .toList()
         );
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }

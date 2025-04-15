@@ -1,10 +1,16 @@
 package com.example.shinsekai.purchase.dto.in;
 
+import com.example.shinsekai.payment.entity.PaymentStatus;
 import com.example.shinsekai.purchase.entity.PurchaseStatus;
 import com.example.shinsekai.purchase.vo.in.OrderRequestVo;
 import lombok.*;
+import org.springframework.security.core.parameters.P;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 @Getter
 @AllArgsConstructor
 @Builder
@@ -26,24 +32,15 @@ public class OrderRequestDto {
     private String purchaseName;
     private Double paymentPrice;
     private String paymentMethod;
-    private String status;
+    private PaymentStatus paymentStatus;
     private String receiptUrl;
-    private LocalDateTime approvedAt;
-
-    //간편결제
-    private String cardName;
-    private String cardNumber;
-    private String approveNo;
-    private boolean isInterestFree;
-    private int installmentPlanMonths;
-    private boolean useCardPoint;
 
     //스타벅스 카드
     private String memberStarbucksCardUuid;
 
     public static OrderRequestDto from(OrderRequestVo vo, String memberUuid){
         return OrderRequestDto.builder()
-                .purchaseCode(vo.getPurchaseCode())
+                .purchaseCode(generateOrderCode())
                 .memberUuid(memberUuid)
                 .purchaseStatus(vo.getPurchaseStatus())
                 .receiver(vo.getReceiver())
@@ -54,24 +51,21 @@ public class OrderRequestDto {
                 .productTotalPrice(vo.getProductTotalPrice())
 
                 // 결제
-                .paymentKey(vo.getPaymentKey())
                 .purchaseName(vo.getOrderName())
                 .paymentPrice(vo.getPaymentPrice())
                 .paymentMethod(vo.getPaymentMethod())
-                .status(vo.getStatus())
+                .paymentStatus(vo.getPaymentStatus())
                 .receiptUrl(vo.getReceiptUrl())
-                .approvedAt(vo.getApprovedAt())
-
-                // 간편결제
-                .cardName(vo.getCardName())
-                .cardNumber(vo.getCardNumber())
-                .approveNo(vo.getApproveNo())
-                .isInterestFree(vo.isInterestFree())
-                .installmentPlanMonths(vo.getInstallmentPlanMonths())
-                .useCardPoint(vo.isUseCardPoint())
 
                 // 스타벅스 카드
                 .memberStarbucksCardUuid(vo.getMemberStarbucksCardUuid())
                 .build();
+    }
+    public static String generateOrderCode() {
+        String prefix = "O";
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String uuidPart = UUID.randomUUID().toString().substring(0, 8);
+
+        return prefix + date + "-" + uuidPart;
     }
 }

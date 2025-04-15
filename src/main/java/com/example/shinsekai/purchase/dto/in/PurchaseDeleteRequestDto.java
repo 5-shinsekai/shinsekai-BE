@@ -11,9 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PurchaseDeleteRequestDto {
     private String purchaseCode;
+    private String cancelReason;
     private String memberUuid;
 
-    public static PurchaseDeleteRequestDto from(String purchaseCode, String memberUuid) {
-        return PurchaseDeleteRequestDto.builder().purchaseCode(purchaseCode).memberUuid(memberUuid).build();
+    public static PurchaseDeleteRequestDto from(String purchaseCode, String cancelReason, String memberUuid) {
+        return PurchaseDeleteRequestDto.builder()
+                .purchaseCode(purchaseCode)
+                .cancelReason(cancelReason)
+                .memberUuid(memberUuid)
+                .build();
     }
 }

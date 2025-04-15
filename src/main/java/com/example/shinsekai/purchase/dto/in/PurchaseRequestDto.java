@@ -7,6 +7,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 @Getter
 @ToString
 @Builder
@@ -37,20 +41,20 @@ public class PurchaseRequestDto {
                 .build();
     }
 
-    public static PurchaseRequestDto from(PurchaseRequestVo purchaseRequestVo, String memberUuid){
-        return PurchaseRequestDto.builder()
-                .purchaseCode(purchaseRequestVo.getPurchaseCode())
-                .paymentCode(purchaseRequestVo.getPaymentCode())
-                .memberUuid(memberUuid)
-                .purchaseStatus(purchaseRequestVo.getPurchaseStatus())
-                .receiver(purchaseRequestVo.getReceiver())
-                .address(purchaseRequestVo.getAddress())
-                .giftCertificationUuid(purchaseRequestVo.getGiftCertificationUuid())
-                .couponUuid(purchaseRequestVo.getCouponUuid())
-                .shipmentFee(purchaseRequestVo.getShipmentFee())
-                .productTotalPrice(purchaseRequestVo.getProductTotalPrice())
-                .build();
-    }
+//    public static PurchaseRequestDto from(PurchaseRequestVo purchaseRequestVo, String memberUuid){
+//        return PurchaseRequestDto.builder()
+//                .purchaseCode(purchaseRequestVo.getPurchaseCode())
+//                .paymentCode(purchaseRequestVo.getPaymentCode())
+//                .memberUuid(memberUuid)
+//                .purchaseStatus(purchaseRequestVo.getPurchaseStatus())
+//                .receiver(purchaseRequestVo.getReceiver())
+//                .address(purchaseRequestVo.getAddress())
+//                .giftCertificationUuid(purchaseRequestVo.getGiftCertificationUuid())
+//                .couponUuid(purchaseRequestVo.getCouponUuid())
+//                .shipmentFee(purchaseRequestVo.getShipmentFee())
+//                .productTotalPrice(purchaseRequestVo.getProductTotalPrice())
+//                .build();
+//    }
 
     public static PurchaseRequestDto fromOrder(OrderRequestDto orderRequestDto, String paymentCode){
         return PurchaseRequestDto.builder()
@@ -67,4 +71,11 @@ public class PurchaseRequestDto {
                 .build();
     }
 
+//    public static String generateOrderCode() {
+//        String prefix = "O";
+//        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+//        String uuidPart = UUID.randomUUID().toString().substring(0, 8);
+//
+//        return prefix + date + "-" + uuidPart;
+//    }
 }

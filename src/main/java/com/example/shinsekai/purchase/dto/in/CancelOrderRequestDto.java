@@ -10,17 +10,19 @@ import lombok.*;
 public class CancelOrderRequestDto {
     private String purchaseCode;
     private String paymentCode;
+    private String memberStarbucksCardUuid;
     private String memberUuid;
     private String cancelReason;
-    private Double totalPrice;
+    private Double refundAmount;
 
     public static CancelOrderRequestDto from(CancelOrderRequestVo vo, String memberUuid){
         return CancelOrderRequestDto.builder()
                 .purchaseCode(vo.getPurchaseCode())
                 .paymentCode(vo.getPaymentCode())
+                .memberStarbucksCardUuid(vo.getMemberStarbucksCardUuid())
                 .memberUuid(memberUuid)
                 .cancelReason(vo.getCancelReason())
-                .totalPrice(vo.getTotalPrice())
+                .refundAmount(vo.getRefundAmount())
                 .build();
     }
 }

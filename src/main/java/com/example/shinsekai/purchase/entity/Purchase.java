@@ -2,13 +2,12 @@ package com.example.shinsekai.purchase.entity;
 
 import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Purchase extends BaseEntity {
     @Id
@@ -48,23 +47,8 @@ public class Purchase extends BaseEntity {
     @Column(nullable = false, updatable = false)
     private double productTotalPrice;
 
-
-    @Builder
-    public Purchase(Long id, String purchaseCode, String memberUuid, String paymentCode,
-                    PurchaseStatus purchaseStatus, String cancelReason, String receiver,
-                    String address, String giftCertificateUuid, String couponUuid,
-                    double shipmentFee, double productTotalPrice) {
-        this.id = id;
-        this.purchaseCode = purchaseCode;
-        this.memberUuid = memberUuid;
-        this.paymentCode = paymentCode;
-        this.purchaseStatus = purchaseStatus;
+    public void cancelPurchase(String cancelReason) {
+        this.purchaseStatus = PurchaseStatus.CANCEL;
         this.cancelReason = cancelReason;
-        this.receiver = receiver;
-        this.address = address;
-        this.giftCertificateUuid = giftCertificateUuid;
-        this.couponUuid = couponUuid;
-        this.shipmentFee = shipmentFee;
-        this.productTotalPrice = productTotalPrice;
     }
 }
