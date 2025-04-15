@@ -23,8 +23,8 @@ public class PurchaseRequestDto {
     private String address;
     private String giftCertificationUuid;
     private String couponUuid;
-    private int shipmentFee;
-    private double productTotalPrice;
+    private Double shipmentFee;
+    private Double productTotalPrice;
 
     public Purchase toEntity(){
         return Purchase.builder()

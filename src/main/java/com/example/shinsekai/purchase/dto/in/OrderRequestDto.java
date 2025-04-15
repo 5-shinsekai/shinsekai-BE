@@ -24,11 +24,10 @@ public class OrderRequestDto {
     private String address;
     private String giftCertificationUuid;
     private String couponUuid;
-    private int shipmentFee;
-    private double productTotalPrice;
+    private Double shipmentFee;
+    private Double productTotalPrice;
 
     //결제
-    private String paymentKey;
     private String purchaseName;
     private Double paymentPrice;
     private String paymentMethod;

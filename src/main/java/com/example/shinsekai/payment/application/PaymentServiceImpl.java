@@ -6,6 +6,7 @@ import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.payment.dto.in.PaymentDeleteRequestDto;
 import com.example.shinsekai.payment.dto.in.PaymentRequestDto;
+import com.example.shinsekai.payment.dto.out.PaymentResponseDto;
 import com.example.shinsekai.payment.entity.Payment;
 import com.example.shinsekai.payment.entity.PaymentStatus;
 import com.example.shinsekai.payment.infrastructure.PaymentRepository;
@@ -23,6 +24,12 @@ import java.util.Optional;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
+
+    @Override
+    public PaymentResponseDto findPayment(String paymentCode, String memberUuid) {
+        return PaymentResponseDto.from(paymentRepository.findByPaymentCodeAndMemberUuidAndStatus(paymentCode, memberUuid, PaymentStatus.DONE)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_ORDER_ID)));
+    }
 
     @Override
     @Transactional

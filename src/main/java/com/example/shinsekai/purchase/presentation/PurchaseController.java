@@ -2,24 +2,22 @@ package com.example.shinsekai.purchase.presentation;
 
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
-import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.purchase.application.OrderService;
 import com.example.shinsekai.purchase.application.PurchaseService;
 import com.example.shinsekai.purchase.dto.in.*;
+import com.example.shinsekai.purchase.dto.out.PurchaseResponseDto;
 import com.example.shinsekai.purchase.vo.in.CancelOrderRequestVo;
 import com.example.shinsekai.purchase.vo.in.OrderRequestVo;
-import com.example.shinsekai.purchase.vo.in.PurchaseRequestVo;
-import com.example.shinsekai.purchase.vo.in.PurchaseTemporaryRequestVo;
+import com.example.shinsekai.purchase.vo.out.PurchaseResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.lang.model.element.NestingKind;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,8 +26,15 @@ import java.util.stream.Collectors;
 public class PurchaseController {
 
     private final OrderService orderService;
+    private final PurchaseService purchaseService;
     private final JwtTokenProvider jwtTokenProvider;
 
+
+    @Operation(summary = "회원 구매 정보 조회")
+    @GetMapping
+    public List<PurchaseResponseVo> findPurchase(HttpServletRequest request){
+        return purchaseService.findMemberPurchaseList(jwtTokenProvider.getAccessToken(request)).stream().map(PurchaseResponseDto::toVo).toList();
+    }
 
     @Operation(summary = "구매 정보 저장")
     @PostMapping
@@ -43,8 +48,6 @@ public class PurchaseController {
         );
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
-
-
 
     @Operation(summary = "구매 환불")
     @DeleteMapping

@@ -17,8 +17,8 @@ public class OrderRequestVo {
     private String address;
     private String giftCertificationUuid;
     private String couponUuid;
-    private int shipmentFee;
-    private double productTotalPrice;
+    private Double shipmentFee;
+    private Double productTotalPrice;
 
     private List<PurchaseProductRequestVo> orderProductList;
 

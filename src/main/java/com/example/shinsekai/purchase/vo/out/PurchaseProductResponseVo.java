@@ -1,11 +1,13 @@
-package com.example.shinsekai.purchase.vo.in;
+package com.example.shinsekai.purchase.vo.out;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
+@Builder
 @ToString
-public class PurchaseProductRequestVo {
+public class PurchaseProductResponseVo {
     private Long productOptionId;
     private String productCode;
     private String productName;

@@ -70,7 +70,6 @@ public class OrderServiceImpl implements OrderService{
         //재고 충전
         purchaseService.findPurchaseProductListByPurchaseCode(cancelOrderRequestDto.getPurchaseCode())
                 .forEach(entity -> {
-                    System.out.println(entity);
                     productOptionService.increaseOptionStock(entity.getProductOptionId(), entity.getQuantity());
                 }); 
     }
