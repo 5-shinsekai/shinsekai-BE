@@ -57,11 +57,13 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public void verifyCode(VerificationCodeRequestDto verificationCodeRequestDto) {
-        memberRepository.findByEmail(verificationCodeRequestDto.getEmail())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
         switch (verificationCodeRequestDto.getMailType()) {
             case FIND_LOGIN_ID -> {
+
+                memberRepository.findByEmail(verificationCodeRequestDto.getEmail())
+                        .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
+
                 if (!verificationCodeRequestDto.getCode()
                         .equals(redisProvider.getEmailVerificationCodeForLoginId(
                                 verificationCodeRequestDto.getEmail()
