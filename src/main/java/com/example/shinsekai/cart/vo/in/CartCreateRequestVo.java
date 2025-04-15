@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class CartCreateRequestVo {
-    private String memberUuid;
     private Long productOptionListId;
     private String productCode;
     private int quantity;

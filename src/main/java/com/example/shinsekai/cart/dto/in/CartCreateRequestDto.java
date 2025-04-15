@@ -30,9 +30,9 @@ public class CartCreateRequestDto {
         this.isFrozen = isFrozen;
     }
 
-    public static CartCreateRequestDto from(CartCreateRequestVo cartCreateRequestVo){
+    public static CartCreateRequestDto from(String memberUuid, CartCreateRequestVo cartCreateRequestVo){
         return CartCreateRequestDto.builder()
-                .memberUuid(cartCreateRequestVo.getMemberUuid()) // memberUUid header로 따로 받음?
+                .memberUuid(memberUuid)
                 .productOptionListId(cartCreateRequestVo.getProductOptionListId())
                 .productCode(cartCreateRequestVo.getProductCode())
                 .quantity(cartCreateRequestVo.getQuantity())
