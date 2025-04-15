@@ -17,7 +17,8 @@ public class Event {
     @Column(nullable = false)
     private String eventName;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String eventImage;
 
     @Column(nullable = false)
@@ -33,7 +34,8 @@ public class Event {
     private Long categoryId;
 
     @Builder
-    public Event(int id, String eventName, String eventImage, String eventImageAltText, LocalDate startDate, LocalDate endDate, Long categoryId) {
+    public Event(int id, String eventName, String eventImage, String eventImageAltText,
+                 LocalDate startDate, LocalDate endDate, Long categoryId) {
         this.id = id;
         this.eventName = eventName;
         this.eventImage = eventImage;
