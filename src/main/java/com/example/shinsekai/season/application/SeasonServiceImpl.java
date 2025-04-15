@@ -17,7 +17,8 @@ import java.util.List;
 @Service
 public class SeasonServiceImpl implements SeasonService {
     private final SeasonRepository seasonRepository;
-
+    
+    @Override
     public void createSeason(SeasonCreateRequestDto seasonCreateRequestDto) {
         seasonRepository.save(seasonCreateRequestDto.toEntity());
     }
@@ -44,7 +45,7 @@ public class SeasonServiceImpl implements SeasonService {
         seasonRepository.save(seasonUpdateRequestDto.toEntity(season));
     }
 
-
+    @Override
     public void deleteSeason(Integer seasonId) {
         Season season = seasonRepository.findById(seasonId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_SEASON));
