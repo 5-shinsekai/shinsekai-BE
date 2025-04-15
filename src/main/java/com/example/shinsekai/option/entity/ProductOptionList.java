@@ -1,5 +1,7 @@
 package com.example.shinsekai.option.entity;
 
+import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.exception.BaseException;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,6 +53,30 @@ public class ProductOptionList {
         this.optionStatus = optionStatus;
         this.stockCount = stockCount;
         this.minStockCount = minStockCount;
+    }
+
+
+    public void decreaseStock(int quantity) {
+        if (this.stockCount < quantity) {
+            throw new BaseException(BaseResponseStatus.NOT_ENOUGH_STOCK);
+        }
+        this.stockCount -= quantity;
+        recalculateStatus();
+    }
+
+    public void increaseStock(int quantity) {
+        this.stockCount += quantity;
+        recalculateStatus();
+    }
+
+    private void recalculateStatus() {
+        if (this.stockCount == 0) {
+            this.optionStatus = OptionStatus.OUT_OF_STOCK;
+        } else if (this.stockCount <= this.minStockCount) {
+            this.optionStatus = OptionStatus.LOW_STOCK;
+        } else {
+            this.optionStatus = OptionStatus.IN_STOCK;
+        }
     }
 
 }

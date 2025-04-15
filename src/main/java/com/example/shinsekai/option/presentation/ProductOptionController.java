@@ -7,12 +7,12 @@ import com.example.shinsekai.option.application.ProductOptionService;
 import com.example.shinsekai.option.dto.in.ProductOptionRequestDto;
 import com.example.shinsekai.option.dto.out.ProductOptionResponseDto;
 import com.example.shinsekai.option.vo.in.ProductOptionRequestVo;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Tag(name = "ProductOption", description = "상품 옵션 API")
 @RestController
@@ -39,4 +39,21 @@ public class ProductOptionController {
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "상품 옵션 재고 차감")
+    @PostMapping("/{optionId}/decrease-stock")
+    public BaseResponseEntity<Void> decreaseStock(
+            @PathVariable Long optionId,
+            @RequestParam int quantity) {
+        productOptionService.decreaseOptionStock(optionId, quantity);
+        return new BaseResponseEntity<>();
+    }
+
+    @Operation(summary = "상품 옵션 재고 증가")
+    @PostMapping("/{optionId}/increase-stock")
+    public BaseResponseEntity<Void> increaseStock(
+            @PathVariable Long optionId,
+            @RequestParam int quantity) {
+        productOptionService.increaseOptionStock(optionId, quantity);
+        return new BaseResponseEntity<>();
+    }
 }
