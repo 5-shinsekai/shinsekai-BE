@@ -46,19 +46,19 @@ public class AddressUpdateRequestDto {
     }
 
 
-    public Address toEntity(Address address, AddressUpdateRequestDto addressRequestDto) {
+    public Address toEntity(Address address) {
         return Address.builder()
                 .id(address.getId())
-                .memberUuid(addressRequestDto.getMemberUuid())
-                .addressUuid(addressRequestDto.getAddressUuid())
-                .zipNo(addressRequestDto.getZipNo())
-                .addressNickname(addressRequestDto.getAddressNickname())
-                .deliveryMemo(addressRequestDto.getDeliveryMemo())
-                .totalAddress(addressRequestDto.getTotalAddress())
-                .isMainAddress(addressRequestDto.getIsMainAddress())
-                .firstPhoneNumber(addressRequestDto.getFirstPhoneNumber())
-                .secondPhoneNumber(addressRequestDto.getSecondPhoneNumber())
-                .receiverName(addressRequestDto.getReceiverName())
+                .memberUuid(memberUuid)
+                .addressUuid(addressUuid)
+                .zipNo(zipNo)
+                .addressNickname(addressNickname)
+                .deliveryMemo(deliveryMemo)
+                .totalAddress(totalAddress)
+                .isMainAddress(isMainAddress)
+                .firstPhoneNumber(firstPhoneNumber)
+                .secondPhoneNumber(secondPhoneNumber)
+                .receiverName(receiverName)
                 .build();
     }
 
