@@ -85,10 +85,11 @@ public enum BaseResponseStatus {
     DUPLICATED_CATEGORY(HttpStatus.CONFLICT, false, 3006, "이미 등록된 카테고리입니다"),
 
     NO_EXIST_OPTIONS_IN_PRODUCT(HttpStatus.NOT_FOUND, false, 3007, "해당 상품에 옵션이 존재하지 않습니다"),
+    NOT_ENOUGH_STOCK(HttpStatus.CONFLICT, false, 3008, "해당 상품에 재고가 충분하지 않습니다"),
 
     // Cart
-    CART_PRODUCT_KIND_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3008, "장바구니에 담을 수 있는 상품 종류는 최대 20개까지입니다"),
-    CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3009, "해당 상품은 장바구니에 담을 수 있는 수량을 초과했습니다."),
+    CART_PRODUCT_KIND_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3108, "장바구니에 담을 수 있는 상품 종류는 최대 20개까지입니다"),
+    CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3109, "해당 상품은 장바구니에 담을 수 있는 수량을 초과했습니다."),
 
     /**
      * 4000: comment service error
