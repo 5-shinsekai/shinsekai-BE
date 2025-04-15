@@ -47,6 +47,26 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         productOptionListRepository.deleteById(id);
     }
 
+    // 상품 옵션 재고 감소
+    @Override
+    @Transactional
+    public void decreaseOptionStock(Long productOptionId, int quantity) {
+        ProductOptionList productOptionList = productOptionListRepository.findById(productOptionId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+
+        productOptionList.decreaseStock(quantity);
+    }
+
+    // 상품 옵션 재고 증가
+    @Override
+    @Transactional
+    public void increaseOptionStock(Long productOptionId, int quantity) {
+        ProductOptionList productOptionList = productOptionListRepository.findById(productOptionId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
+
+        productOptionList.increaseStock(quantity);
+    }
+
     // 상품 옵션 생성 유효성 검사
     private void validateCreateOption(ProductOptionRequestDto dto) {
         boolean exists = productOptionListRepository.existsByProductCodeAndColorIdAndSizeId(
