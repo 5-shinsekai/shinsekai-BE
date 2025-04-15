@@ -1,8 +1,11 @@
 package com.example.shinsekai.payment.infrastructure;
 
 import com.example.shinsekai.payment.entity.Payment;
+import com.example.shinsekai.payment.entity.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PaymentRepository extends JpaRepository<Payment, Long> {
+import java.util.Optional;
 
+public interface PaymentRepository extends JpaRepository<Payment, Long> {
+    Optional<Payment> findByPaymentCodeAndMemberUuidAndStatus(String  paymentCode, String memberUuid, PaymentStatus paymentStatus);
 }

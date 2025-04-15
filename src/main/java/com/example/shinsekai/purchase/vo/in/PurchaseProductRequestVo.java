@@ -7,7 +7,6 @@ import lombok.ToString;
 @ToString
 public class PurchaseProductRequestVo {
     private Long productOptionId;
-    private String purchaseCode;
     private String productCode;
     private String productName;
     private Integer productPrice;

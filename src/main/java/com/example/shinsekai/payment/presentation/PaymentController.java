@@ -19,21 +19,21 @@ public class PaymentController {
     private final PaymentService paymentService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Operation(summary = "결제 API" , description = "간편결제 / 스타벅스 카드 결제")
-    @PostMapping
-    public BaseResponseEntity<Void> createPayment(HttpServletRequest request,
-                                                  @RequestBody PaymentRequestVo paymentRequestVo) {
-        paymentService.createPayment(
-                PaymentRequestDto.from(paymentRequestVo, jwtTokenProvider.getAccessToken(request) )
-        );
-        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
-    }
-
-    @Operation(summary = "결제 취소 API")
-    @DeleteMapping
-    public BaseResponseEntity<Void> deletePayment(HttpServletRequest request,
-                                                  @RequestBody PaymentRequestVo paymentRequestVo) {
-        paymentService.deletePayment(PaymentRequestDto.from(paymentRequestVo, jwtTokenProvider.getAccessToken(request)));
-        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
-    }
+//    @Operation(summary = "결제 API" , description = "간편결제 / 스타벅스 카드 결제")
+//    @PostMapping
+//    public BaseResponseEntity<Void> createPayment(HttpServletRequest request,
+//                                                  @RequestBody PaymentRequestVo paymentRequestVo) {
+//        paymentService.createPayment(
+//                PaymentRequestDto.from(paymentRequestVo, jwtTokenProvider.getAccessToken(request) )
+//        );
+//        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+//    }
+//
+//    @Operation(summary = "결제 취소 API")
+//    @DeleteMapping
+//    public BaseResponseEntity<Void> deletePayment(HttpServletRequest request,
+//                                                  @RequestBody PaymentRequestVo paymentRequestVo) {
+//        paymentService.deletePayment(PaymentRequestDto.from(paymentRequestVo, jwtTokenProvider.getAccessToken(request)));
+//        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+//    }
 }
