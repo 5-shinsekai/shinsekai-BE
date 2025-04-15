@@ -31,23 +31,18 @@ public class Payment extends BaseEntity {
     private double paymentPrice;
 
     private String purchaseName;
-    private String status;
-    private String receiptUrl;
-    private LocalDateTime approvedAt;
 
-    //Card 정보
-    private String cardName;
-    private String cardNumber;
-    private String approveNo;
-    private boolean isInterestFree;
-    private int installmentPlanMonths;
-    private boolean useCardPoint;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentStatus status;
+
+    private String receiptUrl;
 
     //스타벅스 카드 uuid
     private String starbucksCardUuid;
 
 
     public void cancelPayment() {
-        this.status = PaymentStatus.PAYMENT_CANCEL.getPaymentStatus();
+        this.status = PaymentStatus.CANCEL;
     }
 }

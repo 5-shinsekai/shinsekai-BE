@@ -8,11 +8,13 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PaymentDeleteRequestDto {
     private String paymentCode;
+    private Double refundAmount;
     private String memberUuid;
 
-    public static PaymentDeleteRequestDto from(String paymentCode, String memberUuid) {
+    public static PaymentDeleteRequestDto from(String paymentCode, Double refundAmount, String memberUuid) {
         return PaymentDeleteRequestDto.builder()
                 .paymentCode(paymentCode)
+                .refundAmount(refundAmount)
                 .memberUuid(memberUuid)
                 .build();
     }

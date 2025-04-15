@@ -2,14 +2,20 @@ package com.example.shinsekai.payment.application;
 
 import com.example.shinsekai.card.application.StarbucksCardService;
 import com.example.shinsekai.card.dto.in.UseStarbucksCardRequestDto;
+import com.example.shinsekai.common.entity.BaseResponseStatus;
+import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.payment.dto.in.PaymentDeleteRequestDto;
 import com.example.shinsekai.payment.dto.in.PaymentRequestDto;
 import com.example.shinsekai.payment.entity.Payment;
+import com.example.shinsekai.payment.entity.PaymentStatus;
 import com.example.shinsekai.payment.infrastructure.PaymentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -17,31 +23,24 @@ import org.springframework.stereotype.Service;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final StarbucksCardService starbucksCardService;
 
     @Override
     @Transactional
     public String createPayment(PaymentRequestDto paymentRequestDto) {
         return paymentRepository.save(paymentRequestDto.toEntity()).getPaymentCode();
-
-//        //스타벅스 카드 결제
-//        if(paymentRequestDto.getMemberStarbucksCardUuid() != null){
-//            starbucksCardService.useRemainAmount(UseStarbucksCardRequestDto.builder()
-//                    .memberStarbucksCardUuid(paymentRequestDto.getMemberStarbucksCardUuid())
-//                    .memberUuid(paymentRequestDto.getMemberUuid())
-//                    .price(paymentRequestDto.getPaymentPrice())
-//                    .build());
-//        }
     }
 
     @Override
     @Transactional
     public void deletePayment(PaymentDeleteRequestDto paymentDeleteRequestDto) {
-        Payment payment = paymentRepository.findByPaymentCodeAndMemberUuid(
-                paymentDeleteRequestDto.getPaymentCode(), paymentDeleteRequestDto.getMemberUuid()
-        );
-        payment.cancelPayment();
+        Payment payment = paymentRepository.findByPaymentCodeAndMemberUuidAndStatus(
+                        paymentDeleteRequestDto.getPaymentCode(), paymentDeleteRequestDto.getMemberUuid(), PaymentStatus.DONE)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_ORDER_ID));
 
-        //Starbucks 카드 결제 취소(잔여금액 ++)
+        if (!Objects.equals(payment.getPaymentPrice(), paymentDeleteRequestDto.getRefundAmount())) {
+            throw new BaseException(BaseResponseStatus.AMOUNT_MISMATCH);
+        }
+
+        payment.cancelPayment();
     }
 }
