@@ -13,11 +13,15 @@ public class ProductEventList {
     private Long id;
 
     @Column(nullable = false)
-    private Long productId;
+    private String productCode;
+
+    @Column(nullable = false)
+    private int eventId;
 
     @Builder
-    public ProductEventList(Long id, Long productId) {
+    public ProductEventList(Long id, String productCode, int eventId) {
         this.id = id;
-        this.productId = productId;
+        this.productCode = productCode;
+        this.eventId = eventId;
     }
 }
