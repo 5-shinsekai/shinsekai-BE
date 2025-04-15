@@ -1,5 +1,6 @@
 package com.example.shinsekai.cart.application;
 
+import com.example.shinsekai.address.dto.out.AddressResponseDto;
 import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartDeleteRequestDto;
 import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
@@ -14,4 +15,5 @@ public interface CartService {
     void deleteAllCart(String memberUuid);
     void deleteSelectedAllCart (String memberUuid, List<CartDeleteRequestDto> cartDeleRequestDtoList); // deleteAllCartById
     void deleteCart(String memberUuid, CartDeleteRequestDto cartDeleteRequestDto);// 단일 삭제
+    CartGroupedByProductTypeDto getAllCheckedCarts(String memberUuid);
 }

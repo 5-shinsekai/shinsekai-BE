@@ -7,7 +7,6 @@ import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
 import com.example.shinsekai.cart.vo.in.CartCreateRequestVo;
 import com.example.shinsekai.cart.vo.in.CartDeleteRequestVo;
 import com.example.shinsekai.cart.vo.in.CartUpdateRequestVo;
-import com.example.shinsekai.cart.vo.out.CartGetResponseVo;
 import com.example.shinsekai.cart.vo.out.CartGroupedByProductTypeVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
@@ -42,6 +41,13 @@ public class CartController {
     @GetMapping
     public BaseResponseEntity<CartGroupedByProductTypeVo> getAllCarts(HttpServletRequest request){
         return new BaseResponseEntity<>(cartService.getAllCarts(jwtTokenProvider.getAccessToken(request))
+                .toVo());
+    }
+
+    @Operation(summary = "체크된 장바구니 조회")
+    @GetMapping("/checked")
+    public BaseResponseEntity<CartGroupedByProductTypeVo> getAllCheckedCarts(HttpServletRequest request){
+        return new BaseResponseEntity<>(cartService.getAllCheckedCarts(jwtTokenProvider.getAccessToken(request))
                 .toVo());
     }
 

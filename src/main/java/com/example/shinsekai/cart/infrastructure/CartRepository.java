@@ -14,6 +14,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     Optional<Cart> findByMemberUuidAndCartUuidAndIsDeletedFalse(String memberUuid, String cartUuid);
     List<Cart> findAllByMemberUuidAndProductCodeAndIsDeletedFalse(String memberUuid, String productCode);
     List<Cart> findAllByMemberUuidAndIsDeletedFalse(String memberUuid);
+    List<Cart> findAllByMemberUuidAndCheckedTrueAndIsDeletedFalse(String memberUuid);
 
 
     @Modifying

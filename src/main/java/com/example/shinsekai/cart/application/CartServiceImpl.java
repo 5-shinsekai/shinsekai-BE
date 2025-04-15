@@ -83,6 +83,26 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public CartGroupedByProductTypeDto getAllCheckedCarts(String memberUuid) {
+        List<Cart> cartList = cartRepository.findAllByMemberUuidAndCheckedTrueAndIsDeletedFalse(memberUuid);
+
+        List<CartGetResponseDto> frozen = cartList.stream()
+                .filter(Cart::getIsFrozen)
+                .map(CartGetResponseDto::from)
+                .toList();
+
+        List<CartGetResponseDto> ordinary = cartList.stream()
+                .filter(cart -> !cart.getIsFrozen())
+                .map(CartGetResponseDto::from)
+                .toList();
+
+        return CartGroupedByProductTypeDto.builder()
+                .frozenProducts(frozen)
+                .ordinaryProducts(ordinary)
+                .build();
+    }
+
+    @Override
     @Transactional
     public void deleteCart(String memberUuid, CartDeleteRequestDto cartDeleteRequestDto) {
         cartRepository.findByMemberUuidAndCartUuidAndIsDeletedFalse(memberUuid, cartDeleteRequestDto.getCartUuid()).orElseThrow(
