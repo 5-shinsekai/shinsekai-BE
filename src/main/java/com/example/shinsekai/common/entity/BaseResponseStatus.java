@@ -174,6 +174,7 @@ public enum BaseResponseStatus {
 
     //시즌
     NO_EXIST_SEASON(HttpStatus.NOT_FOUND, false, 20030, "시즌 정보가 존재하지 않습니다."),
+    NO_EXIST_PRODUCT_SEASON(HttpStatus.NOT_FOUND, false, 20031, "상품 시즌 정보가 존재하지 않습니다."),
 
     // 기획전(이벤트)
     NO_EXIST_EVENT(HttpStatus.NOT_FOUND, false, 20040, "기획전 정보가 존재하지 않습니다.");
