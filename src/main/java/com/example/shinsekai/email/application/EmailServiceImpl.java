@@ -59,6 +59,7 @@ public class EmailServiceImpl implements EmailService{
     public void verifyCode(VerificationCodeRequestDto verificationCodeRequestDto) {
 
         switch (verificationCodeRequestDto.getMailType()) {
+
             case FIND_LOGIN_ID -> {
 
                 memberRepository.findByEmail(verificationCodeRequestDto.getEmail())
