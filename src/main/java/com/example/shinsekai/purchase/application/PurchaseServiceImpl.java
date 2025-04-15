@@ -4,6 +4,7 @@ import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.common.redis.RedisProvider;
+import com.example.shinsekai.purchase.dto.in.PurchaseDeleteRequestDto;
 import com.example.shinsekai.purchase.dto.in.PurchaseProductListRequestDto;
 import com.example.shinsekai.purchase.dto.in.PurchaseRequestDto;
 import com.example.shinsekai.purchase.dto.in.PurchaseTemporaryRequestDto;
@@ -23,28 +24,27 @@ import static com.example.shinsekai.purchase.dto.in.PurchaseTemporaryRequestDto.
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
 
-    private final RedisProvider redisProvider;
-    private final JwtTokenProvider jwtTokenProvider;
     private final PurchaseRepository purchaseRepository;
     private final PurchaseProductListRepository purchaseProductListRepository;
 
     @Override
-    public String createTemporaryPurchase(String token, PurchaseTemporaryRequestDto purchaseTemporaryRequestDto) {
-        purchaseTemporaryRequestDto.changeMemberUuid(jwtTokenProvider.extractAllClaims(token).getSubject());
-        return redisProvider.setTemporaryPayment(generateOrderCode(),purchaseTemporaryRequestDto,10);
+    @Transactional
+    public void createPurchase(PurchaseRequestDto purchaseRequestDto, List<PurchaseProductListRequestDto> purchaseProductListRequestDtoList) {
+        purchaseRepository.save(purchaseRequestDto.toEntity());
+        purchaseProductListRepository.saveAll(purchaseProductListRequestDtoList.stream()
+                .map(PurchaseProductListRequestDto::toEntity).toList()
+        );
     }
 
     @Override
     @Transactional
-    public void createPurchase(String token, PurchaseRequestDto purchaseRequestDto, List<PurchaseProductListRequestDto> purchaseProductListRequestDtoList) {
-        try {
+    public void deletePurchase(PurchaseDeleteRequestDto purchaseDeleteDto) {
+        purchaseRepository.findByPurchaseCodeAndMemberUuid(purchaseDeleteDto.getPurchaseCode(), purchaseDeleteDto.getMemberUuid())
+                .orElseThrow(()-> new BaseException(BaseResponseStatus.PURCHASE_NOT_FOUND)).cancelPurchase(purchaseDeleteDto.getCancelReason());
+    }
 
-            purchaseRepository.save(purchaseRequestDto.toEntity(jwtTokenProvider.extractAllClaims(token).getSubject()));
-            purchaseProductListRepository.saveAll(purchaseProductListRequestDtoList.stream()
-                    .map(PurchaseProductListRequestDto::toEntity).toList()
-            );
-        }catch (Exception e){
-            throw new BaseException(BaseResponseStatus.PURCHASE_CREATION_FAILED);
-        }
+    @Override
+    public List<PurchaseProductList> findPurchaseProductListByPurchaseCode(String purchaseCode) {
+        return purchaseProductListRepository.findByPurchaseCode(purchaseCode);
     }
 }
