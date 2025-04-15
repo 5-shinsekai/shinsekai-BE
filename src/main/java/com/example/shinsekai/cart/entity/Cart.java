@@ -35,7 +35,7 @@ public class Cart extends BaseEntity {
 
     @Column(nullable = false)
     @Builder.Default
-    private boolean checked = true;
+    private Boolean checked = true;
 
     @Column(length = 10)
     private String engravingMessage;
@@ -64,5 +64,17 @@ public class Cart extends BaseEntity {
 
     public void increaseQuantity(int i) {
         this.quantity += i;
+    }
+
+    public boolean getIsFrozen() {
+        return isFrozen;
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(){
+        this.isDeleted = true;
     }
 }
