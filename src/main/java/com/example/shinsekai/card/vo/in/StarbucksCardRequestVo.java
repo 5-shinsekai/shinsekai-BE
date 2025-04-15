@@ -11,4 +11,5 @@ public class StarbucksCardRequestVo {
     private String cardImageUrl;
     private String cardDescription;
     private Double remainAmount;
+    private Boolean agreed;
 }
