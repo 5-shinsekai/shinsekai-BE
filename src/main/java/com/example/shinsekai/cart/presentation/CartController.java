@@ -55,9 +55,9 @@ public class CartController {
     }
 
     @Operation(summary = "선택된 장바구니 단일 삭제")
-    @DeleteMapping("/{id}")
-    public BaseResponseEntity<Void> deleteCart(HttpServletRequest request, @PathVariable Long id){
-        cartService.deleteCart(jwtTokenProvider.getAccessToken(request),CartDeleteRequestDto.from(id));
+    @DeleteMapping("/{cartUuid}")
+    public BaseResponseEntity<Void> deleteCart(HttpServletRequest request, @PathVariable String cartUuid){
+        cartService.deleteCart(jwtTokenProvider.getAccessToken(request),CartDeleteRequestDto.from(cartUuid));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
