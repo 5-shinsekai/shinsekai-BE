@@ -21,6 +21,7 @@ public class StarbucksCardRequestDto {
     private String cardImageUrl;
     private String cardDescription;
     private Double remainAmount;
+    private Boolean agreed;
 
 
     public StarbucksCard toEntity() {
@@ -31,6 +32,7 @@ public class StarbucksCardRequestDto {
                 .remainAmount(remainAmount)
                 .cardImageUrl(cardImageUrl)
                 .cardDescription(cardDescription)
+                .agreed(agreed)
                 .build();
     }
 
@@ -42,6 +44,7 @@ public class StarbucksCardRequestDto {
                 .remainAmount(starbucksCardRequestVo.getRemainAmount())
                 .cardImageUrl(starbucksCardRequestVo.getCardImageUrl())
                 .cardDescription(starbucksCardRequestVo.getCardDescription())
+                .agreed(starbucksCardRequestVo.getAgreed())
                 .build();
     }
 

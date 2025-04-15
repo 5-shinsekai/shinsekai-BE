@@ -28,6 +28,7 @@ public class StarbucksCard extends BaseEntity {
     private String cardImageUrl;
     private String cardDescription;
     private Double remainAmount;
+    private Boolean agreed;
 
     public void useRemainAmount(Double price) {
         this.remainAmount -= price;
