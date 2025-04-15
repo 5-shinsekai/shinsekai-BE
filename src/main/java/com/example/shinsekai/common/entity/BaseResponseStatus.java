@@ -167,7 +167,10 @@ public enum BaseResponseStatus {
     PURCHASE_PRODUCT_LIST_EMPTY(HttpStatus.BAD_REQUEST, false, 20012, "구매 상품 목록이 비어 있습니다."),
     COUPON_INVALID(HttpStatus.BAD_REQUEST, false, 20015, "유효하지 않은 쿠폰입니다."),
     GIFT_CERTIFICATION_INVALID(HttpStatus.BAD_REQUEST, false, 20016, "유효하지 않은 기프트 인증 번호입니다."),
-    PURCHASE_DUPLICATE(HttpStatus.NOT_FOUND, false, 20019, "이미 처리된 구매 요청입니다.");
+    PURCHASE_DUPLICATE(HttpStatus.NOT_FOUND, false, 20019, "이미 처리된 구매 요청입니다."),
+
+    //시즌
+    NO_EXIST_SEASON(HttpStatus.NOT_FOUND, false, 20030, "시즌 정보가 존재하지 않습니다.");
 
     private final HttpStatusCode httpStatusCode;
     private final boolean isSuccess;
