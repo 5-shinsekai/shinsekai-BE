@@ -33,26 +33,27 @@ public class SeasonController {
 
     @Operation(summary = "시즌 단일 조회")
     @GetMapping("/{seasonId}")
-    public BaseResponseEntity<SeasonGetResponseVo> getSellingProduct(@PathVariable Integer seasonId) {
+    public BaseResponseEntity<SeasonGetResponseVo> getSeason(@PathVariable Integer seasonId) {
         return new BaseResponseEntity<>(seasonService.getSeason(seasonId).toVo());
     }
 
     @Operation(summary = "시즌 전체 조회")
     @GetMapping
-    public BaseResponseEntity<List<SeasonGetResponseVo>> getSellingProduct() {
-        return new BaseResponseEntity<>(seasonService.getAllSeason().stream().map(SeasonGetResponseDto::toVo).toList());
+    public BaseResponseEntity<List<SeasonGetResponseVo>> getAllSeason() {
+        return new BaseResponseEntity<>(seasonService.getAllSeason().stream()
+                .map(SeasonGetResponseDto::toVo).toList());
     }
 
     @Operation(summary = "시즌 수정")
     @PutMapping
-    public BaseResponseEntity<Void> updateProduct(@RequestBody SeasonUpdateRequestVo seasonUpdateRequestVo) {
+    public BaseResponseEntity<Void> updateSeason(@RequestBody SeasonUpdateRequestVo seasonUpdateRequestVo) {
         seasonService.updateSeason(SeasonUpdateRequestDto.from(seasonUpdateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "시즌 하드 삭제")
     @DeleteMapping("/{seasonId}")
-    public BaseResponseEntity<Void> deleteProduct(@PathVariable Integer seasonId) {
+    public BaseResponseEntity<Void> deleteSeason(@PathVariable Integer seasonId) {
         seasonService.deleteSeason(seasonId);
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
