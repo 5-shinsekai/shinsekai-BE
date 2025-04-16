@@ -8,6 +8,7 @@ import com.example.shinsekai.email.properties.MailProperties;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.redis.RedisProvider;
+import com.example.shinsekai.email.templete.RestockEmailBuilder;
 import com.example.shinsekai.email.templete.TempPasswordBuilder;
 import com.example.shinsekai.email.templete.VerificationEmailBuilder;
 import com.example.shinsekai.member.entity.Member;
@@ -37,6 +38,7 @@ public class EmailServiceImpl implements EmailService{
     private final VerificationEmailBuilder verificationEmailBuilder;
     private final TempPasswordBuilder tempPasswordBuilder;
     private final PasswordEncoder passwordEncoder;
+    private final RestockEmailBuilder restockEmailBuilder;
 
     private final long FIVE_MINUTE = 300000L;
 
@@ -104,6 +106,12 @@ public class EmailServiceImpl implements EmailService{
         member.saveTempPassword(passwordEncoder.encode(tempPw));
     }
 
+    @Override
+    @Transactional
+    public void sendRestockEmail(String toEmail, String productName) {
+        buildAndSend(toEmail,EmailType.RESTOCK_NOTIFY, productName);
+    }
+
 
     /**
      * 이메일을 실제로 전송하며, 전송 성공 시 Redis에 인증코드를 저장
@@ -124,6 +132,9 @@ public class EmailServiceImpl implements EmailService{
             switch (mailType) {
                 case TEMP_PW -> {
                     html = tempPasswordBuilder.buildTempPasswordEmail(item);    // item: 임시비밀번호
+                }
+                case RESTOCK_NOTIFY -> {
+                    html = restockEmailBuilder.buildRestockNotifyEmail(item); // item: 상품명
                 }
                 default -> {
                     html = verificationEmailBuilder.buildVerificationEmail(item);     // item: 인증코드
@@ -174,6 +185,9 @@ public class EmailServiceImpl implements EmailService{
             }
             case TEMP_PW -> {
                 subject = "임시 비밀번호 발급 안내메일"; break;
+            }
+            case RESTOCK_NOTIFY -> {
+                subject = "재입고 알림 안내 메일"; break;
             }
             default -> {
                 throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL);
