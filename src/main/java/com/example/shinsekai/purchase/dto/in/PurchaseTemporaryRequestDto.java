@@ -16,14 +16,11 @@ public class PurchaseTemporaryRequestDto {
     private double amount;
     private String memberUuid;
 
-    public static PurchaseTemporaryRequestDto from(PurchaseTemporaryRequestVo purchaseTemporaryRequestVo) {
+    public static PurchaseTemporaryRequestDto from(PurchaseTemporaryRequestVo purchaseTemporaryRequestVo,String memberUuid) {
         return PurchaseTemporaryRequestDto.builder()
+                .memberUuid(memberUuid)
                 .amount(purchaseTemporaryRequestVo.getAmount())
                 .build();
-    }
-
-    public void changeMemberUuid(String memberUuid){
-        this.memberUuid = memberUuid;
     }
 
     public static String generateOrderCode() {
