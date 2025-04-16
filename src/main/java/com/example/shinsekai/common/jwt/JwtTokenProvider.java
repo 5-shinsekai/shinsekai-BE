@@ -19,6 +19,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -213,6 +214,10 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);   // "토큰이 유효하지 않습니다."
         }
+    }
+
+    public String getMemberUuid() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     /**
