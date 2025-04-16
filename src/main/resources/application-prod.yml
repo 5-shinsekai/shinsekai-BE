@@ -28,7 +28,7 @@ spring:
 jwt:
   secret-key: ${SECRET_KEY}
   token:
-    access-expire-time: 1800000
+    access-expire-time: 172800000
     refresh-expire-time: 1209600000
 
 

@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 @Entity
 public class PurchaseProductList extends BaseEntity {
     @Id
@@ -24,7 +25,7 @@ public class PurchaseProductList extends BaseEntity {
     private String purchaseCode;
 
     @Column(updatable = false, nullable = false)
-    private double productPrice;
+    private Double productPrice;
 
     @Column(updatable = false, nullable = false)
     private String productName;

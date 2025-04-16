@@ -7,6 +7,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 @Getter
 @ToString
 @Builder
@@ -19,14 +23,14 @@ public class PurchaseRequestDto {
     private String address;
     private String giftCertificationUuid;
     private String couponUuid;
-    private int shipmentFee;
-    private double productTotalPrice;
+    private Double shipmentFee;
+    private Double productTotalPrice;
 
-    public Purchase toEntity(String memberUuid){
+    public Purchase toEntity(){
         return Purchase.builder()
                 .purchaseCode(this.purchaseCode)
                 .paymentCode(this.paymentCode)
-                .memberUuid(memberUuid)
+                .memberUuid(this.memberUuid)
                 .purchaseStatus(this.purchaseStatus)
                 .receiver(this.receiver)
                 .address(this.address)
@@ -37,19 +41,26 @@ public class PurchaseRequestDto {
                 .build();
     }
 
-    public static PurchaseRequestDto from(PurchaseRequestVo purchaseRequestVo){
+    public static PurchaseRequestDto fromOrder(OrderRequestDto orderRequestDto, String paymentCode){
         return PurchaseRequestDto.builder()
-                .purchaseCode(purchaseRequestVo.getPurchaseCode())
-                .paymentCode(purchaseRequestVo.getPaymentCode())
-                .memberUuid(purchaseRequestVo.getMemberUuid())
-                .purchaseStatus(purchaseRequestVo.getPurchaseStatus())
-                .receiver(purchaseRequestVo.getReceiver())
-                .address(purchaseRequestVo.getAddress())
-                .giftCertificationUuid(purchaseRequestVo.getGiftCertificationUuid())
-                .couponUuid(purchaseRequestVo.getCouponUuid())
-                .shipmentFee(purchaseRequestVo.getShipmentFee())
-                .productTotalPrice(purchaseRequestVo.getProductTotalPrice())
+                .purchaseCode(orderRequestDto.getPurchaseCode())
+                .paymentCode(paymentCode)
+                .memberUuid(orderRequestDto.getMemberUuid())
+                .purchaseStatus(orderRequestDto.getPurchaseStatus())
+                .receiver(orderRequestDto.getReceiver())
+                .address(orderRequestDto.getAddress())
+                .giftCertificationUuid(orderRequestDto.getGiftCertificationUuid())
+                .couponUuid(orderRequestDto.getCouponUuid())
+                .shipmentFee(orderRequestDto.getShipmentFee())
+                .productTotalPrice(orderRequestDto.getProductTotalPrice())
                 .build();
     }
 
+//    public static String generateOrderCode() {
+//        String prefix = "O";
+//        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+//        String uuidPart = UUID.randomUUID().toString().substring(0, 8);
+//
+//        return prefix + date + "-" + uuidPart;
+//    }
 }

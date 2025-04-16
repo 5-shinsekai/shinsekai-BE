@@ -1,12 +1,16 @@
 package com.example.shinsekai.purchase.application;
 
+import com.example.shinsekai.purchase.dto.in.PurchaseDeleteRequestDto;
 import com.example.shinsekai.purchase.dto.in.PurchaseProductListRequestDto;
 import com.example.shinsekai.purchase.dto.in.PurchaseRequestDto;
-import com.example.shinsekai.purchase.dto.in.PurchaseTemporaryRequestDto;
+import com.example.shinsekai.purchase.dto.out.PurchaseProductListResponseDto;
+import com.example.shinsekai.purchase.dto.out.PurchaseResponseDto;
 
 import java.util.List;
 
 public interface PurchaseService {
-    String createTemporaryPurchase(String token, PurchaseTemporaryRequestDto purchaseTemporaryRequestDto);
-    void createPurchase(String Token, PurchaseRequestDto purchaseRequestDto, List<PurchaseProductListRequestDto> purchaseProductListRequestDtoList);
+    void createPurchase(PurchaseRequestDto purchaseRequestDto, List<PurchaseProductListRequestDto> purchaseProductListRequestDtoList);
+    void deletePurchase(PurchaseDeleteRequestDto purchaseDeleteRequestDto);
+    List<PurchaseResponseDto> findMemberPurchaseList(String memberUuid);
+    List<PurchaseProductListResponseDto> findPurchaseProductListByPurchaseCode(String purchaseCode);
 }

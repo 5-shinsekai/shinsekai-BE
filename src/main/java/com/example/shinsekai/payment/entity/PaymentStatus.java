@@ -1,11 +1,10 @@
-package com.example.shinsekai.purchase.entity;
-
+package com.example.shinsekai.payment.entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PurchaseStatus {
+public enum PaymentStatus {
     DONE,
     CANCEL;
 }

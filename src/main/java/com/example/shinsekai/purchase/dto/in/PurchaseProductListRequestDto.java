@@ -14,7 +14,7 @@ public class PurchaseProductListRequestDto {
     private String purchaseCode;
     private String productCode;
     private String productName;
-    private Integer productPrice;
+    private Double productPrice;
     private Integer quantity;
     private String productImageUrl;
     private String productImageDescription;
@@ -32,10 +32,10 @@ public class PurchaseProductListRequestDto {
                 .build();
     }
 
-    public static PurchaseProductListRequestDto from(PurchaseProductRequestVo purchaseProductRequestVo){
+    public static PurchaseProductListRequestDto from(PurchaseProductRequestVo purchaseProductRequestVo, String purchaseCode){
         return PurchaseProductListRequestDto.builder()
                 .productOptionId(purchaseProductRequestVo.getProductOptionId())
-                .purchaseCode(purchaseProductRequestVo.getPurchaseCode())
+                .purchaseCode(purchaseCode)
                 .productCode(purchaseProductRequestVo.getProductCode())
                 .productName(purchaseProductRequestVo.getProductName())
                 .productPrice(purchaseProductRequestVo.getProductPrice())
