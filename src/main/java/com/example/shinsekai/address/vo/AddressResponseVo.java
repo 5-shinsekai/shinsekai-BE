@@ -8,34 +8,43 @@ import lombok.ToString;
 @ToString
 public class AddressResponseVo {
     private String addressUuid;
-    private String zipNo;
     private String addressNickname;
-    private String deliveryMemo;
+    private String zipNo;
+    private String roadAddr;
+    private String detailAddr;
     private String totalAddress;
-    private boolean isMainAddress;
     private String firstPhoneNumber;
     private String secondPhoneNumber;
+    private String deliveryMemo;
+    private Boolean isPersonalMemo;
+    private Boolean isMainAddress;
     private String receiverName;
 
     @Builder
     public AddressResponseVo(String addressUuid,
-                             String zipNo,
                              String addressNickname,
-                             String deliveryMemo,
+                             String zipNo,
+                             String roadAddr,
+                             String detailAddr,
                              String totalAddress,
-                             boolean isMainAddress,
                              String firstPhoneNumber,
                              String secondPhoneNumber,
-                             String receiverName,
-                             boolean isDeleted) {
+                             String deliveryMemo,
+                             Boolean isPersonalMemo,
+                             Boolean isMainAddress,
+                             String receiverName) {
         this.addressUuid = addressUuid;
-        this.zipNo = zipNo;
         this.addressNickname = addressNickname;
-        this.deliveryMemo = deliveryMemo;
+        this.zipNo = zipNo;
+        this.roadAddr = roadAddr;
+        this.detailAddr = detailAddr;
         this.totalAddress = totalAddress;
-        this.isMainAddress = isMainAddress;
         this.firstPhoneNumber = firstPhoneNumber;
         this.secondPhoneNumber = secondPhoneNumber;
+        this.deliveryMemo = deliveryMemo;
+        this.isPersonalMemo = isPersonalMemo;
+        this.isMainAddress = isMainAddress;
         this.receiverName = receiverName;
     }
+
 }

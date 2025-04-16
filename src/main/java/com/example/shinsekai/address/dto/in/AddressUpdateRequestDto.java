@@ -19,45 +19,56 @@ public class AddressUpdateRequestDto {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private Long addressId;
     private String addressUuid;
     private String memberUuid;
-    private String zipNo;
     private String addressNickname;
-    private String deliveryMemo;
+    private String zipNo;
+    private String roadAddress;
+    private String detailAddress;
     private String totalAddress;
-    private Boolean isMainAddress;
     private String firstPhoneNumber;
     private String secondPhoneNumber;
+    private String deliveryMemo;
+    private Boolean isPersonalMemo;
+    private Boolean isMainAddress;
     private String receiverName;
 
     public static AddressUpdateRequestDto of(AddressUpdateRequestVo addressRequestVo, String memberUuid) {
         return AddressUpdateRequestDto.builder()
+                .addressId(addressRequestVo.getAddressId())
                 .memberUuid(memberUuid)
                 .addressUuid(addressRequestVo.getAddressUuid())
-                .zipNo(addressRequestVo.getZipNo())
                 .addressNickname(addressRequestVo.getAddressNickname())
-                .deliveryMemo(addressRequestVo.getDeliveryMemo())
+                .zipNo(addressRequestVo.getZipNo())
+                .roadAddress(addressRequestVo.getRoadAddress())
+                .detailAddress(addressRequestVo.getDetailedAddress())
                 .totalAddress(addressRequestVo.getTotalAddress())
-                .isMainAddress(addressRequestVo.getIsMainAddress())
                 .firstPhoneNumber(addressRequestVo.getFirstPhoneNumber())
                 .secondPhoneNumber(addressRequestVo.getSecondPhoneNumber())
+                .deliveryMemo(addressRequestVo.getDeliveryMemo())
+                .isPersonalMemo(addressRequestVo.getIsPersonalMemo())
+                .isMainAddress(addressRequestVo.getIsMainAddress())
                 .receiverName(addressRequestVo.getReceiverName())
                 .build();
     }
 
 
-    public Address toEntity(Address address) {
+    public Address toEntity() {
         return Address.builder()
-                .id(address.getId())
-                .memberUuid(memberUuid)
+                .id(addressId)
                 .addressUuid(addressUuid)
-                .zipNo(zipNo)
+                .memberUuid(memberUuid)
                 .addressNickname(addressNickname)
-                .deliveryMemo(deliveryMemo)
+                .zipNo(zipNo)
+                .roadAddress(roadAddress)
+                .detailedAddress(detailAddress)
                 .totalAddress(totalAddress)
-                .isMainAddress(isMainAddress)
                 .firstPhoneNumber(firstPhoneNumber)
                 .secondPhoneNumber(secondPhoneNumber)
+                .deliveryMemo(deliveryMemo)
+                .isPersonalMemo(isPersonalMemo)
+                .isMainAddress(isMainAddress)
                 .receiverName(receiverName)
                 .build();
     }

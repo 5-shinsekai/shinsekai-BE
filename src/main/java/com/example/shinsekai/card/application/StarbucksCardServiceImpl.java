@@ -54,7 +54,7 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
     @Transactional
     public void deleteStarbucksCard(MemberStarbucksListDto memberStarbucksCardsListDto) {
         MemberStarbucksCardList memberStarbucksCardList = memberStarbucksListRepository
-                .findMemberStarbucksCardListByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+                .findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
                         memberStarbucksCardsListDto.getMemberStarbucksCardUuid(), memberStarbucksCardsListDto.getMemberUuid()
                 ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_DELETE_STARBUCKS_CARD));
 
@@ -62,14 +62,14 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
     }
     /*
      * Todo :
-     * 스타벅스 카드 결제 시 금액 차감
-     * 시나리오상 존재(외부인증 X)해서 결제 내역 따로 저장 X
-     * 잔액만 관리
+     *  스타벅스 카드 결제 시 금액 차감
+     *  시나리오상 존재(외부인증 X)해서 결제 내역 따로 저장 X
+     *  잔액만 관리
      */
     @Override
     @Transactional
     public void useRemainAmount(UseStarbucksCardRequestDto useStarbucksCardRequestDto) {
-        StarbucksCard starbucksCard = memberStarbucksListRepository.findMemberStarbucksCardListByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+        StarbucksCard starbucksCard = memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
                 useStarbucksCardRequestDto.getMemberStarbucksCardUuid(), useStarbucksCardRequestDto.getMemberUuid()
         ).orElseThrow(()->new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getStarbucksCard();
 
@@ -80,6 +80,15 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
 
         //잔액 차감
         starbucksCard.useRemainAmount(useStarbucksCardRequestDto.getPrice());
+    }
+
+    @Override
+    @Transactional
+    public void chargeRemainAmount(UseStarbucksCardRequestDto useStarbucksCardRequestDto) {
+        memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+                useStarbucksCardRequestDto.getMemberStarbucksCardUuid(), useStarbucksCardRequestDto.getMemberUuid()
+        ).orElseThrow(()->new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD))
+         .getStarbucksCard().chargeRemainAmount(useStarbucksCardRequestDto.getPrice());
     }
 }
 

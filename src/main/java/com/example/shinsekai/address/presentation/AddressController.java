@@ -16,10 +16,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Address", description = "배송지 관련 API")
 @RequestMapping("api/v1/address")
 @RequiredArgsConstructor
@@ -32,11 +34,11 @@ public class AddressController {
     @Operation(summary = "배송지 조회")
     @GetMapping
     public BaseResponseEntity<List<AddressResponseVo>> getAddressList(HttpServletRequest request) {
-        return new BaseResponseEntity<>(
-                addressService.getAddress(jwtTokenProvider.getAccessToken(request))
-                        .stream()
-                        .map(AddressResponseDto::toVo)
-                        .toList());
+        List<AddressResponseVo> result = addressService.getAddress(jwtTokenProvider.getAccessToken(request))
+                .stream()
+                .map(AddressResponseDto::toVo)
+                .toList();
+        return new BaseResponseEntity<>(result);
     }
 
     @Operation(summary = "배송지 생성")

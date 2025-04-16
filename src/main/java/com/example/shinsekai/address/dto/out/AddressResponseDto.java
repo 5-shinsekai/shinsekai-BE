@@ -13,66 +13,77 @@ import lombok.ToString;
 public class AddressResponseDto {
     private Long id;
     private String addressUuid;
-    private String zipNo;
     private String addressNickname;
-    private String deliveryMemo;
+    private String zipNo;
+    private String roadAddress;
+    private String detailAddress;
     private String totalAddress;
-    private boolean isMainAddress;
     private String firstPhoneNumber;
     private String secondPhoneNumber;
+    private String deliveryMemo;
+    private Boolean isPersonalMemo;
+    private Boolean isMainAddress;
     private String receiverName;
-    private boolean isDeleted;
 
     @Builder
     public AddressResponseDto(Long id,
                               String addressUuid,
-                              String zipNo,
                               String addressNickname,
-                              String deliveryMemo,
+                              String zipNo,
+                              String roadAddress,
+                              String detailAddress,
                               String totalAddress,
-                              boolean isMainAddress,
                               String firstPhoneNumber,
                               String secondPhoneNumber,
-                              String receiverName,
-                              boolean isDeleted) {
+                              String deliveryMemo,
+                              Boolean isPersonalMemo,
+                              Boolean isMainAddress,
+                              String receiverName) {
         this.id = id;
         this.addressUuid = addressUuid;
-        this.zipNo = zipNo;
         this.addressNickname = addressNickname;
-        this.deliveryMemo = deliveryMemo;
+        this.zipNo = zipNo;
+        this.roadAddress = roadAddress;
+        this.detailAddress = detailAddress;
         this.totalAddress = totalAddress;
-        this.isMainAddress = isMainAddress;
         this.firstPhoneNumber = firstPhoneNumber;
         this.secondPhoneNumber = secondPhoneNumber;
+        this.deliveryMemo = deliveryMemo;
+        this.isPersonalMemo = isPersonalMemo;
+        this.isMainAddress = isMainAddress;
         this.receiverName = receiverName;
-        this.isDeleted = isDeleted;
     }
 
     public static AddressResponseDto from(Address address) {
         return AddressResponseDto.builder()
                 .addressUuid(address.getAddressUuid())
-                .zipNo(address.getZipNo())
                 .addressNickname(address.getAddressNickname())
-                .deliveryMemo(address.getDeliveryMemo())
+                .zipNo(address.getZipNo())
+                .roadAddress(address.getRoadAddress())
+                .detailAddress(address.getDetailedAddress())
                 .totalAddress(address.getTotalAddress())
-                .isMainAddress(address.getIsMainAddress())
                 .firstPhoneNumber(address.getFirstPhoneNumber())
                 .secondPhoneNumber(address.getSecondPhoneNumber())
+                .deliveryMemo(address.getDeliveryMemo())
+                .isPersonalMemo(address.getIsPersonalMemo())
+                .isMainAddress(address.getIsMainAddress())
                 .receiverName(address.getReceiverName())
-                .isDeleted(address.isDeleted())
                 .build();
     }
 
     public AddressResponseVo toVo() {
         return AddressResponseVo.builder()
                 .addressUuid(addressUuid)
-                .zipNo(zipNo)
                 .addressNickname(addressNickname)
-                .deliveryMemo(deliveryMemo)
+                .zipNo(zipNo)
+                .roadAddr(roadAddress)
+                .detailAddr(detailAddress)
                 .totalAddress(totalAddress)
-                .isMainAddress(isMainAddress)
                 .firstPhoneNumber(firstPhoneNumber)
                 .secondPhoneNumber(secondPhoneNumber)
+                .deliveryMemo(deliveryMemo)
+                .isPersonalMemo(isPersonalMemo)
+                .isMainAddress(isMainAddress)
                 .receiverName(receiverName)
                 .build();
     }
