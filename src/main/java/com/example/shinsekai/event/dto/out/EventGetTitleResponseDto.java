@@ -7,11 +7,11 @@ import lombok.Getter;
 
 @Getter
 public class EventGetTitleResponseDto {
-    private int eventId;
+    private Integer eventId;
     private String eventName;
 
     @Builder
-    public EventGetTitleResponseDto(int eventId, String eventName) {
+    public EventGetTitleResponseDto(Integer eventId, String eventName) {
         this.eventId = eventId;
         this.eventName = eventName;
     }
