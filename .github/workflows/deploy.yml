@@ -78,6 +78,8 @@ jobs:
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
             echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
             echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
+            echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+            echo "SERVER_URL=${{ secrets.SERVER_URL }}" >> .env
             
             docker pull ${{ steps.login-ecr.outputs.registry }}/shinsekai-server:latest
             docker-compose down
