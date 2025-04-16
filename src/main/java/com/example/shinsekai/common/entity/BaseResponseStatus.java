@@ -78,7 +78,7 @@ public enum BaseResponseStatus {
     NO_EXIST_PRODUCT(HttpStatus.NOT_FOUND, false, 3001, "존재하지 않는 상품입니다"),
     NO_EXIST_OPTION(HttpStatus.NOT_FOUND, false, 3002, "존재하지 않는 옵션입니다"),
     NO_EXIST_CATEGORY(HttpStatus.NOT_FOUND, false, 3003, "존재하지 않는 카테고리입니다"),
-    NO_EXIST_PRODUCT_CATEGORY(HttpStatus.NOT_FOUND, false, 3010, "존재하지 않는 상품 카테고리입니다"),
+    NO_EXIST_PRODUCT_CATEGORY(HttpStatus.NOT_FOUND, false, 3011, "존재하지 않는 상품 카테고리입니다"),
 
     DUPLICATED_PRODUCT(HttpStatus.CONFLICT, false, 3004, "이미 등록된 상품입니다"),
     DUPLICATED_OPTION(HttpStatus.CONFLICT, false, 3005, "이미 등록된 옵션입니다"),
