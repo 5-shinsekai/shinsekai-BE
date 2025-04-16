@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-@Tag(name = "Product", description = "상품 관련 API")
 @RestController
+@Tag(name = "Product", description = "상품 관련 API")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/product")
+@RequestMapping("/api/v1/product/upload-json")
 public class ProductJsonUploadController {
 
     private final ProductJsonUploadService productJsonUploadService;
 
     @Operation(summary = "JSON 샘플 상품 일괄 업로드 (Postman 용)")
-    @PostMapping("/upload-json")
+    @PostMapping("/create")
     public BaseResponseEntity<Void> uploadJson(@RequestBody List<Map<String, Object>> rawList) {
         for (Map<String, Object> raw : rawList) {
             ProductRequestDto dto = JsonProductMapper.toDto(raw);

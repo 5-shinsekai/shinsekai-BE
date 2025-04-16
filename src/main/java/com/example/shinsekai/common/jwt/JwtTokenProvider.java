@@ -74,10 +74,10 @@ public class JwtTokenProvider {
 
     /**
      * 토큰 생성
-     * @param authentication, member, tokenType
+     * @param member, tokenType
      * @return 토큰 문자열
      */
-    public String generateToken(Authentication authentication, Member member, TokenEnum tokenType) {
+    public String generateToken(Member member, TokenEnum tokenType) {
         String memberUuid = member.getMemberUuid();
         Date now = new Date();
         Date expiration;
@@ -112,16 +112,16 @@ public class JwtTokenProvider {
 
     /**
      * 토큰 발급
-     * @param authentication, member
+     * @param member
      * @return SignInResponseDto
      */
-    public SignInResponseDto createToken(Authentication authentication, Member member) {
+    public SignInResponseDto createToken(Member member) {
 
         log.info("in JwtTokenProvider_createToken_here_1");
 
         // 토큰 생성
-        String accessToken = generateToken(authentication, member, TokenEnum.ACCESS);
-        String refreshToken = generateToken(authentication, member, TokenEnum.REFRESH);
+        String accessToken = generateToken(member, TokenEnum.ACCESS);
+        String refreshToken = generateToken(member, TokenEnum.REFRESH);
 
         log.info("JwtTokenProvider_createToken_here_2");
 
@@ -130,7 +130,7 @@ public class JwtTokenProvider {
 
         log.info("JwtTokenProvider_createToken_here_3");
 
-        return SignInResponseDto.from(member, accessToken, refreshToken);
+        return SignInResponseDto.of(member, accessToken, refreshToken);
     }
 
     /**
@@ -178,13 +178,13 @@ public class JwtTokenProvider {
         Member member = memberRepository.findByMemberUuid(memberUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
         Authentication authentication = new UsernamePasswordAuthenticationToken(member.getLoginId(), null, member.getAuthorities());
-        String newAccessToken = generateToken(authentication, member, TokenEnum.ACCESS);
-        String newRefreshToken = generateToken(authentication, member, TokenEnum.REFRESH);
+        String newAccessToken = generateToken(member, TokenEnum.ACCESS);
+        String newRefreshToken = generateToken(member, TokenEnum.REFRESH);
 
         // redis에 저장
         redisProvider.setToken(member.getMemberUuid(), newRefreshToken, refreshExpireTime);
 
-        return SignInResponseDto.from(member, newAccessToken, newRefreshToken);
+        return SignInResponseDto.of(member, newAccessToken, newRefreshToken);
     }
 
     /**

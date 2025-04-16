@@ -53,6 +53,7 @@ public class ProductJsonUploadService {
     @Transactional
     public void jsonUploadProduct(ProductRequestDto dto) {
         ProductResponseDto product = ProductResponseDto.from(productRepository.save(dto.toEntity()));
+        productRepository.flush();
         String productCode = product.getProductCode();
         long mainCategoryId = randomMainCategoryId();
         Long subCategoryId = randomSubCategoryIdFor(mainCategoryId);

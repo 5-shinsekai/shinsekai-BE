@@ -112,4 +112,5 @@ public class ProductController {
             @PageableDefault(size = 10) Pageable pageable) {
         return new BaseResponseEntity<>(productSearchService.searchByKeyword(keyword,pageable));
     }
+
 }

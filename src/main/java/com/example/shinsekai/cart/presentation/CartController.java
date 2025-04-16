@@ -1,9 +1,11 @@
 package com.example.shinsekai.cart.presentation;
 
 import com.example.shinsekai.cart.application.CartServiceImpl;
+import com.example.shinsekai.cart.dto.in.CartCheckedUpdateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartDeleteRequestDto;
 import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
+import com.example.shinsekai.cart.vo.in.CartCheckedUpdateRequestVo;
 import com.example.shinsekai.cart.vo.in.CartCreateRequestVo;
 import com.example.shinsekai.cart.vo.in.CartDeleteRequestVo;
 import com.example.shinsekai.cart.vo.in.CartUpdateRequestVo;
@@ -31,55 +33,63 @@ public class CartController {
 
     @Operation(summary = "장바구니 생성")
     @PostMapping
-    public BaseResponseEntity<Void> createCart(HttpServletRequest request,
-            @Valid @RequestBody CartCreateRequestVo cartCreateRequestVo){
-        cartService.createCart(CartCreateRequestDto.from(jwtTokenProvider.getAccessToken(request), cartCreateRequestVo));
+    public BaseResponseEntity<Void> createCart(@Valid @RequestBody CartCreateRequestVo cartCreateRequestVo){
+        cartService.createCart(CartCreateRequestDto.from(jwtTokenProvider.getMemberUuid(), cartCreateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "장바구니 조회")
     @GetMapping
-    public BaseResponseEntity<CartGroupedByProductTypeVo> getAllCarts(HttpServletRequest request){
-        return new BaseResponseEntity<>(cartService.getAllCarts(jwtTokenProvider.getAccessToken(request))
+    public BaseResponseEntity<CartGroupedByProductTypeVo> getAllCarts(){
+        return new BaseResponseEntity<>(cartService.getAllCarts(jwtTokenProvider.getMemberUuid())
                 .toVo());
     }
 
     @Operation(summary = "체크된 장바구니 조회")
     @GetMapping("/checked")
-    public BaseResponseEntity<CartGroupedByProductTypeVo> getAllCheckedCarts(HttpServletRequest request){
-        return new BaseResponseEntity<>(cartService.getAllCheckedCarts(jwtTokenProvider.getAccessToken(request))
+    public BaseResponseEntity<CartGroupedByProductTypeVo> getAllCheckedCarts(){
+        return new BaseResponseEntity<>(cartService.getAllCheckedCarts(jwtTokenProvider.getMemberUuid())
                 .toVo());
     }
 
     @Operation(summary = "장바구니 수정")
     @PutMapping
-    public BaseResponseEntity<Void> updateCart(HttpServletRequest request,
-                                               @Valid @RequestBody CartUpdateRequestVo cartUpdateRequestVo){
+    public BaseResponseEntity<Void> updateCart(@Valid @RequestBody CartUpdateRequestVo cartUpdateRequestVo){
         cartService.updateCart(CartUpdateRequestDto
-                .from(jwtTokenProvider.getAccessToken(request), cartUpdateRequestVo));
+                .from(jwtTokenProvider.getMemberUuid(), cartUpdateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
+    @Operation(summary = "장바구니 checked 상태 변경")
+    @PutMapping("/checked")
+    public BaseResponseEntity<Void> updateCartChecked(
+            @RequestBody CartCheckedUpdateRequestVo cartCheckedUpdateRequestVo){
+        cartService.updateAllCartChecked(CartCheckedUpdateRequestDto
+                .from(jwtTokenProvider.getMemberUuid(), cartCheckedUpdateRequestVo));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+
     @Operation(summary = "선택된 장바구니 단일 삭제")
     @DeleteMapping("/{cartUuid}")
-    public BaseResponseEntity<Void> deleteCart(HttpServletRequest request, @PathVariable String cartUuid){
-        cartService.deleteCart(jwtTokenProvider.getAccessToken(request),CartDeleteRequestDto.from(cartUuid));
+    public BaseResponseEntity<Void> deleteCart(@PathVariable String cartUuid){
+        cartService.deleteCart(jwtTokenProvider.getMemberUuid(),CartDeleteRequestDto.from(cartUuid));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "선택된 장바구니 리스트 삭제")
     @DeleteMapping("/list")
-    public BaseResponseEntity<Void> deleteSelectedAllCart(HttpServletRequest request,
-                                                          @RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList){
-        cartService.deleteSelectedAllCart(jwtTokenProvider.getAccessToken(request),
+    public BaseResponseEntity<Void> deleteSelectedAllCart(
+            @RequestBody List<CartDeleteRequestVo> cartDeleteRequestVoList){
+        cartService.deleteSelectedAllCart(jwtTokenProvider.getMemberUuid(),
                 cartDeleteRequestVoList.stream().map(CartDeleteRequestDto::from).toList());
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "장바구니 전체 삭제")
     @DeleteMapping("/all")
-    public BaseResponseEntity<Void> deleteAllCart(HttpServletRequest request){
-        cartService.deleteAllCart(jwtTokenProvider.getAccessToken(request));
+    public BaseResponseEntity<Void> deleteAllCart(){
+        cartService.deleteAllCart(jwtTokenProvider.getMemberUuid());
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }
