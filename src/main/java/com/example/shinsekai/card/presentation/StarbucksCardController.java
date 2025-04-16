@@ -5,6 +5,7 @@ import com.example.shinsekai.card.dto.in.MemberStarbucksListDto;
 import com.example.shinsekai.card.dto.in.StarbucksCardRequestDto;
 import com.example.shinsekai.card.dto.in.UseStarbucksCardRequestDto;
 import com.example.shinsekai.card.dto.out.StarbucksCardResponseDto;
+import com.example.shinsekai.card.vo.in.ChargeStarbucksCardVo;
 import com.example.shinsekai.card.vo.in.StarbucksCardRequestVo;
 import com.example.shinsekai.card.vo.out.StarbucksCardResponseVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
@@ -54,6 +55,19 @@ public class StarbucksCardController {
                 MemberStarbucksListDto.builder()
                         .memberStarbucksCardUuid(memberStarbucksCardUuid)
                         .memberUuid(jwtTokenProvider.getAccessToken(request))
+                        .build());
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @Operation(summary = "스타벅스 카드 충전")
+    @PutMapping("charge")
+    public  BaseResponseEntity<Void> chargeStarbucksCard(HttpServletRequest request,
+                                                         @RequestBody ChargeStarbucksCardVo starbucksCardRequestVo) {
+        starbucksCardService.chargeRemainAmount(
+                UseStarbucksCardRequestDto.builder()
+                        .memberStarbucksCardUuid(starbucksCardRequestVo.getMemberStarbucksCardUuid())
+                        .memberUuid(jwtTokenProvider.getAccessToken(request))
+                        .price(starbucksCardRequestVo.getPrice())
                         .build());
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
