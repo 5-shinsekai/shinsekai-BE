@@ -42,7 +42,7 @@ public class Address extends BaseEntity {
     @Column(nullable = false, length = 30)
     private String firstPhoneNumber;
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String secondPhoneNumber;
 
     @Column(nullable = false, length = 100)
@@ -55,8 +55,8 @@ public class Address extends BaseEntity {
     @Column(nullable = false, length = 30)
     private String receiverName;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean isDeleted;
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
 

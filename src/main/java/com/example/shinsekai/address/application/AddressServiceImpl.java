@@ -10,6 +10,7 @@ import com.example.shinsekai.common.exception.BaseException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
@@ -27,15 +28,13 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public List<AddressResponseDto> getAddress(String memberUuid) {
-        return addressRepository.findByMemberUuid(memberUuid)
-                .stream()
-                .filter(address -> !address.getIsDeleted())
-                .sorted(
-                        Comparator.comparing(Address::getIsMainAddress).reversed()
-                                .thenComparing(Address::getId) //오름차순     //.reversed(): 내림차순
+        return addressRepository.findByMemberUuidAndIsDeletedIsFalse(
+                        memberUuid,
+                        Sort.by(Sort.Order.desc("isMainAddress"), Sort.Order.desc("createdAt"))
                 )
+                .stream()
                 .map(AddressResponseDto::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -52,7 +51,7 @@ public class AddressServiceImpl implements AddressService{
         // 최초 등록이 아닌 경우
         else if (addressCount > 0 && addressCount < 10) {
 
-            Boolean requestedDtoIsMain = addressCreateRequestDto.getIsMainAddress() == null ? false : true;
+            Boolean requestedDtoIsMain = addressCreateRequestDto.getIsMainAddress() == null ? false : addressCreateRequestDto.getIsMainAddress();
             if (requestedDtoIsMain) {
                 Address prevMainAddress =
                         addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressCreateRequestDto.getMemberUuid())

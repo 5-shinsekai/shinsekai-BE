@@ -64,6 +64,7 @@ public class AddressCreateRequestDto {
                 .deliveryMemo(deliveryMemo)
                 .isPersonalMemo(isPersonalMemo)
                 .isMainAddress(isMainAddress)
+                .isDeleted(false)
                 .receiverName(receiverName)
                 .build();
     }
