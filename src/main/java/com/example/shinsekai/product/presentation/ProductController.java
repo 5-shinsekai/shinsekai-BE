@@ -3,11 +3,9 @@ package com.example.shinsekai.product.presentation;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.product.application.ProductFilterService;
-import com.example.shinsekai.product.application.ProductJsonUploadService;
 import com.example.shinsekai.product.application.ProductSearchService;
 import com.example.shinsekai.product.application.ProductService;
 import com.example.shinsekai.product.dto.in.ProductRequestDto;
-import com.example.shinsekai.product.mapper.JsonProductMapper;
 import com.example.shinsekai.product.vo.in.ProductRequestVo;
 import com.example.shinsekai.product.vo.out.ProductOutlineResponseVo;
 import com.example.shinsekai.product.vo.out.ProductResponseVo;
@@ -22,7 +20,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 
 @Tag(name = "Product", description = "상품 관련 API")
@@ -35,7 +32,6 @@ public class ProductController {
     private final ProductService productService;
     private final ProductFilterService productFilterService;
     private final ProductSearchService productSearchService;
-    private final ProductJsonUploadService productJsonUploadService;
 
     @Operation(summary = "상품 생성")
     @PostMapping
@@ -117,13 +113,4 @@ public class ProductController {
         return new BaseResponseEntity<>(productSearchService.searchByKeyword(keyword,pageable));
     }
 
-    @Operation(summary = "JSON 샘플 상품 일괄 업로드 (Postman 용)")
-    @PostMapping("/upload-json/create")
-    public BaseResponseEntity<Void> uploadJson(@RequestBody List<Map<String, Object>> rawList) {
-        for (Map<String, Object> raw : rawList) {
-            ProductRequestDto dto = JsonProductMapper.toDto(raw);
-            productJsonUploadService.jsonUploadProduct(dto);
-        }
-        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
-    }
 }
