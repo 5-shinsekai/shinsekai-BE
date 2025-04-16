@@ -27,7 +27,7 @@ public class AddressServiceImpl implements AddressService{
     private final AddressRepository addressRepository;
 
     @Override
-    public List<AddressResponseDto> getAddress(String memberUuid) {
+    public List<AddressResponseDto> getAddressList(String memberUuid) {
         return addressRepository.findByMemberUuidAndIsDeletedIsFalse(
                         memberUuid,
                         Sort.by(Sort.Order.desc("isMainAddress"), Sort.Order.desc("createdAt"))
@@ -35,6 +35,13 @@ public class AddressServiceImpl implements AddressService{
                 .stream()
                 .map(AddressResponseDto::from)
                 .toList();
+    }
+
+    @Override
+    public AddressResponseDto getMainAddress(String memberUuid) {
+        return AddressResponseDto.from(addressRepository.findByMemberUuidAndIsMainAddressIsTrue(memberUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_MAIN_ADDRESS)
+        ));
     }
 
     @Override
@@ -51,7 +58,8 @@ public class AddressServiceImpl implements AddressService{
         // 최초 등록이 아닌 경우
         else if (addressCount > 0 && addressCount < 10) {
 
-            Boolean requestedDtoIsMain = addressCreateRequestDto.getIsMainAddress() == null ? false : addressCreateRequestDto.getIsMainAddress();
+            Boolean requestedDtoIsMain =
+                    addressCreateRequestDto.getIsMainAddress() == null ? false : addressCreateRequestDto.getIsMainAddress();
             if (requestedDtoIsMain) {
                 Address prevMainAddress =
                         addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressCreateRequestDto.getMemberUuid())
@@ -73,7 +81,7 @@ public class AddressServiceImpl implements AddressService{
     @Override
     @Transactional
     public void updateAddress(AddressUpdateRequestDto addressUpdateRequestDto) {
-        addressRepository
+        Address address = addressRepository
                 .findByMemberUuidAndAddressUuid(addressUpdateRequestDto.getMemberUuid()
                         , addressUpdateRequestDto.getAddressUuid())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
@@ -87,7 +95,7 @@ public class AddressServiceImpl implements AddressService{
             prevMainAddress.clearMainAddress();                 // 기존 주소의 메인주소지 해제
         }
 
-        addressRepository.save(addressUpdateRequestDto.toEntity());
+        addressRepository.save(addressUpdateRequestDto.toEntity(address.getId()));
     }
 
     @Override
