@@ -1,5 +1,6 @@
 package com.example.shinsekai.season.entity;
 
+import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class ProductSeasonList {
+public class ProductSeasonList extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
