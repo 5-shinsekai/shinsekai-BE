@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(
+                                        "/api/v1/kakao/**",
                                         "/redis/**",
                                         "/api/v1/agreement/**",
                                         "/api/v1/email/**",
