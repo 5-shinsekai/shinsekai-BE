@@ -40,7 +40,7 @@ public class AddressUpdateRequestDto {
                 .addressNickname(addressRequestVo.getAddressNickname())
                 .zipNo(addressRequestVo.getZipNo())
                 .roadAddress(addressRequestVo.getRoadAddress())
-                .detailAddress(addressRequestVo.getDetailedAddress())
+                .detailAddress(addressRequestVo.getDetailAddress())
                 .totalAddress(addressRequestVo.getTotalAddress())
                 .firstPhoneNumber(addressRequestVo.getFirstPhoneNumber())
                 .secondPhoneNumber(addressRequestVo.getSecondPhoneNumber())
