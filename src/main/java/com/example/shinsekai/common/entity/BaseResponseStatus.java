@@ -69,6 +69,7 @@ public enum BaseResponseStatus {
     SAME_LOGIN_ID(HttpStatus.CONFLICT, false, 2026, "이미 사용중인 아이디입니다."),
     SAME_EMAIL(HttpStatus.CONFLICT, false, 2027, "이미 사용중인 이메일입니다."),
     SAME_PHONE(HttpStatus.CONFLICT, false, 2028, "이미 사용중인 전화번호입니다."),
+    FAILED_TO_FIND_SOCIAL_MEMBER(HttpStatus.UNAUTHORIZED, false, 2029, "가입되지 않은 소셜 회원입니다."),
 
     /**
      * 3000: product service error
