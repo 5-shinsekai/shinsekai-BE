@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProductSeasonService {
     void createProductSeasonList(ProductSeasonListCreateRequestDto productSeasonListCreateRequestDto);
-    List<ProductSeasonListGetResponseDto> getAllProductSeasonList(Long seasonId);
+    List<ProductSeasonListGetResponseDto> getAllProductSeasonList(Integer seasonId);
     void updateProductSeasonList(ProductSeasonListUpdateRequestDto productSeasonListUpdateRequestDto);
-    void deleteProductSeasonList(Long seasonId);
+    void deleteProductSeasonList(Long id);
 }

@@ -25,7 +25,7 @@ public class ProductSeasonServiceImpl implements ProductSeasonService {
     }
 
     @Override
-    public List<ProductSeasonListGetResponseDto> getAllProductSeasonList(Long seasonId) {
+    public List<ProductSeasonListGetResponseDto> getAllProductSeasonList(Integer seasonId) {
         return productSeasonListRepository.findAllBySeasonId(seasonId)
                 .stream().map(ProductSeasonListGetResponseDto::from).toList();
     }

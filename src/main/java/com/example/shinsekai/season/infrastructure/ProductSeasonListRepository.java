@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ProductSeasonListRepository extends JpaRepository<ProductSeasonList, Long> {
-    List<ProductSeasonList> findAllBySeasonId(Long seasonId);
+    List<ProductSeasonList> findAllBySeasonId(Integer seasonId);
 }

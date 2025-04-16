@@ -38,7 +38,7 @@ public class ProductSeasonController {
     @Operation(summary = "시즌별 상품 전체 조회")
     @GetMapping("/{seasonId}")
     public BaseResponseEntity<List<ProductSeasonListGetResponseVo>> getAllProductSeasonList(
-            @PathVariable Long seasonId) {
+            @PathVariable Integer seasonId) {
         return new BaseResponseEntity<>(productSeasonService.getAllProductSeasonList(seasonId).stream()
                 .map(ProductSeasonListGetResponseDto::toVo).toList());
     }
