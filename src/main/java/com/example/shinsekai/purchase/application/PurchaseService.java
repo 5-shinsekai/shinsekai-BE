@@ -5,7 +5,6 @@ import com.example.shinsekai.purchase.dto.in.PurchaseProductListRequestDto;
 import com.example.shinsekai.purchase.dto.in.PurchaseRequestDto;
 import com.example.shinsekai.purchase.dto.out.PurchaseProductListResponseDto;
 import com.example.shinsekai.purchase.dto.out.PurchaseResponseDto;
-import com.example.shinsekai.purchase.entity.PurchaseProductList;
 
 import java.util.List;
 

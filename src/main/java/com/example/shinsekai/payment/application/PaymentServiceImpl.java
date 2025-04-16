@@ -1,7 +1,5 @@
 package com.example.shinsekai.payment.application;
 
-import com.example.shinsekai.card.application.StarbucksCardService;
-import com.example.shinsekai.card.dto.in.UseStarbucksCardRequestDto;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.payment.dto.in.PaymentDeleteRequestDto;
@@ -14,9 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.Objects;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -26,8 +22,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
 
     @Override
-    public PaymentResponseDto findPayment(String paymentCode, String memberUuid) {
-        return PaymentResponseDto.from(paymentRepository.findByPaymentCodeAndMemberUuidAndStatus(paymentCode, memberUuid, PaymentStatus.DONE)
+    public PaymentResponseDto findAllPayment(String paymentCode, String memberUuid) {
+        return PaymentResponseDto.from(paymentRepository.findByPaymentCodeAndMemberUuid(paymentCode, memberUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_ORDER_ID)));
     }
 

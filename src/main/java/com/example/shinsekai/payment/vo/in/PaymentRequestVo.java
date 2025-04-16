@@ -3,7 +3,6 @@ package com.example.shinsekai.payment.vo.in;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
 
 @Getter
 @ToString

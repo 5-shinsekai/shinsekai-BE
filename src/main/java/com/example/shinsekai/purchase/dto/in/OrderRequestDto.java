@@ -4,10 +4,8 @@ import com.example.shinsekai.payment.entity.PaymentStatus;
 import com.example.shinsekai.purchase.entity.PurchaseStatus;
 import com.example.shinsekai.purchase.vo.in.OrderRequestVo;
 import lombok.*;
-import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 

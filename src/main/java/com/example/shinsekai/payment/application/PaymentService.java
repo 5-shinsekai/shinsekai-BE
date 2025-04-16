@@ -5,7 +5,7 @@ import com.example.shinsekai.payment.dto.in.PaymentRequestDto;
 import com.example.shinsekai.payment.dto.out.PaymentResponseDto;
 
 public interface PaymentService {
-    PaymentResponseDto findPayment(String paymentCode, String memberUuid);
+    PaymentResponseDto findAllPayment(String paymentCode, String memberUuid);
     String createPayment(PaymentRequestDto paymentRequestDto);
     void deletePayment(PaymentDeleteRequestDto paymentDeleteRequestDto);
 }

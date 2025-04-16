@@ -7,8 +7,6 @@ import com.example.shinsekai.purchase.dto.in.PurchaseProductListRequestDto;
 import com.example.shinsekai.purchase.dto.in.PurchaseRequestDto;
 import com.example.shinsekai.purchase.dto.out.PurchaseProductListResponseDto;
 import com.example.shinsekai.purchase.dto.out.PurchaseResponseDto;
-import com.example.shinsekai.purchase.entity.Purchase;
-import com.example.shinsekai.purchase.entity.PurchaseProductList;
 import com.example.shinsekai.purchase.infrastructure.PurchaseProductListRepository;
 import com.example.shinsekai.purchase.infrastructure.PurchaseRepository;
 import jakarta.transaction.Transactional;
@@ -49,7 +47,6 @@ public class PurchaseServiceImpl implements PurchaseService {
                     return PurchaseResponseDto.from(purchase, productList);
                 })
                 .toList();
-
     }
 
     @Override

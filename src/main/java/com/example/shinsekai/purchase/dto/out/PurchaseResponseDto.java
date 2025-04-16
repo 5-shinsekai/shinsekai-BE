@@ -1,9 +1,7 @@
 package com.example.shinsekai.purchase.dto.out;
 
-import com.example.shinsekai.payment.entity.PaymentStatus;
 import com.example.shinsekai.purchase.entity.Purchase;
 import com.example.shinsekai.purchase.entity.PurchaseStatus;
-import com.example.shinsekai.purchase.vo.out.PurchaseProductResponseVo;
 import com.example.shinsekai.purchase.vo.out.PurchaseResponseVo;
 import lombok.*;
 

@@ -41,21 +41,6 @@ public class PurchaseRequestDto {
                 .build();
     }
 
-//    public static PurchaseRequestDto from(PurchaseRequestVo purchaseRequestVo, String memberUuid){
-//        return PurchaseRequestDto.builder()
-//                .purchaseCode(purchaseRequestVo.getPurchaseCode())
-//                .paymentCode(purchaseRequestVo.getPaymentCode())
-//                .memberUuid(memberUuid)
-//                .purchaseStatus(purchaseRequestVo.getPurchaseStatus())
-//                .receiver(purchaseRequestVo.getReceiver())
-//                .address(purchaseRequestVo.getAddress())
-//                .giftCertificationUuid(purchaseRequestVo.getGiftCertificationUuid())
-//                .couponUuid(purchaseRequestVo.getCouponUuid())
-//                .shipmentFee(purchaseRequestVo.getShipmentFee())
-//                .productTotalPrice(purchaseRequestVo.getProductTotalPrice())
-//                .build();
-//    }
-
     public static PurchaseRequestDto fromOrder(OrderRequestDto orderRequestDto, String paymentCode){
         return PurchaseRequestDto.builder()
                 .purchaseCode(orderRequestDto.getPurchaseCode())
