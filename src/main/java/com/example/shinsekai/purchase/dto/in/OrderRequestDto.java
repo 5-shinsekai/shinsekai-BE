@@ -4,10 +4,8 @@ import com.example.shinsekai.payment.entity.PaymentStatus;
 import com.example.shinsekai.purchase.entity.PurchaseStatus;
 import com.example.shinsekai.purchase.vo.in.OrderRequestVo;
 import lombok.*;
-import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -24,11 +22,10 @@ public class OrderRequestDto {
     private String address;
     private String giftCertificationUuid;
     private String couponUuid;
-    private int shipmentFee;
-    private double productTotalPrice;
+    private Double shipmentFee;
+    private Double productTotalPrice;
 
     //결제
-    private String paymentKey;
     private String purchaseName;
     private Double paymentPrice;
     private String paymentMethod;

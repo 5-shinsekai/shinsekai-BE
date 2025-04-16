@@ -25,7 +25,7 @@ public class PurchaseProductList extends BaseEntity {
     private String purchaseCode;
 
     @Column(updatable = false, nullable = false)
-    private double productPrice;
+    private Double productPrice;
 
     @Column(updatable = false, nullable = false)
     private String productName;

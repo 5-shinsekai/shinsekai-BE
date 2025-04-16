@@ -18,9 +18,6 @@ public class Payment extends BaseEntity {
     @Column(unique = true, nullable = false, updatable = false)
     private String paymentCode;
 
-    @Column(updatable = false)
-    private String paymentKey;
-
     @Column(nullable = false, updatable = false)
     private String memberUuid;
 

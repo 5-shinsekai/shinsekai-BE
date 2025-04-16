@@ -23,8 +23,8 @@ public class PurchaseRequestDto {
     private String address;
     private String giftCertificationUuid;
     private String couponUuid;
-    private int shipmentFee;
-    private double productTotalPrice;
+    private Double shipmentFee;
+    private Double productTotalPrice;
 
     public Purchase toEntity(){
         return Purchase.builder()
@@ -40,21 +40,6 @@ public class PurchaseRequestDto {
                 .productTotalPrice(this.productTotalPrice)
                 .build();
     }
-
-//    public static PurchaseRequestDto from(PurchaseRequestVo purchaseRequestVo, String memberUuid){
-//        return PurchaseRequestDto.builder()
-//                .purchaseCode(purchaseRequestVo.getPurchaseCode())
-//                .paymentCode(purchaseRequestVo.getPaymentCode())
-//                .memberUuid(memberUuid)
-//                .purchaseStatus(purchaseRequestVo.getPurchaseStatus())
-//                .receiver(purchaseRequestVo.getReceiver())
-//                .address(purchaseRequestVo.getAddress())
-//                .giftCertificationUuid(purchaseRequestVo.getGiftCertificationUuid())
-//                .couponUuid(purchaseRequestVo.getCouponUuid())
-//                .shipmentFee(purchaseRequestVo.getShipmentFee())
-//                .productTotalPrice(purchaseRequestVo.getProductTotalPrice())
-//                .build();
-//    }
 
     public static PurchaseRequestDto fromOrder(OrderRequestDto orderRequestDto, String paymentCode){
         return PurchaseRequestDto.builder()

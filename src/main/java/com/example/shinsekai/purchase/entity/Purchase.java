@@ -42,10 +42,10 @@ public class Purchase extends BaseEntity {
     private String couponUuid;
 
     @Column(updatable = false)
-    private double shipmentFee;
+    private Double shipmentFee;
 
     @Column(nullable = false, updatable = false)
-    private double productTotalPrice;
+    private Double productTotalPrice;
 
     public void cancelPurchase(String cancelReason) {
         this.purchaseStatus = PurchaseStatus.CANCEL;
