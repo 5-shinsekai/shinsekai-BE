@@ -36,7 +36,7 @@ public class ProductEventListController {
     }
 
     @Operation(summary = "기획전별 상품 전체 조회")
-    @GetMapping("/{seasonId}")
+    @GetMapping("/{eventId}")
     public BaseResponseEntity<List<ProductEventListGetResponseVo>> getAllProductEventList(
             @PathVariable Integer eventId) {
         return new BaseResponseEntity<>(productEventService.getAllProductEventList(eventId).stream()
