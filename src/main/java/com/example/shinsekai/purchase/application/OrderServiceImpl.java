@@ -7,7 +7,6 @@ import com.example.shinsekai.payment.application.PaymentService;
 import com.example.shinsekai.payment.dto.in.PaymentDeleteRequestDto;
 import com.example.shinsekai.payment.dto.in.PaymentRequestDto;
 import com.example.shinsekai.purchase.dto.in.*;
-import com.example.shinsekai.purchase.entity.PurchaseProductList;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,7 +69,6 @@ public class OrderServiceImpl implements OrderService{
         //재고 충전
         purchaseService.findPurchaseProductListByPurchaseCode(cancelOrderRequestDto.getPurchaseCode())
                 .forEach(entity -> {
-                    System.out.println(entity);
                     productOptionService.increaseOptionStock(entity.getProductOptionId(), entity.getQuantity());
                 }); 
     }

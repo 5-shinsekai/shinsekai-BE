@@ -3,7 +3,6 @@ package com.example.shinsekai.purchase.vo.in;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.List;
 
 @Getter
 @ToString

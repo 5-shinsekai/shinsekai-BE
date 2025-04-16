@@ -1,6 +1,5 @@
 package com.example.shinsekai.common.redis;
 
-import com.example.shinsekai.purchase.dto.in.PurchaseTemporaryRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
@@ -78,29 +77,6 @@ public class RedisProvider {
 
     public boolean deleteValue(String key) {
         return redisTemplate.delete(key);
-    }
-
-    @Builder
-    public String setTemporaryPayment(String orderId, PurchaseTemporaryRequestDto purchaseTemporaryRequestDto, long expirationTime) {
-        try {
-            String json = objectMapper.writeValueAsString(purchaseTemporaryRequestDto); // 객체 → JSON 변환
-            redisTemplate.opsForValue().set(orderId, json, expirationTime, TimeUnit.MINUTES);
-        } catch (JsonProcessingException e) {
-            log.error("Failed to serialize PendingPayment: {}", e.getMessage());
-        }
-        return orderId;
-    }
-
-    public PurchaseTemporaryRequestDto getTemporaryPayment(String orderId) {
-        String json = redisTemplate.opsForValue().get(orderId);
-        if (json == null) return null;
-
-        try {
-            return objectMapper.readValue(json, PurchaseTemporaryRequestDto.class);
-        } catch (JsonProcessingException e) {
-            log.error("Failed to deserialize JSON to PurchaseTemporaryRequestDto: {}", e.getMessage());
-            return null;
-        }
     }
 
 }

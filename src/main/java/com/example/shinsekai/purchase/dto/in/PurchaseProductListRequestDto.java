@@ -14,7 +14,7 @@ public class PurchaseProductListRequestDto {
     private String purchaseCode;
     private String productCode;
     private String productName;
-    private Integer productPrice;
+    private Double productPrice;
     private Integer quantity;
     private String productImageUrl;
     private String productImageDescription;

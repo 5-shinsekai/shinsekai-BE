@@ -13,7 +13,9 @@ import org.springframework.context.annotation.Profile;
                 title = "STARBUCKS Service API",
                 version = "v1",
                 description = "STARBUCKS API Docs"
-        )
+        ),security = {
+                @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "Bearer Auth")
+        }
 )
 @SecurityScheme(
         name = "Bearer Auth",
