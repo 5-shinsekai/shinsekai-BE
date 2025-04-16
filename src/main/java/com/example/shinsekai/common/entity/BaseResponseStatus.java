@@ -78,14 +78,16 @@ public enum BaseResponseStatus {
     NO_EXIST_PRODUCT(HttpStatus.NOT_FOUND, false, 3001, "존재하지 않는 상품입니다"),
     NO_EXIST_OPTION(HttpStatus.NOT_FOUND, false, 3002, "존재하지 않는 옵션입니다"),
     NO_EXIST_CATEGORY(HttpStatus.NOT_FOUND, false, 3003, "존재하지 않는 카테고리입니다"),
-    NO_EXIST_PRODUCT_CATEGORY(HttpStatus.NOT_FOUND, false, 30010, "존재하지 않는 상품 카테고리입니다"),
+    NO_EXIST_PRODUCT_CATEGORY(HttpStatus.NOT_FOUND, false, 3010, "존재하지 않는 상품 카테고리입니다"),
 
     DUPLICATED_PRODUCT(HttpStatus.CONFLICT, false, 3004, "이미 등록된 상품입니다"),
     DUPLICATED_OPTION(HttpStatus.CONFLICT, false, 3005, "이미 등록된 옵션입니다"),
     DUPLICATED_CATEGORY(HttpStatus.CONFLICT, false, 3006, "이미 등록된 카테고리입니다"),
+    DUPLICATED_RESTOCK_NOTIFICATION(HttpStatus.CONFLICT, false, 3008, "이미 재입고 알림 신청이 완료 되었습니다"),
+    INVALID_RESTOCK_NOTIFICATION_CONDITION(HttpStatus.BAD_REQUEST, false, 3009, "재입고 알림은 품절 상품에만 신청할 수 있습니다."),
 
-    NO_EXIST_OPTIONS_IN_PRODUCT(HttpStatus.NOT_FOUND, false, 3007, "해당 상품에 옵션이 존재하지 않습니다"),
-    NOT_ENOUGH_STOCK(HttpStatus.CONFLICT, false, 3008, "해당 상품에 재고가 충분하지 않습니다"),
+    NO_EXIST_OPTIONS_IN_PRODUCT(HttpStatus.NOT_FOUND, false, 3010, "해당 상품에 옵션이 존재하지 않습니다"),
+    NOT_ENOUGH_STOCK(HttpStatus.CONFLICT, false, 3011, "해당 상품에 재고가 충분하지 않습니다"),
 
     // Cart
     CART_PRODUCT_KIND_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 3108, "장바구니에 담을 수 있는 상품 종류는 최대 20개까지입니다"),
@@ -154,12 +156,14 @@ public enum BaseResponseStatus {
     INVALID_ZIP_NO_FORMAT(HttpStatus.BAD_REQUEST, false, 10023, "잘못된 형식의 우편번호입니다."),
     INVALID_ADDRESS_NICKNAME_FORMAT(HttpStatus.BAD_REQUEST, false, 10024, "잘못된 형식의 배송지 별칭입니다."),
     INVALID_DELIVERY_MEMO_FORMAT(HttpStatus.BAD_REQUEST, false, 10025, "잘못된 형식의 배송 메모입니다."),
-    INVALID_TOTAL_ADDRESS_FORMAT(HttpStatus.BAD_REQUEST, false, 10026, "잘못된 형식의 주소입니다."),
+    INVALID_TOTAL_ADDRESS_FORMAT(HttpStatus.BAD_REQUEST, false, 10026, "잘못된 형식의 전체 주소입니다."),
     INVALID_MEMBER_UUID(HttpStatus.BAD_REQUEST, false, 10027, "잘못된 형식의 사용자 UUID 입니다."),
     INVALID_ADDRESS_UUID(HttpStatus.BAD_REQUEST, false, 10028, "잘못된 형식의 배송지 UUID 입니다."),
     ADDRESS_QUANTITY_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, false, 10029, "저장 가능한 배송지 개수를 초과했습니다."),
     FAILED_TO_DELETE_MAIN_ADDRESS(HttpStatus.BAD_REQUEST, false, 10030, "기본 배송지는 삭제가 불가능합니다."),
-    
+    INVALID_ROAD_ADDRESS_FORMAT(HttpStatus.BAD_REQUEST, false, 10031, "잘못된 형식의 도로명 주소입니다."),
+    INVALID_DETAIL_ADDRESS_FORMAT(HttpStatus.BAD_REQUEST, false, 10032, "잘못된 형식의 상세 주소입니다."),
+
     // 약관
     NO_EXIST_AGREEMENT(HttpStatus.NOT_FOUND, false, 10040, "존재하지 않는 약관입니다."),
     FAILED_TO_DELETE_AGREEMENT(HttpStatus.BAD_REQUEST, false, 10041, "삭제할 수 없는 약관입니다."),

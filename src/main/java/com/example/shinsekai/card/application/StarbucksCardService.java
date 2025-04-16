@@ -13,5 +13,6 @@ public interface StarbucksCardService {
     void createStarbucksCard(StarbucksCardRequestDto starbucksCardRequestDto);
     void deleteStarbucksCard(MemberStarbucksListDto memberStarbucksCardsListDto);
     void useRemainAmount(UseStarbucksCardRequestDto useStarbucksCardRequestDto);
+    void chargeRemainAmount(UseStarbucksCardRequestDto useStarbucksCardRequestDto);
 }
 

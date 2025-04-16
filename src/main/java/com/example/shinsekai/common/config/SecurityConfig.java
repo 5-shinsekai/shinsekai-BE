@@ -48,7 +48,7 @@ public class SecurityConfig {
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(
                                         "/redis/**",
-                                        "api/v1/agreement/**",
+                                        "/api/v1/agreement/**",
                                         "/api/v1/email/**",
                                         "/api/v1/member/**",
                                         "/api/v1/cart/**",

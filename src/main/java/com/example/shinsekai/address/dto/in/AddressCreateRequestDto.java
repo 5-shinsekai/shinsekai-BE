@@ -20,26 +20,32 @@ public class AddressCreateRequestDto {
 
     private String addressUuid;
     private String memberUuid;
-    private String zipNo;
     private String addressNickname;
-    private String deliveryMemo;
+    private String zipNo;
+    private String roadAddress;
+    private String detailAddress;
     private String totalAddress;
-    private Boolean isMainAddress;
     private String firstPhoneNumber;
     private String secondPhoneNumber;
+    private String deliveryMemo;
+    private Boolean isPersonalMemo;
+    private Boolean isMainAddress;
     private String receiverName;
 
     public static AddressCreateRequestDto of(AddressCreateRequestVo addressRequestVo, String memberUuid) {
         return AddressCreateRequestDto.builder()
                 .memberUuid(memberUuid)
                 .addressUuid(generateAddressUuid())
-                .zipNo(addressRequestVo.getZipNo())
                 .addressNickname(addressRequestVo.getAddressNickname())
-                .deliveryMemo(addressRequestVo.getDeliveryMemo())
+                .zipNo(addressRequestVo.getZipNo())
+                .roadAddress(addressRequestVo.getRoadAddress())
+                .detailAddress(addressRequestVo.getDetailedAddress())
                 .totalAddress(addressRequestVo.getTotalAddress())
-                .isMainAddress(addressRequestVo.getIsMainAddress())
                 .firstPhoneNumber(addressRequestVo.getFirstPhoneNumber())
                 .secondPhoneNumber(addressRequestVo.getSecondPhoneNumber())
+                .deliveryMemo(addressRequestVo.getDeliveryMemo())
+                .isPersonalMemo(addressRequestVo.getIsPersonalMemo())
+                .isMainAddress(addressRequestVo.getIsMainAddress())
                 .receiverName(addressRequestVo.getReceiverName())
                 .build();
     }
@@ -48,13 +54,17 @@ public class AddressCreateRequestDto {
         return Address.builder()
                 .addressUuid(addressUuid)
                 .memberUuid(memberUuid)
-                .zipNo(zipNo)
                 .addressNickname(addressNickname)
-                .deliveryMemo(deliveryMemo)
+                .zipNo(zipNo)
+                .roadAddress(roadAddress)
+                .detailedAddress(detailAddress)
                 .totalAddress(totalAddress)
-                .isMainAddress(isMainAddress)
                 .firstPhoneNumber(firstPhoneNumber)
                 .secondPhoneNumber(secondPhoneNumber)
+                .deliveryMemo(deliveryMemo)
+                .isPersonalMemo(isPersonalMemo)
+                .isMainAddress(isMainAddress)
+                .isDeleted(false)
                 .receiverName(receiverName)
                 .build();
     }

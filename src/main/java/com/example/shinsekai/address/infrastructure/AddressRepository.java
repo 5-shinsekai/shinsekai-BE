@@ -3,6 +3,7 @@ package com.example.shinsekai.address.infrastructure;
 
 import com.example.shinsekai.address.dto.out.AddressResponseDto;
 import com.example.shinsekai.address.entity.Address;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +17,5 @@ public interface AddressRepository extends JpaRepository<Address,Long> {
     Optional<Address> findByMemberUuidAndAddressUuid(String memberUuid, String addressUuid);
     Optional<Address> findByAddressUuid(String addressUuid);
     Optional<Address> findByMemberUuidAndIsMainAddressIsTrue(String memberUuid);
-
+    List<Address> findByMemberUuidAndIsDeletedIsFalse(String memberUuid, Sort sort);
 }

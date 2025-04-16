@@ -24,50 +24,72 @@ public class Address extends BaseEntity {
     @Column(nullable = false, updatable = false)
     private String memberUuid;
 
+    @Column(nullable = false, length = 30)
+    private String addressNickname;
+
     @Column(nullable = false, length = 100)
     private String zipNo;
 
-    @Column(nullable = false, length = 30)
-    private String addressNickname;
+    @Column(nullable = false, length = 50)
+    private String roadAddress;
+
     @Column(nullable = false, length = 100)
-    private String deliveryMemo;
+    private String detailedAddress;
+
     @Column(nullable = false)
     private String totalAddress;
-    private Boolean isMainAddress;
+
     @Column(nullable = false, length = 30)
     private String firstPhoneNumber;
-    @Column(nullable = false, length = 30)
+
+    @Column(length = 30)
     private String secondPhoneNumber;
+
+    @Column(nullable = false, length = 100)
+    private String deliveryMemo;
+
+    private Boolean isPersonalMemo;
+
+    private Boolean isMainAddress;
+
     @Column(nullable = false, length = 30)
     private String receiverName;
-    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean isDeleted;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    private Boolean isDeleted = false;
+
     private LocalDateTime deletedAt;
 
     @Builder
     public Address(Long id,
                    String addressUuid,
                    String memberUuid,
-                   String zipNo,
                    String addressNickname,
-                   String deliveryMemo,
+                   String zipNo,
+                   String roadAddress,
+                   String detailedAddress,
                    String totalAddress,
-                   boolean isMainAddress,
                    String firstPhoneNumber,
                    String secondPhoneNumber,
+                   String deliveryMemo,
+                   Boolean isPersonalMemo,
+                   Boolean isMainAddress,
                    String receiverName,
-                   boolean isDeleted,
+                   Boolean isDeleted,
                    LocalDateTime deletedAt) {
         this.id = id;
         this.addressUuid = addressUuid;
         this.memberUuid = memberUuid;
-        this.zipNo = zipNo;
         this.addressNickname = addressNickname;
-        this.deliveryMemo = deliveryMemo;
+        this.zipNo = zipNo;
+        this.roadAddress = roadAddress;
+        this.detailedAddress = detailedAddress;
         this.totalAddress = totalAddress;
-        this.isMainAddress = isMainAddress;
         this.firstPhoneNumber = firstPhoneNumber;
         this.secondPhoneNumber = secondPhoneNumber;
+        this.deliveryMemo = deliveryMemo;
+        this.isPersonalMemo = isPersonalMemo;
+        this.isMainAddress = isMainAddress;
         this.receiverName = receiverName;
         this.isDeleted = isDeleted;
         this.deletedAt = deletedAt;
