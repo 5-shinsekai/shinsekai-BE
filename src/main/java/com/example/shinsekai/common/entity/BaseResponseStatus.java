@@ -164,6 +164,7 @@ public enum BaseResponseStatus {
     FAILED_TO_DELETE_MAIN_ADDRESS(HttpStatus.BAD_REQUEST, false, 10030, "기본 배송지는 삭제가 불가능합니다."),
     INVALID_ROAD_ADDRESS_FORMAT(HttpStatus.BAD_REQUEST, false, 10031, "잘못된 형식의 도로명 주소입니다."),
     INVALID_DETAIL_ADDRESS_FORMAT(HttpStatus.BAD_REQUEST, false, 10032, "잘못된 형식의 상세 주소입니다."),
+    NO_EXIST_MAIN_ADDRESS(HttpStatus.NOT_FOUND, false, 10033, "기본 배송지가 존재하지 않습니다."),
 
     // 약관
     NO_EXIST_AGREEMENT(HttpStatus.NOT_FOUND, false, 10040, "존재하지 않는 약관입니다."),

@@ -46,7 +46,7 @@ public class AddressCreateRequestVo {
 
 
     @NotBlank(message = "INVALID_NAME_FORMAT")
-    @Pattern(regexp = "^[a-zA-Z가-힣]+$", message = "INVALID_NAME_FORMAT")
+    @Pattern(regexp = "^[a-zA-Z가-힣]+(\\s[a-zA-Z가-힣]+)*$", message = "INVALID_NAME_FORMAT")
     @Size(max = 30)
     private String receiverName;
 }

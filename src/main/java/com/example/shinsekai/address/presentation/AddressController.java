@@ -31,38 +31,42 @@ public class AddressController {
     private final AddressService addressService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Operation(summary = "배송지 조회")
-    @GetMapping
-    public BaseResponseEntity<List<AddressResponseVo>> getAddressList(HttpServletRequest request) {
-        List<AddressResponseVo> result = addressService.getAddress(jwtTokenProvider.getAccessToken(request))
+    @Operation(summary = "배송지 전체 조회")
+    @GetMapping("/list")
+    public BaseResponseEntity<List<AddressResponseVo>> getAddressList() {
+        List<AddressResponseVo> result = addressService.getAddressList(jwtTokenProvider.getMemberUuid())
                 .stream()
                 .map(AddressResponseDto::toVo)
                 .toList();
         return new BaseResponseEntity<>(result);
     }
 
+    @Operation(summary = "기본 배송지 조회")
+    @GetMapping("/main")
+    public BaseResponseEntity<AddressResponseVo> getMainAddress() {
+        AddressResponseVo result = addressService.getMainAddress(jwtTokenProvider.getMemberUuid()).toVo();
+        return new BaseResponseEntity<>(result);
+    }
+
     @Operation(summary = "배송지 생성")
     @PostMapping
-    public BaseResponseEntity<Void> createAddress(HttpServletRequest request,
-                                                  @Valid @RequestBody AddressCreateRequestVo addressRequestVo) {
+    public BaseResponseEntity<Void> createAddress(@Valid @RequestBody AddressCreateRequestVo addressRequestVo) {
 
-        addressService.createAddress(AddressCreateRequestDto.of(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
+        addressService.createAddress(AddressCreateRequestDto.of(addressRequestVo, jwtTokenProvider.getMemberUuid()));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "배송지 수정")
     @PutMapping
-    public BaseResponseEntity<Void> updateAddress(HttpServletRequest request,
-                                                  @Valid @RequestBody AddressUpdateRequestVo addressRequestVo) {
-        addressService.updateAddress(AddressUpdateRequestDto.of(addressRequestVo, jwtTokenProvider.getAccessToken(request)));
+    public BaseResponseEntity<Void> updateAddress(@Valid @RequestBody AddressUpdateRequestVo addressRequestVo) {
+        addressService.updateAddress(AddressUpdateRequestDto.of(addressRequestVo, jwtTokenProvider.getMemberUuid()));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
     
     @Operation(summary = "배송지 삭제")
     @DeleteMapping
-    public BaseResponseEntity<Void> deleteAddress(HttpServletRequest request,
-                                                  @Valid @RequestBody AddressDeleteRequestVo addressRequestVo) {
-        addressService.softDeleteAddress(jwtTokenProvider.getAccessToken(request), addressRequestVo.getAddressUuid());
+    public BaseResponseEntity<Void> deleteAddress(@Valid @RequestBody AddressDeleteRequestVo addressRequestVo) {
+        addressService.softDeleteAddress(jwtTokenProvider.getMemberUuid(), addressRequestVo.getAddressUuid());
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }
