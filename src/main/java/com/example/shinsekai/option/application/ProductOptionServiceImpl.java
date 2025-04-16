@@ -2,13 +2,14 @@ package com.example.shinsekai.option.application;
 
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
+import com.example.shinsekai.notification.application.RestockNotificationService;
 import com.example.shinsekai.option.dto.in.ProductOptionRequestDto;
 import com.example.shinsekai.option.dto.out.ProductOptionResponseDto;
+import com.example.shinsekai.option.entity.OptionStatus;
 import com.example.shinsekai.option.entity.ProductOptionList;
 import com.example.shinsekai.option.infrastructure.ColorRepository;
 import com.example.shinsekai.option.infrastructure.ProductOptionListRepository;
 import com.example.shinsekai.option.infrastructure.SizeRepository;
-import com.example.shinsekai.product.infrastructure.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     private final ProductOptionListRepository productOptionListRepository;
     private final SizeRepository sizeRepository;
     private final ColorRepository colorRepository;
+    private final RestockNotificationService restockNotificationService;
 
     @Override
     public ProductOptionResponseDto getProductOption(Long productOptionId) {
@@ -64,7 +66,13 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         ProductOptionList productOptionList = productOptionListRepository.findById(productOptionId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_OPTION));
 
+        OptionStatus beforeStatus = productOptionList.getOptionStatus();
+
         productOptionList.increaseStock(quantity);
+
+        if (beforeStatus == OptionStatus.OUT_OF_STOCK) {
+            restockNotificationService.notifyForRestockedOption(productOptionId);
+        }
     }
 
     // 상품 옵션 생성 유효성 검사
