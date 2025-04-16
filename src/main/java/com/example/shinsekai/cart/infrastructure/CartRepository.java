@@ -34,4 +34,12 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
                                   @Param("productCode") String productCode,
                                   @Param("productOptionListId") Long productOptionListId);
 
+    @Modifying
+    @Query("UPDATE Cart c SET c.checked = :checked " +
+            "WHERE c.memberUuid = :memberUuid " +
+            "AND (:isFrozen IS NULL OR c.isFrozen = :isFrozen) " +
+            "AND c.isDeleted = false")
+    void updateCheckedStatusByType(String memberUuid, Boolean checked, Boolean isFrozen);
+
+
 }

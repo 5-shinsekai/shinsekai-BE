@@ -1,9 +1,11 @@
 package com.example.shinsekai.cart.presentation;
 
 import com.example.shinsekai.cart.application.CartServiceImpl;
+import com.example.shinsekai.cart.dto.in.CartCheckedUpdateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartDeleteRequestDto;
 import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
+import com.example.shinsekai.cart.vo.in.CartCheckedUpdateRequestVo;
 import com.example.shinsekai.cart.vo.in.CartCreateRequestVo;
 import com.example.shinsekai.cart.vo.in.CartDeleteRequestVo;
 import com.example.shinsekai.cart.vo.in.CartUpdateRequestVo;
@@ -59,6 +61,17 @@ public class CartController {
                 .from(jwtTokenProvider.getAccessToken(request), cartUpdateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
+
+    @Operation(summary = "장바구니 checked 상태 변경")
+    @PutMapping("/checked")
+    public BaseResponseEntity<Void> updateCartChecked(
+            HttpServletRequest request,
+            @RequestBody CartCheckedUpdateRequestVo cartCheckedUpdateRequestVo){
+        cartService.updateAllCartChecked(CartCheckedUpdateRequestDto
+                .from(jwtTokenProvider.getAccessToken(request), cartCheckedUpdateRequestVo));
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
 
     @Operation(summary = "선택된 장바구니 단일 삭제")
     @DeleteMapping("/{cartUuid}")

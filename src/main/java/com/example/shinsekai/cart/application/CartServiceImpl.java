@@ -1,5 +1,6 @@
 package com.example.shinsekai.cart.application;
 
+import com.example.shinsekai.cart.dto.in.CartCheckedUpdateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartDeleteRequestDto;
 import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
@@ -159,6 +160,20 @@ public class CartServiceImpl implements CartService {
             throw new BaseException(BaseResponseStatus.CART_PRODUCT_QUANTITY_LIMIT_EXCEEDED);
 
         cartRepository.save(cartUpdateRequestDto.toEntity(cart));
+    }
+
+    @Override
+    @Transactional
+    public void updateAllCartChecked(CartCheckedUpdateRequestDto cartCheckedUpdateRequestDto) {
+        Boolean isFrozen = switch (cartCheckedUpdateRequestDto.getItemType()) {
+            case ALL -> null;
+            case ORDINARY -> false;
+            case FROZEN -> true;
+        };
+
+        cartRepository.updateCheckedStatusByType(cartCheckedUpdateRequestDto.getMemberUuid(),
+                cartCheckedUpdateRequestDto.getChecked(),
+                isFrozen);
     }
 
     // 상품별 구매 갯수 확인
