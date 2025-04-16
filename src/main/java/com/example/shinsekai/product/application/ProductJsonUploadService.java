@@ -52,8 +52,12 @@ public class ProductJsonUploadService {
 
     @Transactional
     public void jsonUploadProduct(ProductRequestDto dto) {
-        ProductResponseDto product = ProductResponseDto.from(productRepository.save(dto.toEntity()));
+        // 1. Product 저장
+        Product savedProduct = productRepository.save(dto.toEntity());
+        productRepository.flush();
         String productCode = product.getProductCode();
+
+        // 2. 카테고리 등록
         long mainCategoryId = randomMainCategoryId();
         Long subCategoryId = randomSubCategoryIdFor(mainCategoryId);
 
@@ -65,6 +69,7 @@ public class ProductJsonUploadService {
 
         productCategoryListRepository.save(categoryList);
 
+        // 3. 옵션 등록
         ProductOptionList optionList = ProductOptionList.builder()
                 .productCode(productCode)
                 .colorId(randomId())
@@ -77,6 +82,7 @@ public class ProductJsonUploadService {
 
         productOptionListRepository.save(optionList);
 
+        // 4. 이벤트 등록
         ProductEventList eventList = ProductEventList.builder()
                 .productCode(productCode)
                 .eventId(random.nextInt(6) + 1)
@@ -84,6 +90,7 @@ public class ProductJsonUploadService {
 
         productEventListRepository.save(eventList);
 
+        // 5. 시즌 등록
         ProductSeasonList seasonList = ProductSeasonList.builder()
                 .productCode(productCode)
                 .seasonId(random.nextInt(6) + 1)
