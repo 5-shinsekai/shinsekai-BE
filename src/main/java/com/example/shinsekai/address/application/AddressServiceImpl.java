@@ -10,6 +10,7 @@ import com.example.shinsekai.common.exception.BaseException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
@@ -27,15 +28,13 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public List<AddressResponseDto> getAddress(String memberUuid) {
-        return addressRepository.findByMemberUuid(memberUuid)
-                .stream()
-                .filter(address -> !address.isDeleted())
-                .sorted(
-                        Comparator.comparing(Address::getIsMainAddress).reversed()
-                                .thenComparing(Address::getId) //오름차순     //.reversed(): 내림차순
+        return addressRepository.findByMemberUuidAndIsDeletedIsFalse(
+                        memberUuid,
+                        Sort.by(Sort.Order.desc("isMainAddress"), Sort.Order.desc("createdAt"))
                 )
+                .stream()
                 .map(AddressResponseDto::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -52,10 +51,10 @@ public class AddressServiceImpl implements AddressService{
         // 최초 등록이 아닌 경우
         else if (addressCount > 0 && addressCount < 10) {
 
-            Boolean requestedDtoIsMain = addressCreateRequestDto.getIsMainAddress() == null ? false : true;
+            Boolean requestedDtoIsMain = addressCreateRequestDto.getIsMainAddress() == null ? false : addressCreateRequestDto.getIsMainAddress();
             if (requestedDtoIsMain) {
-                Address prevMainAddress = addressRepository
-                        .findByMemberUuidAndIsMainAddressIsTrue(addressCreateRequestDto.getMemberUuid())
+                Address prevMainAddress =
+                        addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressCreateRequestDto.getMemberUuid())
                         .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_SAVE_ADDRESS));
 
                 prevMainAddress.clearMainAddress();                 // 기존 주소의 메인주소지 해제
@@ -74,22 +73,21 @@ public class AddressServiceImpl implements AddressService{
     @Override
     @Transactional
     public void updateAddress(AddressUpdateRequestDto addressUpdateRequestDto) {
-        Address address = addressRepository
-                .findByMemberUuidAndAddressUuid(addressUpdateRequestDto.getMemberUuid(), addressUpdateRequestDto.getAddressUuid())
+        addressRepository
+                .findByMemberUuidAndAddressUuid(addressUpdateRequestDto.getMemberUuid()
+                        , addressUpdateRequestDto.getAddressUuid())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
 
         // 메인 주소지로 저장한다면
-        if (addressUpdateRequestDto.getIsMainAddress()) {
-            List<Address> addressList = addressRepository.findByMemberUuid(addressUpdateRequestDto.getMemberUuid())
-                    .stream()
-                    .filter(Address::getIsMainAddress)
-                    .toList();
+        if (addressUpdateRequestDto.getIsMainAddress() != null && addressUpdateRequestDto.getIsMainAddress()) {
+            Address prevMainAddress =
+                    addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressUpdateRequestDto.getMemberUuid())
+                            .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_SAVE_ADDRESS));
 
-            Address prevMainAddress = addressList.get(0);       // 메인 주소지는 하나만 존재
             prevMainAddress.clearMainAddress();                 // 기존 주소의 메인주소지 해제
         }
 
-        addressRepository.save(addressUpdateRequestDto.toEntity(address));
+        addressRepository.save(addressUpdateRequestDto.toEntity());
     }
 
     @Override
