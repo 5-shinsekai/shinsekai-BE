@@ -53,6 +53,8 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false, length = 8)
     private LocalDate birth;
 
+    private Long socialId;
+
     @Builder
     public Member(Long id
             , String memberUuid
@@ -116,4 +118,7 @@ public class Member extends BaseEntity implements UserDetails {
         this.password = tempPassword;
     }
 
+    public void updateSocialMember(Long socialId) {
+        this.socialId = socialId;
+    }
 }

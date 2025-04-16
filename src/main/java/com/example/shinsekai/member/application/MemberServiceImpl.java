@@ -85,7 +85,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         Authentication authentication = jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
-        return jwtTokenProvider.createToken(authentication, member);
+        return jwtTokenProvider.createToken(member);
     }
 
     @Override

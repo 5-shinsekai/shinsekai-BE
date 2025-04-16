@@ -23,7 +23,7 @@ public class SignInResponseDto {
         this.name = name;
     }
 
-    public static SignInResponseDto from(Member member, String accessToken, String refreshToken) {
+    public static SignInResponseDto of(Member member, String accessToken, String refreshToken) {
         return SignInResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
