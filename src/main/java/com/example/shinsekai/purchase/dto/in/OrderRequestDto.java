@@ -10,16 +10,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Getter
-@AllArgsConstructor
 @Builder
+@ToString
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderRequestDto {
     //구매
     private String purchaseCode;
     private String memberUuid;
     private PurchaseStatus purchaseStatus;
-    private String receiver;
-    private String address;
+    private String addressUuid;
     private String giftCertificationUuid;
     private String couponUuid;
     private Double shipmentFee;
@@ -40,8 +40,7 @@ public class OrderRequestDto {
                 .purchaseCode(generateOrderCode())
                 .memberUuid(memberUuid)
                 .purchaseStatus(vo.getPurchaseStatus())
-                .receiver(vo.getReceiver())
-                .address(vo.getAddress())
+                .addressUuid(vo.getAddressUuid())
                 .giftCertificationUuid(vo.getGiftCertificationUuid())
                 .couponUuid(vo.getCouponUuid())
                 .shipmentFee(vo.getShipmentFee())
