@@ -15,8 +15,7 @@ public class PurchaseResponseDto {
     private String purchaseCode;
     private String paymentCode;
     private PurchaseStatus purchaseStatus;
-    private String receiver;
-    private String address;
+    private String addressUuid;
     private String giftCertificationUuid;
     private String couponUuid;
     private Double shipmentFee;
@@ -29,8 +28,7 @@ public class PurchaseResponseDto {
                 .purchaseCode(purchaseCode)
                 .paymentCode(paymentCode)
                 .purchaseStatus(purchaseStatus)
-                .receiver(receiver)
-                .address(address)
+                .addressUuid(addressUuid)
                 .couponUuid(couponUuid)
                 .shipmentFee(shipmentFee)
                 .productTotalPrice(productTotalPrice)
@@ -43,8 +41,7 @@ public class PurchaseResponseDto {
                 .purchaseCode(purchase.getPurchaseCode())
                 .paymentCode(purchase.getPaymentCode())
                 .purchaseStatus(purchase.getPurchaseStatus())
-                .receiver(purchase.getReceiver())
-                .address(purchase.getAddress())
+                .addressUuid(purchase.getAddressUuid())
                 .giftCertificationUuid(purchase.getGiftCertificateUuid())
                 .couponUuid(purchase.getCouponUuid())
                 .shipmentFee(purchase.getShipmentFee())

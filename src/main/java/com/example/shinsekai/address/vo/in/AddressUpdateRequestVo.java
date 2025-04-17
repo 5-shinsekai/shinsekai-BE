@@ -1,4 +1,4 @@
-package com.example.shinsekai.address.vo;
+package com.example.shinsekai.address.vo.in;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,7 +26,7 @@ public class AddressUpdateRequestVo {
     private String roadAddress;
 
     @NotBlank(message = "INVALID_DETAIL_ADDRESS_FORMAT")
-    private String detailedAddress;
+    private String detailAddress;
 
     @NotBlank(message = "INVALID_TOTAL_ADDRESS_FORMAT")
     private String totalAddress;

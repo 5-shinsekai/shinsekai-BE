@@ -14,8 +14,7 @@ public class PurchaseRequestVo extends BaseEntity {
     private String paymentCode;
     private String memberUuid;
     private PurchaseStatus purchaseStatus;
-    private String receiver;
-    private String address;
+    private String addressUuid;
     private String giftCertificationUuid;
     private String couponUuid;
     private Double shipmentFee;

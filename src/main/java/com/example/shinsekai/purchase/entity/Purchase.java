@@ -27,13 +27,10 @@ public class Purchase extends BaseEntity {
     @Column(nullable = false)
     private PurchaseStatus purchaseStatus;
 
+    @Column(nullable = false)
+    private String addressUuid;
+
     private String cancelReason;
-
-    @Column(nullable = false, updatable = false)
-    private String receiver;
-
-    @Column(nullable = false, updatable = false)
-    private String address;
 
     @Column(updatable = false)
     private String giftCertificateUuid;
