@@ -10,13 +10,13 @@ public class SignInResponseVo {
 
     private String accessToken;
     private String refreshToken;
-    private String name;
+    private String memberUuid;
 
     @Builder
-    public SignInResponseVo(String accessToken, String refreshToken, String name) {
+    public SignInResponseVo(String accessToken, String refreshToken, String memberUuid) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.name = name;
+        this.memberUuid = memberUuid;
     }
 
 }

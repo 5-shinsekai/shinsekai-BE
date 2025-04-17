@@ -16,6 +16,7 @@ import com.example.shinsekai.member.entity.Member;
 import com.example.shinsekai.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,20 +79,25 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByLoginId(signInRequestDto.getLoginId())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
 
-        if (!passwordEncoder.matches(signInRequestDto.getPassword(), member.getPassword())) {
+        Authentication authentication = jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
+        if (!authentication.isAuthenticated()) {
             throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
         }
 
-        jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
         return jwtTokenProvider.createToken(member);
     }
 
     @Override
-    public void logout(String accessToken) {
+    public void logout() {
+
+        log.info("memberUuid {}", jwtTokenProvider.getMemberUuid());
 
         // redis에 있는 토큰 정보 삭제
-        jwtTokenProvider.deleteToken(TokenType.ACCESS, jwtTokenProvider.getMemberUuid());
-        jwtTokenProvider.deleteToken(TokenType.REFRESH, jwtTokenProvider.getMemberUuid());
+        boolean isDeleteAccess = jwtTokenProvider.deleteToken(TokenType.ACCESS, jwtTokenProvider.getMemberUuid());
+        boolean idDeleteRefresh = jwtTokenProvider.deleteToken(TokenType.REFRESH, jwtTokenProvider.getMemberUuid());
+
+        log.info("isDeleteAccess {}", isDeleteAccess);
+        log.info("idDeleteRefresh {}", idDeleteRefresh);
     }
 
     @Override

@@ -45,9 +45,8 @@ public class MemberController {
 
     @Operation(summary = "로그아웃")
     @PostMapping("/logout")
-    public BaseResponseEntity<Void> logout(HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
-        memberService.logout(accessToken);
+    public BaseResponseEntity<Void> logout() {
+        memberService.logout();
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 

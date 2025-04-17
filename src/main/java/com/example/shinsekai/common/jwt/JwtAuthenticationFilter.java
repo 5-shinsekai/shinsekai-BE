@@ -54,17 +54,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             uuid = jwtTokenProvider.extractAllClaims(token).getSubject();
         } catch (ExpiredJwtException e) {
-            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
+            setErrorResponse(response, BaseResponseStatus.TOKEN_NOT_VALID);
+            return;
         } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
+            setErrorResponse(response, BaseResponseStatus.WRONG_JWT_TOKEN);
+            return;
         }
 
         String storedAccessToken = redisProvider.getToken(TokenType.ACCESS, uuid);
 
         log.info("token {}", token);
         log.info("storedAccessToken {}", storedAccessToken);
-
-
+        
         if (!token.equals(storedAccessToken)) {
             setErrorResponse(response, BaseResponseStatus.DUPLICATED_LOGIN);
             return;
@@ -84,8 +85,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    // 필터 내에서 error throw하면 것이 불가능(@ControllerAdvice에서 처리하기 때문)
+    // json을 클라이언트에 던지는 메서드를 정의하고 활용함
     private void setErrorResponse(HttpServletResponse response, BaseResponseStatus status) throws IOException {
-        response.setStatus(status.getCode()); // 예: 401
+        response.setStatus(status.getHttpStatusCode().value()); // 예: 401
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
@@ -93,5 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String json = new ObjectMapper().writeValueAsString(errorResponse);
 
         response.getWriter().write(json);
+        response.getWriter().flush();
+        response.getWriter().close();
     }
 }

@@ -5,8 +5,8 @@ import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.member.application.KakaoAuthService;
 import com.example.shinsekai.member.application.MemberService;
 import com.example.shinsekai.member.dto.in.SocialMemberUpdateRequestDto;
-import com.example.shinsekai.member.dto.out.KakaoTokenResponse;
-import com.example.shinsekai.member.dto.out.KakaoUserResponse;
+import com.example.shinsekai.member.dto.out.KakaoTokenResponseDto;
+import com.example.shinsekai.member.dto.out.KakaoUserResponseDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
 import com.example.shinsekai.member.vo.out.SignInResponseVo;
 import com.example.shinsekai.member.vo.in.SocialMemberUpdateRequestVo;
@@ -26,13 +26,13 @@ public class KakaoAuthController {
     @GetMapping("/callback")
     public BaseResponseEntity<SignInResponseVo> kakaoCallback(@RequestParam("code") String code) {
         // 1. 인가 코드로 (카카오)토큰 요청
-        KakaoTokenResponse tokenResponse = kakaoAuthService.getAccessToken(code);
+        KakaoTokenResponseDto tokenResponse = kakaoAuthService.getAccessToken(code);
 
         // 2. 토큰으로 사용자 정보 요청
-        KakaoUserResponse userResponse = kakaoAuthService.getUserInfo(tokenResponse.getAccessToken());
+        KakaoUserResponseDto userResponseDto = kakaoAuthService.getUserInfo(tokenResponse.getAccessToken());
 
         // 3. (스타벅스) 토큰 생성
-        SignInResponseDto signInResponseDto = kakaoAuthService.socialLogin(userResponse);
+        SignInResponseDto signInResponseDto = kakaoAuthService.socialLogin(userResponseDto);
 
         return new BaseResponseEntity<>(signInResponseDto.toVo());
     }
