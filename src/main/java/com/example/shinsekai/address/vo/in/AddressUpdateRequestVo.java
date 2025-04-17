@@ -1,6 +1,5 @@
-package com.example.shinsekai.address.vo;
+package com.example.shinsekai.address.vo.in;
 
-import com.example.shinsekai.common.entity.BaseResponseStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -9,7 +8,10 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class AddressCreateRequestVo {
+public class AddressUpdateRequestVo {
+
+    @NotBlank(message = "INVALID_ADDRESS_UUID")
+    private String addressUuid;
 
     @NotBlank(message = "INVALID_ADDRESS_NICKNAME_FORMAT")
     @Size(max = 100, message = "INVALID_ADDRESS_NICKNAME_FORMAT")
@@ -43,7 +45,6 @@ public class AddressCreateRequestVo {
     private Boolean isPersonalMemo;
 
     private Boolean isMainAddress;
-
 
     @NotBlank(message = "INVALID_NAME_FORMAT")
     @Pattern(regexp = "^[a-zA-Z가-힣]+(\\s[a-zA-Z가-힣]+)*$", message = "INVALID_NAME_FORMAT")

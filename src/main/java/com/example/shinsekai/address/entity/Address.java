@@ -55,7 +55,7 @@ public class Address extends BaseEntity {
     @Column(nullable = false, length = 30)
     private String receiverName;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isDeleted = false;
 
     private LocalDateTime deletedAt;

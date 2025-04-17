@@ -1,7 +1,7 @@
 package com.example.shinsekai.address.dto.out;
 
 import com.example.shinsekai.address.entity.Address;
-import com.example.shinsekai.address.vo.AddressResponseVo;
+import com.example.shinsekai.address.vo.out.AddressResponseVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
