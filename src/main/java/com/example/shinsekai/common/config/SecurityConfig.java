@@ -60,6 +60,7 @@ public class SecurityConfig {
                                         "/api/v1/product/**",
                                         "/api/v1/category/**",
                                         "/api/v1/product-category/**",
+                                        "/api/v1/filter/**",
                                         "/api/v1/season/**",
                                         "/api/v1/product-season/**",
                                         "/api/v1/event/**",

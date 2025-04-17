@@ -1,5 +1,6 @@
 package com.example.shinsekai.category.dto.out;
 
+import com.example.shinsekai.category.entity.FilterSummary;
 import com.example.shinsekai.category.entity.PriceRange;
 import com.example.shinsekai.category.vo.out.CommonFilterItemVo;
 import com.example.shinsekai.option.entity.Color;
@@ -19,17 +20,10 @@ public class CommonFilterItemDto {
         this.name = name;
     }
 
-    public static CommonFilterItemDto from(Size size) {
+    public static CommonFilterItemDto from(FilterSummary filterSummary) {
         return CommonFilterItemDto.builder()
-                .id(size.getId().intValue())
-                .name(size.getSizeName())
-                .build();
-    }
-
-    public static CommonFilterItemDto from(Color color) {
-        return CommonFilterItemDto.builder()
-                .id(color.getId().intValue())
-                .name(color.getColorName())
+                .id(filterSummary.getFilterId().intValue())
+                .name(filterSummary.getFilterValue())
                 .build();
     }
 
