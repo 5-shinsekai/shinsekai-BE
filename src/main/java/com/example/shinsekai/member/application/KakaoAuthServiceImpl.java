@@ -21,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -143,6 +142,7 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
             throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
         }
 
+        // 회원 정보 가져와서 컨텍스트홀더에 저장 -> memberUuid 꺼내기 가능해짐
         UserDetails userDetails = userDetailsService.loadUserByUsername(member.getMemberUuid());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails,
