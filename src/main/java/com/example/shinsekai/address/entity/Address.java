@@ -45,7 +45,7 @@ public class Address extends BaseEntity {
     @Column(length = 30)
     private String secondPhoneNumber;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String deliveryMemo;
 
     private Boolean isPersonalMemo;
@@ -102,9 +102,5 @@ public class Address extends BaseEntity {
 
     public void clearMainAddress() {
         isMainAddress = false;
-    }
-
-    public void registerMainAddress() {
-        isMainAddress = true;
     }
 }
