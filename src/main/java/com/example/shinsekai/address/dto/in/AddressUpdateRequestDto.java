@@ -19,7 +19,6 @@ public class AddressUpdateRequestDto {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private Long addressId;
     private String addressUuid;
     private String memberUuid;
     private String addressNickname;
@@ -36,13 +35,12 @@ public class AddressUpdateRequestDto {
 
     public static AddressUpdateRequestDto of(AddressUpdateRequestVo addressRequestVo, String memberUuid) {
         return AddressUpdateRequestDto.builder()
-                .addressId(addressRequestVo.getAddressId())
                 .memberUuid(memberUuid)
                 .addressUuid(addressRequestVo.getAddressUuid())
                 .addressNickname(addressRequestVo.getAddressNickname())
                 .zipNo(addressRequestVo.getZipNo())
                 .roadAddress(addressRequestVo.getRoadAddress())
-                .detailAddress(addressRequestVo.getDetailedAddress())
+                .detailAddress(addressRequestVo.getDetailAddress())
                 .totalAddress(addressRequestVo.getTotalAddress())
                 .firstPhoneNumber(addressRequestVo.getFirstPhoneNumber())
                 .secondPhoneNumber(addressRequestVo.getSecondPhoneNumber())
@@ -54,7 +52,7 @@ public class AddressUpdateRequestDto {
     }
 
 
-    public Address toEntity() {
+    public Address toEntity(Long addressId) {
         return Address.builder()
                 .id(addressId)
                 .addressUuid(addressUuid)

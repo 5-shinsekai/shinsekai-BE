@@ -10,8 +10,8 @@ public class AddressResponseVo {
     private String addressUuid;
     private String addressNickname;
     private String zipNo;
-    private String roadAddr;
-    private String detailAddr;
+    private String roadAddress;
+    private String detailAddress;
     private String totalAddress;
     private String firstPhoneNumber;
     private String secondPhoneNumber;
@@ -24,8 +24,8 @@ public class AddressResponseVo {
     public AddressResponseVo(String addressUuid,
                              String addressNickname,
                              String zipNo,
-                             String roadAddr,
-                             String detailAddr,
+                             String roadAddress,
+                             String detailAddress,
                              String totalAddress,
                              String firstPhoneNumber,
                              String secondPhoneNumber,
@@ -36,8 +36,8 @@ public class AddressResponseVo {
         this.addressUuid = addressUuid;
         this.addressNickname = addressNickname;
         this.zipNo = zipNo;
-        this.roadAddr = roadAddr;
-        this.detailAddr = detailAddr;
+        this.roadAddress = roadAddress;
+        this.detailAddress = detailAddress;
         this.totalAddress = totalAddress;
         this.firstPhoneNumber = firstPhoneNumber;
         this.secondPhoneNumber = secondPhoneNumber;
