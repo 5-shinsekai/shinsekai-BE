@@ -66,10 +66,11 @@ public enum BaseResponseStatus {
     INVALID_DATE_FORMAT(HttpStatus.BAD_REQUEST, false, 2023, "잘못된 형식의 날짜입니다."),
     INVALID_BIRTH_PAST(HttpStatus.BAD_REQUEST, false, 2024, "생년월일은 과거 날짜여야 합니다."),
     INVALID_NAME_FORMAT(HttpStatus.BAD_REQUEST, false, 2025, "잘못된 형식의 이름입니다."),
-    SAME_LOGIN_ID(HttpStatus.CONFLICT, false, 2026, "이미 사용중인 아이디입니다."),
-    SAME_EMAIL(HttpStatus.CONFLICT, false, 2027, "이미 사용중인 이메일입니다."),
-    SAME_PHONE(HttpStatus.CONFLICT, false, 2028, "이미 사용중인 전화번호입니다."),
+    DUPLICATED_LOGIN_ID(HttpStatus.CONFLICT, false, 2026, "이미 사용중인 아이디입니다."),
+    DUPLICATED_EMAIL(HttpStatus.CONFLICT, false, 2027, "이미 사용중인 이메일입니다."),
+    DUPLICATED_PHONE(HttpStatus.CONFLICT, false, 2028, "이미 사용중인 전화번호입니다."),
     FAILED_TO_FIND_SOCIAL_MEMBER(HttpStatus.UNAUTHORIZED, false, 2029, "가입되지 않은 소셜 회원입니다."),
+    DUPLICATED_LOGIN(HttpStatus.UNAUTHORIZED, false, 2030, "이미 다른 기기에서 로그인되었습니다."),
 
     /**
      * 3000: product service error

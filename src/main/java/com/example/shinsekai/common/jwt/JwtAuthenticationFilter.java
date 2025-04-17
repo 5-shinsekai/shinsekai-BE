@@ -1,7 +1,11 @@
 package com.example.shinsekai.common.jwt;
 
+import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
+import com.example.shinsekai.common.redis.RedisProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,6 +30,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisProvider redisProvider;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -54,6 +59,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         }
 
+        String storedAccessToken = redisProvider.getToken(TokenType.ACCESS, uuid);
+
+        log.info("token {}", token);
+        log.info("storedAccessToken {}", storedAccessToken);
+
+
+        if (!token.equals(storedAccessToken)) {
+            setErrorResponse(response, BaseResponseStatus.DUPLICATED_LOGIN);
+            return;
+        }
+
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(uuid);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -66,5 +82,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void setErrorResponse(HttpServletResponse response, BaseResponseStatus status) throws IOException {
+        response.setStatus(status.getCode()); // 예: 401
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        BaseResponseEntity<?> errorResponse = new BaseResponseEntity<>(status);
+        String json = new ObjectMapper().writeValueAsString(errorResponse);
+
+        response.getWriter().write(json);
     }
 }

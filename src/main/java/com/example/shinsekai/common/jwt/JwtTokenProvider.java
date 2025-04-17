@@ -128,7 +128,7 @@ public class JwtTokenProvider {
 
         log.info("JwtTokenProvider_createToken_here_2");
 
-        redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), refreshToken, accessExpireTime);
+        redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), accessToken, accessExpireTime);
         redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
 
         log.info("JwtTokenProvider_createToken_here_3");
