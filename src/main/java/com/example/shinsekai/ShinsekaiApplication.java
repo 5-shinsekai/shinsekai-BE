@@ -6,10 +6,12 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 //@EnableJpaRepositories(basePackages = "com.example.shinsekai")
 @EnableJpaAuditing
+@EnableScheduling
 @ConfigurationPropertiesScan
 @SpringBootApplication
 public class ShinsekaiApplication {
