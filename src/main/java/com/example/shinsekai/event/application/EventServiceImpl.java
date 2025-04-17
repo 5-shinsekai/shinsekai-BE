@@ -5,12 +5,15 @@ import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.event.dto.in.EventCreateRequestDto;
 import com.example.shinsekai.event.dto.in.EventUpdateRequestDto;
 import com.example.shinsekai.event.dto.out.EventGetDetailResponseDto;
+import com.example.shinsekai.event.dto.out.EventGetThumbnailResponseDto;
 import com.example.shinsekai.event.dto.out.EventGetTitleResponseDto;
 import com.example.shinsekai.event.entity.Event;
 import com.example.shinsekai.event.infrastructure.EventRepository;
 import com.example.shinsekai.season.dto.out.SeasonGetResponseDto;
 import com.example.shinsekai.season.entity.Season;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -29,15 +32,23 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventGetDetailResponseDto getEventDetail(Integer eventId) {
-        return EventGetDetailResponseDto.from(eventRepository.findById(eventId)
+        return EventGetDetailResponseDto.from(eventRepository.findOngoingEventById(eventId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_EVENT)));
     }
 
     @Override
     public List<EventGetTitleResponseDto> getAllEventTitle() {
-        return eventRepository.findAll(Sort.by(Sort.Order.desc("startDate")))
+        return eventRepository.findAllOngoingEvents(Pageable.unpaged())
                 .stream()
                 .map(EventGetTitleResponseDto::from)
+                .toList();
+    }
+
+    @Override
+    public List<EventGetThumbnailResponseDto> getAllEventThumbnail() {
+        return eventRepository.findAllOngoingEvents(PageRequest.of(0, 6))
+                .stream()
+                .map(EventGetThumbnailResponseDto::from)
                 .toList();
     }
 

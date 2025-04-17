@@ -27,6 +27,13 @@ public class Event extends BaseEntity {
     @Column(nullable = false)
     private String eventImageAltText;
 
+    @Lob
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String eventThumbnailImage;
+
+    @Column(nullable = false)
+    private String eventThumbnailImageAltText;
+
     @Column(nullable = false)
     private LocalDate startDate;
 
@@ -34,12 +41,14 @@ public class Event extends BaseEntity {
     private LocalDate endDate;
 
     @Builder
-    public Event(int id, String eventName, String eventImage, String eventImageAltText,
-                 LocalDate startDate, LocalDate endDate) {
+    public Event(int id, String eventName, String eventImage, String eventImageAltText, String eventThumbnailImage,
+                 String eventThumbnailImageAltText, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.eventName = eventName;
         this.eventImage = eventImage;
         this.eventImageAltText = eventImageAltText;
+        this.eventThumbnailImage = eventThumbnailImage;
+        this.eventThumbnailImageAltText = eventThumbnailImageAltText;
         this.startDate = startDate;
         this.endDate = endDate;
     }
