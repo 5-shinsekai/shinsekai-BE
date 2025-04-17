@@ -24,7 +24,7 @@ public class Cart extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String memberUuid;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Long productOptionListId;
 
     @Column(nullable = false, length = 50)
