@@ -1,16 +1,12 @@
 package com.example.shinsekai.address.dto.in;
 
 import com.example.shinsekai.address.entity.Address;
-import com.example.shinsekai.address.vo.AddressCreateRequestVo;
-import com.example.shinsekai.address.vo.AddressUpdateRequestVo;
+import com.example.shinsekai.address.vo.in.AddressUpdateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Getter
 @Builder

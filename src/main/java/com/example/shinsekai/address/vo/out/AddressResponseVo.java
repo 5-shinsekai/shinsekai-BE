@@ -1,4 +1,4 @@
-package com.example.shinsekai.address.vo;
+package com.example.shinsekai.address.vo.out;
 
 import lombok.Builder;
 import lombok.Getter;
