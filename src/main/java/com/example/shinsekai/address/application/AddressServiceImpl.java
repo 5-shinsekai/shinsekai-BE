@@ -28,7 +28,7 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public List<AddressResponseDto> getAddressList(String memberUuid) {
-        return addressRepository.findByMemberUuidAndIsDeletedIsFalse(
+        return addressRepository.findActiveByMemberUuid(
                         memberUuid,
                         Sort.by(Sort.Order.desc("isMainAddress"), Sort.Order.desc("createdAt"))
                 )
@@ -40,8 +40,14 @@ public class AddressServiceImpl implements AddressService{
     @Override
     public AddressResponseDto getMainAddress(String memberUuid) {
         return AddressResponseDto.from(addressRepository.findByMemberUuidAndIsMainAddressIsTrue(memberUuid)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_MAIN_ADDRESS)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS)
         ));
+    }
+
+    @Override
+    public AddressResponseDto getAddress(String memberUuid, String addressUuid) {
+        return AddressResponseDto.from( addressRepository.findByMemberUuidAndAddressUuid(memberUuid, addressUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS)));
     }
 
     @Override
