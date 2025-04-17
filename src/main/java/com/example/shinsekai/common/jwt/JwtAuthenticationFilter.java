@@ -1,7 +1,12 @@
 package com.example.shinsekai.common.jwt;
 
+import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
+import com.example.shinsekai.common.redis.RedisProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.Serializers;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,8 +30,8 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisProvider redisProvider;
     private final UserDetailsService userDetailsService;
-
 
     @Override
     protected void doFilterInternal(
@@ -48,8 +53,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             uuid = jwtTokenProvider.extractAllClaims(token).getSubject();
+        } catch (ExpiredJwtException e) {
+            setErrorResponse(response, BaseResponseStatus.TOKEN_NOT_VALID);
+            return;
         } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
+            setErrorResponse(response, BaseResponseStatus.WRONG_JWT_TOKEN);
+            return;
+        }
+
+        String storedAccessToken = redisProvider.getToken(TokenType.ACCESS, uuid);
+
+        log.info("token {}", token);
+        log.info("storedAccessToken {}", storedAccessToken);
+        
+        if (!token.equals(storedAccessToken)) {
+            setErrorResponse(response, BaseResponseStatus.DUPLICATED_LOGIN);
+            return;
         }
 
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -64,5 +83,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    // 필터 내에서 error throw하면 것이 불가능(@ControllerAdvice에서 처리하기 때문)
+    // json을 클라이언트에 던지는 메서드를 정의하고 활용함
+    private void setErrorResponse(HttpServletResponse response, BaseResponseStatus status) throws IOException {
+        response.setStatus(status.getHttpStatusCode().value()); // 예: 401
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        BaseResponseEntity<?> errorResponse = new BaseResponseEntity<>(status);
+        String json = new ObjectMapper().writeValueAsString(errorResponse);
+
+        response.getWriter().write(json);
+        response.getWriter().flush();
+        response.getWriter().close();
     }
 }

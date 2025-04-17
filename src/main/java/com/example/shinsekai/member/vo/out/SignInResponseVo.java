@@ -1,4 +1,4 @@
-package com.example.shinsekai.member.vo.in;
+package com.example.shinsekai.member.vo.out;
 
 import lombok.Builder;
 import lombok.Getter;

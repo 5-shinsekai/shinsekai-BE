@@ -1,10 +1,12 @@
 package com.example.shinsekai.member.dto.out;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-public class KakaoTokenResponse {
+@Getter
+@ToString
+public class KakaoTokenResponseDto {
 
     @JsonProperty("access_token")
     private String accessToken;
