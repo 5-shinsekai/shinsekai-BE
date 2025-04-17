@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface StarbucksCardService {
     List<StarbucksCardResponseDto> getActiveStarbucksCards(String memberUuid);
+    StarbucksCardResponseDto getStarbucksCard(MemberStarbucksListDto memberStarbucksCardDto);
     void createStarbucksCard(StarbucksCardRequestDto starbucksCardRequestDto);
     void deleteStarbucksCard(MemberStarbucksListDto memberStarbucksCardsListDto);
     void useRemainAmount(UseStarbucksCardRequestDto useStarbucksCardRequestDto);
