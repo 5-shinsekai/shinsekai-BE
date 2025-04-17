@@ -17,9 +17,9 @@ public class BatchScheduler {
 
 
     /*
-    * 임시 배치 시간 설정 : 10초 마다
+    * 임시 배치 시간 설정 : 매일 오전 10시마다
     * */
-    @Scheduled(cron = "0/10 * * * * *")
+    @Scheduled(cron = "0 0 10 * * *")
     public void runJob() {
         String time = LocalDateTime.now().toString();
         try {
