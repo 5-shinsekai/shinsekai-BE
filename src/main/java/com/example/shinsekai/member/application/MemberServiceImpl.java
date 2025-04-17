@@ -1,14 +1,13 @@
 package com.example.shinsekai.member.application;
 
 import com.example.shinsekai.agreement.dto.in.MemberAgreementListCreateRequestDto;
-import com.example.shinsekai.agreement.entity.MemberAgreementList;
 import com.example.shinsekai.agreement.infrastructure.AgreementRepository;
 import com.example.shinsekai.agreement.infrastructure.MemberAgreementListRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
+import com.example.shinsekai.common.jwt.TokenType;
 import com.example.shinsekai.common.redis.RedisProvider;
-import com.example.shinsekai.email.application.EmailService;
 import com.example.shinsekai.member.dto.in.ChangePasswordRequestDto;
 import com.example.shinsekai.member.dto.in.SignInRequestDto;
 import com.example.shinsekai.member.dto.in.SignUpRequestDto;
@@ -43,13 +42,13 @@ public class MemberServiceImpl implements MemberService {
         // 아이디 중복 체크
         memberRepository.findByLoginId(signUpRequestDto.getLoginId())
                 .ifPresent(member -> {
-                    throw new BaseException(BaseResponseStatus.SAME_LOGIN_ID);
+                    throw new BaseException(BaseResponseStatus.DUPLICATED_LOGIN_ID);
                 });
 
         // 이메일 중복 체크
         memberRepository.findByEmail(signUpRequestDto.getEmail())
                 .ifPresent(member -> {
-                    throw new BaseException(BaseResponseStatus.SAME_EMAIL);
+                    throw new BaseException(BaseResponseStatus.DUPLICATED_EMAIL);
                 });
 
         // 닉네임 중복 체크
@@ -61,7 +60,7 @@ public class MemberServiceImpl implements MemberService {
         // 휴대전화 번호 중복체크
         memberRepository.findByPhone(signUpRequestDto.getPhone())
                 .ifPresent(member -> {
-                    throw new BaseException(BaseResponseStatus.SAME_PHONE);
+                    throw new BaseException(BaseResponseStatus.DUPLICATED_PHONE);
                 });
 
         // 약관 동의 저장
@@ -80,21 +79,25 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByLoginId(signInRequestDto.getLoginId())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
 
-        if (!passwordEncoder.matches(signInRequestDto.getPassword(), member.getPassword())) {
+        Authentication authentication = jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
+        if (!authentication.isAuthenticated()) {
             throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
         }
 
-        Authentication authentication = jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
         return jwtTokenProvider.createToken(member);
     }
 
     @Override
-    public void logout(String accessToken) {
-        // redis에서 토큰 삭제
-        boolean deleteRefreshTokenSuccess
-                = redisProvider.deleteValue(jwtTokenProvider.extractAllClaims(accessToken).getSubject());
-        if(!deleteRefreshTokenSuccess)
-            throw new BaseException(BaseResponseStatus.FAILED_TO_RESTORE);
+    public void logout() {
+
+        log.info("memberUuid {}", jwtTokenProvider.getMemberUuid());
+
+        // redis에 있는 토큰 정보 삭제
+        boolean isDeleteAccess = jwtTokenProvider.deleteToken(TokenType.ACCESS, jwtTokenProvider.getMemberUuid());
+        boolean idDeleteRefresh = jwtTokenProvider.deleteToken(TokenType.REFRESH, jwtTokenProvider.getMemberUuid());
+
+        log.info("isDeleteAccess {}", isDeleteAccess);
+        log.info("idDeleteRefresh {}", idDeleteRefresh);
     }
 
     @Override
@@ -129,29 +132,8 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(BaseResponseStatus.DUPLICATED_PASSWORD);
         }
 
-//        // 비밀번호 형식 검사
-//        if (!validatePassword(changePasswordRequestDto.getNewPassword())) {
-//            throw new BaseException(BaseResponseStatus.INVALID_PASSWORD_FORMAT);
-//        }
-
         // 인코딩된 패스워드를 entity에 전달 -> 더티체킹
         member.updatePassword(passwordEncoder.encode(changePasswordRequestDto.getNewPassword()));
     }
 
-//    private boolean validatePassword(String password) {
-//        // PASSWORD_REGEX → 유효성 체크할 정규식(Regex) 패턴 정의.
-//        // 공백 허용 안 됨
-//        // 소문자 (?=.*[a-z])
-//        // 숫자 (?=.*\\d)
-//        // 특수문자 (?=.*[@$!%*?&])
-//        // 전체 길이 8~20자
-//        final String PASSWORD_REGEX =
-//                "^(?=\\S+$)(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[a-z\\d@$!%*?&]{8,20}$";
-//
-//        if (password == null) {
-//            return false;
-//        } else {
-//            return password.matches(PASSWORD_REGEX);
-//        }
-//    }
 }

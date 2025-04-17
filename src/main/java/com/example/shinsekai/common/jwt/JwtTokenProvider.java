@@ -15,12 +15,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -41,7 +39,7 @@ public class JwtTokenProvider {
     private String secretKey;
 
     @Value("${jwt.token.access-expire-time}")
-    private long expireTime;
+    private long accessExpireTime;
 
     @Value("${jwt.token.refresh-expire-time}")
     private long refreshExpireTime;
@@ -64,7 +62,6 @@ public class JwtTokenProvider {
      * @return jwt토큰에서 모든 클레임 추출
      */
     public Claims extractAllClaims(String token) {
-
         return Jwts.parser()
                 .verifyWith((SecretKey) getSignKey())
                 .build()
@@ -77,13 +74,19 @@ public class JwtTokenProvider {
      * @param member, tokenType
      * @return 토큰 문자열
      */
-    public String generateToken(Member member, TokenEnum tokenType) {
+    public String generateToken(TokenType tokenType, Member member) {
         String memberUuid = member.getMemberUuid();
         Date now = new Date();
         Date expiration;
         switch (tokenType) {
-            case ACCESS: expiration = new Date(now.getTime() + expireTime); break;
-            default: expiration = new Date(now.getTime() + refreshExpireTime);
+            case ACCESS -> {
+                expiration = new Date(now.getTime() + accessExpireTime);
+                break;
+            }
+            // REFRESH
+            default -> {
+                expiration = new Date(now.getTime() + refreshExpireTime);
+            }
         }
 
         return Jwts.builder()
@@ -120,13 +123,13 @@ public class JwtTokenProvider {
         log.info("in JwtTokenProvider_createToken_here_1");
 
         // 토큰 생성
-        String accessToken = generateToken(member, TokenEnum.ACCESS);
-        String refreshToken = generateToken(member, TokenEnum.REFRESH);
+        String accessToken = generateToken(TokenType.ACCESS, member);
+        String refreshToken = generateToken(TokenType.REFRESH, member);
 
         log.info("JwtTokenProvider_createToken_here_2");
 
-        // redis에는 refreshToken만 저장(accessToken은 만료시간이 짧음)
-        redisProvider.setToken(member.getMemberUuid(), refreshToken, refreshExpireTime);
+        redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), accessToken, accessExpireTime);
+        redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
 
         log.info("JwtTokenProvider_createToken_here_3");
 
@@ -135,11 +138,11 @@ public class JwtTokenProvider {
 
     /**
      * 토큰 삭제
-     * @param token
+     * @param tokenType, memberUuid
      * @return 토큰
      */
-    public boolean deleteToken(String token) {
-        return redisProvider.deleteValue(extractAllClaims(token).getSubject());
+    public boolean deleteToken(TokenType tokenType, String memberUuid) {
+        return redisProvider.deleteValue(tokenType + ":" + memberUuid);
     }
 
     /**
@@ -149,7 +152,7 @@ public class JwtTokenProvider {
      */
     public boolean isAccessTokenExists(String token) {
         // Redis에서 저장된 Access Token 가져오기
-        String storedToken = redisProvider.getToken(extractAllClaims(token).getSubject());
+        String storedToken = redisProvider.getToken(TokenType.ACCESS, extractAllClaims(token).getSubject());
         return storedToken != null && storedToken.equals(token);
     }
 
@@ -166,23 +169,24 @@ public class JwtTokenProvider {
         try {
             memberUuid = extractAllClaims(refreshToken).getSubject();
         } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN );
         }
-        String storedRefreshToken = redisProvider.getToken(memberUuid);
+        String storedRefreshToken = redisProvider.getToken(TokenType.REFRESH, memberUuid);
 
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
-            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         }
 
         // 새 Access Token 생성
         Member member = memberRepository.findByMemberUuid(memberUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member.getLoginId(), null, member.getAuthorities());
-        String newAccessToken = generateToken(member, TokenEnum.ACCESS);
-        String newRefreshToken = generateToken(member, TokenEnum.REFRESH);
+
+        String newAccessToken = generateToken(TokenType.ACCESS, member);
+        String newRefreshToken = generateToken(TokenType.REFRESH, member);
 
         // redis에 저장
-        redisProvider.setToken(member.getMemberUuid(), newRefreshToken, refreshExpireTime);
+        redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), newAccessToken, accessExpireTime);
+        redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), newRefreshToken, refreshExpireTime);
 
         return SignInResponseDto.of(member, newAccessToken, newRefreshToken);
     }
@@ -190,13 +194,13 @@ public class JwtTokenProvider {
     /**
      * 토큰이 만료되었는지 확인
      * @param token
-     * @return 만료되었으면 true, 유효하면 false
+     * @return 유효하면 true, 만료되었으면 false
      */
     public boolean isTokenValid(String token) {
         try {
-            return extractAllClaims(token).getExpiration().before(new Date());
+            return !extractAllClaims(token).getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
-            return true;
+            return false;
         }
     }
 
@@ -206,14 +210,7 @@ public class JwtTokenProvider {
      * @return memberUuid
      */
     public String  getAccessToken(HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization").substring(7);
-
-        String memberUuid;
-        try {
-            return memberUuid = extractAllClaims(accessToken).getSubject();  // extractAllClaims 내부에서 우리가 발급한 토근인지 검증함
-        } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);   // "토큰이 유효하지 않습니다."
-        }
+        return request.getHeader("Authorization").substring(7);
     }
 
     public String getMemberUuid() {

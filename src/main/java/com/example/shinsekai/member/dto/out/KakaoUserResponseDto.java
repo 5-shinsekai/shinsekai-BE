@@ -1,21 +1,25 @@
 package com.example.shinsekai.member.dto.out;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-public class KakaoUserResponse {
+@Getter
+@ToString
+public class KakaoUserResponseDto {
     private Long id;
 
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
 
-    @Data
+    @Getter
+    @ToString
     public static class KakaoAccount {
         private String email;
         private Profile profile;
 
-        @Data
+        @Getter
+        @ToString
         public static class Profile {
             private String nickname;
 
