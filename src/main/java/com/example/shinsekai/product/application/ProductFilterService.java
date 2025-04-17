@@ -8,5 +8,5 @@ import java.util.List;
 public interface ProductFilterService {
 
     Page<String> filterProducts(Long mainCategoryId, List<Long> subCategoryIds, List<Integer> seasonIds,
-                                List<Long> sizeIds, String priceRange, Pageable pageable);
+                                List<Long> sizeIds, Integer priceRangeId, Pageable pageable);
 }

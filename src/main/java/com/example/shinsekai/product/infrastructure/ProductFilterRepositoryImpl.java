@@ -1,6 +1,8 @@
 package com.example.shinsekai.product.infrastructure;
 
+import com.example.shinsekai.category.entity.PriceRange;
 import com.example.shinsekai.category.entity.QProductCategoryList;
+import com.example.shinsekai.category.infrastructure.PriceRangeRepository;
 import com.example.shinsekai.option.entity.QProductOptionList;
 import com.example.shinsekai.product.entity.ProductStatus;
 import com.example.shinsekai.product.entity.QProduct;
@@ -22,6 +24,7 @@ import java.util.List;
 public class ProductFilterRepositoryImpl implements ProductFilterRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final PriceRangeRepository priceRangeRepository;
 
     @Override
     public Page<String> filterProductCodes(
@@ -29,7 +32,7 @@ public class ProductFilterRepositoryImpl implements ProductFilterRepositoryCusto
             List<Long> subCategoryIds,
             List<Integer> seasonIds,
             List<Long> sizeIds,
-            String priceRange,
+            Integer priceRangeId,
             Pageable pageable
     ) {
         QProduct product = QProduct.product;
@@ -62,10 +65,9 @@ public class ProductFilterRepositoryImpl implements ProductFilterRepositoryCusto
         }
 
         // 가격 조건 (실구매가 = productPrice * (1 - discountRate / 100.0))
-        if (priceRange != null && priceRange.contains("-")) {
-            String[] range = priceRange.split("-");
-            double min = Double.parseDouble(range[0]);
-            double max = Double.parseDouble(range[1]);
+        if (priceRangeId != null) {
+            PriceRange range = priceRangeRepository.findById(priceRangeId)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가격 범위 ID입니다."));
 
             NumberTemplate<Double> finalPrice = Expressions.numberTemplate(
                     Double.class,
@@ -74,7 +76,7 @@ public class ProductFilterRepositoryImpl implements ProductFilterRepositoryCusto
                     product.discountRate
             );
 
-            builder.and(finalPrice.between(min, max));
+            builder.and(finalPrice.between(range.getMin(), range.getMax()));
         }
 
         // 상품 코드 조회
