@@ -26,7 +26,6 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional
     public void createOrder(OrderRequestDto orderRequestDto, List<PurchaseProductListRequestDto> purchaseProductList) {
-        log.info("createPurchase = {}", purchaseProductList.toString());
         //결제
         String paymentCode = paymentService.createPayment(PaymentRequestDto.fromOrder(orderRequestDto));
 

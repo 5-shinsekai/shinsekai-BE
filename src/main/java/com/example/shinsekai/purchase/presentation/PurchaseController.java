@@ -39,7 +39,6 @@ public class PurchaseController {
     @Operation(summary = "구매 정보 저장")
     @PostMapping
     public BaseResponseEntity<Boolean> createPurchase(@RequestBody OrderRequestVo orderRequestVo) {
-        log.info("createPurchase = {}", orderRequestVo.toString());
         OrderRequestDto orderDto = OrderRequestDto.from(orderRequestVo, jwtTokenProvider.getMemberUuid());
         orderService.createOrder(orderDto, orderRequestVo.getOrderProductList().stream()
                         .map(listVo->PurchaseProductListRequestDto.from(listVo,orderDto.getPurchaseCode()))
