@@ -3,7 +3,9 @@ package com.example.shinsekai.event.application;
 import com.example.shinsekai.event.dto.in.EventCreateRequestDto;
 import com.example.shinsekai.event.dto.in.EventUpdateRequestDto;
 import com.example.shinsekai.event.dto.out.EventGetDetailResponseDto;
+import com.example.shinsekai.event.dto.out.EventGetThumbnailResponseDto;
 import com.example.shinsekai.event.dto.out.EventGetTitleResponseDto;
+import com.example.shinsekai.event.vo.in.EventGetThumbnailResponseVo;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,4 +16,5 @@ public interface EventService {
     List<EventGetTitleResponseDto> getAllEventTitle();
     void updateEvent(EventUpdateRequestDto eventUpdateRequestDto);
     void deleteEvent(Integer eventId);
+    List<EventGetThumbnailResponseDto> getAllEventThumbnail();
 }

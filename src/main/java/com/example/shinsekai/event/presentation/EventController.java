@@ -5,8 +5,10 @@ import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.event.application.EventServiceImpl;
 import com.example.shinsekai.event.dto.in.EventCreateRequestDto;
 import com.example.shinsekai.event.dto.in.EventUpdateRequestDto;
+import com.example.shinsekai.event.dto.out.EventGetThumbnailResponseDto;
 import com.example.shinsekai.event.dto.out.EventGetTitleResponseDto;
 import com.example.shinsekai.event.vo.in.EventCreateRequestVo;
+import com.example.shinsekai.event.vo.in.EventGetThumbnailResponseVo;
 import com.example.shinsekai.event.vo.in.EventUpdateRequestVo;
 import com.example.shinsekai.event.vo.out.EventGetDetailResponseVo;
 import com.example.shinsekai.event.vo.out.EventGetTitleResponseVo;
@@ -43,6 +45,13 @@ public class EventController {
     public BaseResponseEntity<List<EventGetTitleResponseVo>> getAllEventTitle() {
         return new BaseResponseEntity<>(eventService.getAllEventTitle().stream()
                 .map(EventGetTitleResponseDto::toVo).toList());
+    }
+
+    @Operation(summary = "기획전 썸네일 리스트 조회")
+    @GetMapping("/thumbnail")
+    public BaseResponseEntity<List<EventGetThumbnailResponseVo>> getAllEventThumbnail() {
+        return new BaseResponseEntity<>(eventService.getAllEventThumbnail().stream()
+                .map(EventGetThumbnailResponseDto::toVo).toList());
     }
 
     @Operation(summary = "기획전 수정")

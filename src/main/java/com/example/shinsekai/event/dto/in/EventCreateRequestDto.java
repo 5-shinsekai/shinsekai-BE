@@ -12,15 +12,20 @@ public class EventCreateRequestDto {
     private String eventName;
     private String eventImage;
     private String eventImageAltText;
+    private String eventThumbnailImage;
+    private String eventThumbnailImageAltText;
     private LocalDate startDate;
     private LocalDate endDate;
 
     @Builder
     public EventCreateRequestDto(String eventName, String eventImage, String eventImageAltText,
+                                 String eventThumbnailImage, String eventThumbnailImageAltText,
                                  LocalDate startDate, LocalDate endDate) {
         this.eventName = eventName;
         this.eventImage = eventImage;
         this.eventImageAltText = eventImageAltText;
+        this.eventThumbnailImage = eventThumbnailImage;
+        this.eventThumbnailImageAltText = eventThumbnailImageAltText;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -30,6 +35,8 @@ public class EventCreateRequestDto {
                 .eventName(vo.getEventName())
                 .eventImage(vo.getEventImage())
                 .eventImageAltText(vo.getEventImageAltText())
+                .eventThumbnailImage(vo.getEventThumbnailImage())
+                .eventThumbnailImageAltText(vo.getEventThumbnailImageAltText())
                 .startDate(vo.getStartDate())
                 .endDate(vo.getEndDate())
                 .build();
@@ -40,6 +47,8 @@ public class EventCreateRequestDto {
                 .eventName(eventName)
                 .eventImage(eventImage)
                 .eventImageAltText(eventImageAltText)
+                .eventThumbnailImage(eventThumbnailImage)
+                .eventThumbnailImageAltText(eventThumbnailImageAltText)
                 .startDate(startDate)
                 .endDate(endDate)
                 .build();
