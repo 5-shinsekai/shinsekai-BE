@@ -13,6 +13,7 @@ import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,20 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
                 ).toList();
     }
 
+    //활성화된 단일 카드 조회
+
+
+    @Override
+    public StarbucksCardResponseDto getStarbucksCard(MemberStarbucksListDto dto) {
+
+        return StarbucksCardResponseDto.from(
+                memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+                    dto.getMemberStarbucksCardUuid(), dto.getMemberUuid()
+                ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD))
+                .getStarbucksCard(), dto.getMemberStarbucksCardUuid()
+        );
+    }
+
     @Override
     @Transactional
     public void createStarbucksCard(StarbucksCardRequestDto starbucksCardDto) {
@@ -58,6 +73,10 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
                         memberStarbucksCardsListDto.getMemberStarbucksCardUuid(), memberStarbucksCardsListDto.getMemberUuid()
                 ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_DELETE_STARBUCKS_CARD));
 
+        //잔액 존재하는지 검사
+        if(memberStarbucksCardList.getStarbucksCard().getRemainAmount() > 0)
+            throw new BaseException(BaseResponseStatus.NO_DELETE_STARBUCKS_CARD);
+
         memberStarbucksCardList.softDelete();
     }
     /*
@@ -69,6 +88,11 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
     @Override
     @Transactional
     public void useRemainAmount(UseStarbucksCardRequestDto useStarbucksCardRequestDto) {
+
+        //결제 하는 금액 검사
+        if(useStarbucksCardRequestDto.getPrice() < 0)
+            throw new BaseException(BaseResponseStatus.INVALID_INPUT);
+
         StarbucksCard starbucksCard = memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
                 useStarbucksCardRequestDto.getMemberStarbucksCardUuid(), useStarbucksCardRequestDto.getMemberUuid()
         ).orElseThrow(()->new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getStarbucksCard();
@@ -85,6 +109,10 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
     @Override
     @Transactional
     public void chargeRemainAmount(UseStarbucksCardRequestDto useStarbucksCardRequestDto) {
+        //충전 금액 1000원 이상
+        if(useStarbucksCardRequestDto.getPrice() < 1000) 
+            throw new BaseException(BaseResponseStatus.NO_CHARGE_STARBUCKS_CARD);
+        
         memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
                 useStarbucksCardRequestDto.getMemberStarbucksCardUuid(), useStarbucksCardRequestDto.getMemberUuid()
         ).orElseThrow(()->new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD))
