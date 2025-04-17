@@ -11,7 +11,6 @@ import com.example.shinsekai.purchase.vo.in.CancelOrderRequestVo;
 import com.example.shinsekai.purchase.vo.in.OrderRequestVo;
 import com.example.shinsekai.purchase.vo.out.PurchaseResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -32,16 +31,15 @@ public class PurchaseController {
 
     @Operation(summary = "회원 구매 정보 조회")
     @GetMapping
-    public List<PurchaseResponseVo> findPurchase(HttpServletRequest request){
-        return purchaseService.findMemberPurchaseList(jwtTokenProvider.getAccessToken(request)).stream().map(PurchaseResponseDto::toVo).toList();
+    public List<PurchaseResponseVo> findPurchase(){
+        return purchaseService.findMemberPurchaseList(jwtTokenProvider.getMemberUuid())
+                .stream().map(PurchaseResponseDto::toVo).toList();
     }
 
     @Operation(summary = "구매 정보 저장")
     @PostMapping
-    public BaseResponseEntity<Boolean> createPurchase(HttpServletRequest request,
-                                                      @RequestBody OrderRequestVo orderRequestVo) {
-
-        OrderRequestDto orderDto = OrderRequestDto.from(orderRequestVo, jwtTokenProvider.getAccessToken(request));
+    public BaseResponseEntity<Boolean> createPurchase(@RequestBody OrderRequestVo orderRequestVo) {
+        OrderRequestDto orderDto = OrderRequestDto.from(orderRequestVo, jwtTokenProvider.getMemberUuid());
         orderService.createOrder(orderDto, orderRequestVo.getOrderProductList().stream()
                         .map(listVo->PurchaseProductListRequestDto.from(listVo,orderDto.getPurchaseCode()))
                         .toList()
@@ -51,9 +49,8 @@ public class PurchaseController {
 
     @Operation(summary = "구매 환불")
     @DeleteMapping
-    public BaseResponseEntity<Boolean> cancelPurchase(HttpServletRequest request,
-                                                      @RequestBody CancelOrderRequestVo cancelOrderRequestVo) {
-        orderService.deleteOrder(CancelOrderRequestDto.from(cancelOrderRequestVo,jwtTokenProvider.getAccessToken(request)));
+    public BaseResponseEntity<Boolean> cancelPurchase(@RequestBody CancelOrderRequestVo cancelOrderRequestVo) {
+        orderService.deleteOrder(CancelOrderRequestDto.from(cancelOrderRequestVo,jwtTokenProvider.getMemberUuid()));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.shinsekai.address.dto.in;
 
 import com.example.shinsekai.address.entity.Address;
-import com.example.shinsekai.address.vo.AddressCreateRequestVo;
+import com.example.shinsekai.address.vo.in.AddressCreateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
