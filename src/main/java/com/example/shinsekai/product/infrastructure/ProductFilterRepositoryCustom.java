@@ -11,6 +11,6 @@ public interface ProductFilterRepositoryCustom {
             List<Long> subCategoryIds,
             List<Integer> seasonIds,
             List<Long> sizeIds,
-            String priceRange,
+            Integer priceRangeId,
             Pageable pageable);
 }

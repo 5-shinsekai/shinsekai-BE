@@ -84,8 +84,8 @@ public class ProductController {
         return new BaseResponseEntity<>(productService.getAllSellingProductCodes(pageable));
     }
 
-    @Operation(summary = "전체 상품 요약 정보 조회")
-    @GetMapping("/{productCode}/outline")
+    @Operation(summary = "상품 개요 조회")
+    @GetMapping("/outline/{productCode}")
     public BaseResponseEntity<ProductOutlineResponseVo> getProductSummary(@PathVariable String productCode) {
         return new BaseResponseEntity<>(productService.getSellingProductOutline(productCode).toVo());
     }
@@ -97,11 +97,11 @@ public class ProductController {
             @RequestParam(required = false) List<Long> subCategoryIds,
             @RequestParam(required = false) List<Integer> seasonIds,
             @RequestParam(required = false) List<Long> sizeIds,
-            @RequestParam(required = false) String priceRange,
+            @RequestParam(required = false) Integer priceRangeId,
             @PageableDefault(size = 10) Pageable pageable
     ) {
         return new BaseResponseEntity<>(productFilterService.filterProducts(
-                mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRange, pageable
+                mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRangeId, pageable
         ));
     }
 
@@ -110,7 +110,7 @@ public class ProductController {
     public BaseResponseEntity<Page<String>> searchProducts(
             @RequestParam String keyword,
             @PageableDefault(size = 10) Pageable pageable) {
-        return new BaseResponseEntity<>(productSearchService.searchByKeyword(keyword,pageable));
+        return new BaseResponseEntity<>(productSearchService.searchByKeyword(keyword, pageable));
     }
 
 }
