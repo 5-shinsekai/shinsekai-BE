@@ -9,9 +9,11 @@ import com.example.shinsekai.payment.dto.in.PaymentRequestDto;
 import com.example.shinsekai.purchase.dto.in.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -24,6 +26,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     @Transactional
     public void createOrder(OrderRequestDto orderRequestDto, List<PurchaseProductListRequestDto> purchaseProductList) {
+        log.info("createPurchase = {}", purchaseProductList.toString());
         //결제
         String paymentCode = paymentService.createPayment(PaymentRequestDto.fromOrder(orderRequestDto));
 

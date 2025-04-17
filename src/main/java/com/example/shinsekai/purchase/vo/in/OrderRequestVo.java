@@ -12,12 +12,11 @@ import java.util.List;
 public class OrderRequestVo {
     //구매
     private PurchaseStatus purchaseStatus;
-    private String receiver;
-    private String address;
     private String giftCertificationUuid;
     private String couponUuid;
     private Double shipmentFee;
     private Double productTotalPrice;
+    private String addressUuid;
 
     private List<PurchaseProductRequestVo> orderProductList;
 

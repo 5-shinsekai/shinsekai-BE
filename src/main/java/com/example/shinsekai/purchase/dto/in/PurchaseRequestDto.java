@@ -2,14 +2,9 @@ package com.example.shinsekai.purchase.dto.in;
 
 import com.example.shinsekai.purchase.entity.Purchase;
 import com.example.shinsekai.purchase.entity.PurchaseStatus;
-import com.example.shinsekai.purchase.vo.in.PurchaseRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Getter
 @ToString
@@ -19,8 +14,7 @@ public class PurchaseRequestDto {
     private String paymentCode;
     private String memberUuid;
     private PurchaseStatus purchaseStatus;
-    private String receiver;
-    private String address;
+    private String addressUuid;
     private String giftCertificationUuid;
     private String couponUuid;
     private Double shipmentFee;
@@ -32,8 +26,7 @@ public class PurchaseRequestDto {
                 .paymentCode(this.paymentCode)
                 .memberUuid(this.memberUuid)
                 .purchaseStatus(this.purchaseStatus)
-                .receiver(this.receiver)
-                .address(this.address)
+                .addressUuid(this.addressUuid)
                 .giftCertificateUuid(this.giftCertificationUuid)
                 .couponUuid(this.couponUuid)
                 .shipmentFee(this.shipmentFee)
@@ -47,20 +40,11 @@ public class PurchaseRequestDto {
                 .paymentCode(paymentCode)
                 .memberUuid(orderRequestDto.getMemberUuid())
                 .purchaseStatus(orderRequestDto.getPurchaseStatus())
-                .receiver(orderRequestDto.getReceiver())
-                .address(orderRequestDto.getAddress())
+                .addressUuid(orderRequestDto.getAddressUuid())
                 .giftCertificationUuid(orderRequestDto.getGiftCertificationUuid())
                 .couponUuid(orderRequestDto.getCouponUuid())
                 .shipmentFee(orderRequestDto.getShipmentFee())
                 .productTotalPrice(orderRequestDto.getProductTotalPrice())
                 .build();
     }
-
-//    public static String generateOrderCode() {
-//        String prefix = "O";
-//        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-//        String uuidPart = UUID.randomUUID().toString().substring(0, 8);
-//
-//        return prefix + date + "-" + uuidPart;
-//    }
 }

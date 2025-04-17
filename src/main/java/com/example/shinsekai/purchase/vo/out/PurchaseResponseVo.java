@@ -13,8 +13,7 @@ public class PurchaseResponseVo {
     private String purchaseCode;
     private String paymentCode;
     private PurchaseStatus purchaseStatus;
-    private String receiver;
-    private String address;
+    private String addressUuid;
     private String giftCertificationUuid;
     private String couponUuid;
     private Double shipmentFee;

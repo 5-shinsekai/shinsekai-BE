@@ -26,7 +26,8 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Transactional
     public void createPurchase(PurchaseRequestDto purchaseRequestDto, List<PurchaseProductListRequestDto> purchaseProductListRequestDtoList) {
         purchaseRepository.save(purchaseRequestDto.toEntity());
-        purchaseProductListRepository.saveAll(purchaseProductListRequestDtoList.stream()
+        purchaseProductListRepository.saveAll(purchaseProductListRequestDtoList
+                .stream()
                 .map(PurchaseProductListRequestDto::toEntity).toList()
         );
     }
@@ -35,15 +36,18 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Transactional
     public void deletePurchase(PurchaseDeleteRequestDto purchaseDeleteDto) {
         purchaseRepository.findByPurchaseCodeAndMemberUuid(purchaseDeleteDto.getPurchaseCode(), purchaseDeleteDto.getMemberUuid())
-                .orElseThrow(()-> new BaseException(BaseResponseStatus.PURCHASE_NOT_FOUND)).cancelPurchase(purchaseDeleteDto.getCancelReason());
+                .orElseThrow(()-> new BaseException(BaseResponseStatus.PURCHASE_NOT_FOUND))
+                .cancelPurchase(purchaseDeleteDto.getCancelReason());
     }
 
     //회원의 주문 목록과 해당 주문의 상품들 조회
     @Override
     public List<PurchaseResponseDto> findMemberPurchaseList(String memberUuid) {
-        return purchaseRepository.findByMemberUuid(memberUuid).stream()
+        return purchaseRepository.findByMemberUuid(memberUuid)
+                .stream()
                 .map(purchase -> {
-                    List<PurchaseProductListResponseDto> productList = findPurchaseProductListByPurchaseCode(purchase.getPurchaseCode());
+                    List<PurchaseProductListResponseDto> productList =
+                            findPurchaseProductListByPurchaseCode(purchase.getPurchaseCode());
                     return PurchaseResponseDto.from(purchase, productList);
                 })
                 .toList();
@@ -51,6 +55,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public List<PurchaseProductListResponseDto> findPurchaseProductListByPurchaseCode(String purchaseCode) {
-        return purchaseProductListRepository.findByPurchaseCode(purchaseCode).stream().map(PurchaseProductListResponseDto::from).toList();
+        return purchaseProductListRepository.findByPurchaseCode(purchaseCode)
+                .stream()
+                .map(PurchaseProductListResponseDto::from)
+                .toList();
     }
 }
