@@ -2,6 +2,7 @@ package com.example.shinsekai.common.jwt;
 
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
 
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -48,6 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             uuid = jwtTokenProvider.extractAllClaims(token).getSubject();
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(BaseResponseStatus.TOKEN_NOT_VALID);
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         }

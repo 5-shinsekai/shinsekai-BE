@@ -1,5 +1,5 @@
 package com.example.shinsekai.common.jwt;
 
-public enum TokenEnum {
+public enum TokenType {
     ACCESS, REFRESH
 }

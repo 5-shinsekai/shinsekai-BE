@@ -10,7 +10,7 @@ import com.example.shinsekai.member.dto.in.SignUpRequestDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
 import com.example.shinsekai.member.vo.in.ChangePasswordVo;
 import com.example.shinsekai.member.vo.in.SignInRequestVo;
-import com.example.shinsekai.member.vo.in.SignInResponseVo;
+import com.example.shinsekai.member.vo.out.SignInResponseVo;
 import com.example.shinsekai.member.vo.in.SignUpRequestVo;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;

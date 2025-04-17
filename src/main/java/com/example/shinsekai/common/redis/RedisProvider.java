@@ -1,5 +1,6 @@
 package com.example.shinsekai.common.redis;
 
+import com.example.shinsekai.common.jwt.TokenType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
@@ -18,13 +19,13 @@ public class RedisProvider {
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public String getToken(String memberUuid) {
-        return redisTemplate.opsForValue().get(memberUuid);
+    public String getToken(TokenType tokenType, String memberUuid) {
+        return redisTemplate.opsForValue().get(tokenType + ":" + memberUuid);
     }
 
-    public void setToken(String memberUuid, String token, long expirationTime) {
+    public void setToken(TokenType tokenType, String memberUuid, String token, long expirationTime) {
         redisTemplate.opsForValue().set(
-                memberUuid,
+                tokenType + ":" + memberUuid,
                 token,
                 expirationTime,
                 TimeUnit.MILLISECONDS
