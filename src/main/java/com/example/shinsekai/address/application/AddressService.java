@@ -10,6 +10,7 @@ public interface AddressService {
 
     List<AddressResponseDto> getAddressList(String memberUuid);
     AddressResponseDto getMainAddress(String memberUuid);
+    AddressResponseDto getAddress(String memberUuid, String addressUuid);
     void createAddress(AddressCreateRequestDto addressRequestDto);
     void updateAddress(AddressUpdateRequestDto addressRequestDto);
     void hardDeleteAddress(String addressUuid);
