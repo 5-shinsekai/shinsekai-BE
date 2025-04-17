@@ -3,7 +3,7 @@ package com.example.shinsekai.member.application;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
-import com.example.shinsekai.common.jwt.TokenEnum;
+import com.example.shinsekai.common.jwt.TokenType;
 import com.example.shinsekai.common.redis.RedisProvider;
 import com.example.shinsekai.member.dto.in.SocialMemberUpdateRequestDto;
 import com.example.shinsekai.member.dto.out.KakaoTokenResponse;
@@ -94,13 +94,13 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
 
         log.info("socialLogin_1");
 
-        String accessToken = jwtTokenProvider.generateToken(member, TokenEnum.ACCESS);
-        String refreshToken = jwtTokenProvider.generateToken(member, TokenEnum.REFRESH);
+        String accessToken = jwtTokenProvider.generateToken(TokenType.ACCESS, member);
+        String refreshToken = jwtTokenProvider.generateToken(TokenType.REFRESH, member);
 
         log.info("socialLogin_2");
 
         // redis에는 refreshToken만 저장(accessToken은 만료시간이 짧음)
-        redisProvider.setToken(member.getMemberUuid(), refreshToken, refreshExpireTime);
+        redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
 
         log.info("socialLogin_3");
 

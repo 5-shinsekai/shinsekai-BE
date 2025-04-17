@@ -8,7 +8,7 @@ import com.example.shinsekai.member.dto.in.SocialMemberUpdateRequestDto;
 import com.example.shinsekai.member.dto.out.KakaoTokenResponse;
 import com.example.shinsekai.member.dto.out.KakaoUserResponse;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
-import com.example.shinsekai.member.vo.in.SignInResponseVo;
+import com.example.shinsekai.member.vo.out.SignInResponseVo;
 import com.example.shinsekai.member.vo.in.SocialMemberUpdateRequestVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

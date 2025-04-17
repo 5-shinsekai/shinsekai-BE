@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisProvider {
 
     private final StringRedisTemplate redisTemplate;
-    private final ObjectMapper objectMapper;
 
     public String getToken(TokenType tokenType, String memberUuid) {
         return redisTemplate.opsForValue().get(tokenType + ":" + memberUuid);

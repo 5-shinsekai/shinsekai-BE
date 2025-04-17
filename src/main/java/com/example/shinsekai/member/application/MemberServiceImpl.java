@@ -84,7 +84,7 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
         }
 
-        Authentication authentication = jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
+        jwtTokenProvider.authenticate(member, signInRequestDto.getPassword());
         return jwtTokenProvider.createToken(member);
     }
 

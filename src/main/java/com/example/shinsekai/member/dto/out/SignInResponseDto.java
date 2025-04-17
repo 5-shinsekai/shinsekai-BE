@@ -12,14 +12,12 @@ public class SignInResponseDto {
 
     private String accessToken;
     private String refreshToken;
-    private String memberUuid;
     private String name;
 
     @Builder
-    public SignInResponseDto(String accessToken, String refreshToken , String memberUuid, String name) {
+    public SignInResponseDto(String accessToken, String refreshToken, String name) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.memberUuid = memberUuid;
         this.name = name;
     }
 
@@ -27,7 +25,6 @@ public class SignInResponseDto {
         return SignInResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .memberUuid(member.getMemberUuid())
                 .name(member.getName())
                 .build();
     }
@@ -36,7 +33,6 @@ public class SignInResponseDto {
         return SignInResponseVo.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .memberUuid(memberUuid)
                 .name(name)
                 .build();
     }

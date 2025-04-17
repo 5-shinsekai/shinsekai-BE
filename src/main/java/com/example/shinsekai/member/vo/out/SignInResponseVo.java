@@ -13,7 +13,7 @@ public class SignInResponseVo {
     private String name;
 
     @Builder
-    public SignInResponseVo(String accessToken, String refreshToken, String memberUuid, String name) {
+    public SignInResponseVo(String accessToken, String refreshToken, String name) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.name = name;
