@@ -6,9 +6,9 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 public class BestProduct {
     @Id

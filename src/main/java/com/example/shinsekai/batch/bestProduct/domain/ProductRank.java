@@ -3,8 +3,8 @@ package com.example.shinsekai.batch.bestProduct.domain;
 import lombok.*;
 
 @Getter
-@NoArgsConstructor
 @ToString
+@NoArgsConstructor
 public class ProductRank {
     private String productCode;
     private int totalQuantity;

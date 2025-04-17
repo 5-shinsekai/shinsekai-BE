@@ -1,5 +1,6 @@
 package com.example.shinsekai.batch.bestProduct.domain;
 
+import jakarta.persistence.Entity;
 import lombok.*;
 
 @Getter

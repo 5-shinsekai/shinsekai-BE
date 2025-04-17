@@ -1,4 +1,4 @@
-package com.example.shinsekai.batch.bestProduct;
+package com.example.shinsekai.batch.bestProduct.application;
 
 import com.example.shinsekai.batch.bestProduct.domain.BestProduct;
 import com.example.shinsekai.batch.bestProduct.domain.ProductRank;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 /*
-* Todo : 일단 순위를 매기는 요소를 구매 수량으로만 고정. 차후 찜하기 등 추가 할 수도
+* Todo : 일단 순위를 매기는 요소를 구매 수량으로만 고정. 차후 찜하기 등 추가 할 수도...
 * */
 @Slf4j
 public class BestProductProcessor implements ItemProcessor<PurchaseProductCategory, BestProduct> {
@@ -26,14 +26,7 @@ public class BestProductProcessor implements ItemProcessor<PurchaseProductCatego
         productCountMap.merge(list.getProductCode(), list.getQuantity(), Integer::sum);
 
 
-        return new BestProduct(
-                null, // ID는 자동 생성되므로 null
-                list.getProductCode(),
-                list.getMainCategoryId(),
-                list.getQuantity(),
-                0, // 순위는 나중에 집계할 때 매겨짐
-                LocalDate.now() // orderDate는 배치 작업에서 자동으로 설정
-        );
+        return null;
     }
 
     /**
@@ -72,7 +65,7 @@ public class BestProductProcessor implements ItemProcessor<PurchaseProductCatego
                         categoryId,
                         productRank.getTotalQuantity(),
                         rank++, // 순위는 내림차순으로 정렬된 순서대로 매겨짐
-                        null // orderDate는 배치 작업에서 자동으로 설정
+                        LocalDate.now() // orderDate는 배치 작업에서 자동으로 설정
                 );
                 bestProducts.add(bestProduct);
             }

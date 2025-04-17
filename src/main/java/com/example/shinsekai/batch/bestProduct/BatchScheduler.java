@@ -1,4 +1,4 @@
-package com.example.shinsekai.batch;
+package com.example.shinsekai.batch.bestProduct;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
