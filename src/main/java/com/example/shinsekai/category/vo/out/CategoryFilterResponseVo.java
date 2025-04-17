@@ -7,7 +7,6 @@ import java.util.List;
 
 @Getter
 public class CategoryFilterResponseVo {
-    private List<SubCategoryResponseVo> subCategories;
     private List<CommonFilterItemVo> seasons;
     private List<CommonFilterItemVo> sizes;
     private List<CommonFilterItemVo> colors;
@@ -15,10 +14,8 @@ public class CategoryFilterResponseVo {
 
     @Builder
 
-    public CategoryFilterResponseVo(List<SubCategoryResponseVo> subCategories, List<CommonFilterItemVo> seasons,
-                                    List<CommonFilterItemVo> sizes, List<CommonFilterItemVo> colors,
-                                    List<CommonFilterItemVo> priceRanges) {
-        this.subCategories = subCategories;
+    public CategoryFilterResponseVo(List<CommonFilterItemVo> seasons, List<CommonFilterItemVo> sizes,
+                                    List<CommonFilterItemVo> colors, List<CommonFilterItemVo> priceRanges) {
         this.seasons = seasons;
         this.sizes = sizes;
         this.colors = colors;

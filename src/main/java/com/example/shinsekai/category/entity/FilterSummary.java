@@ -10,25 +10,30 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class ProductCategoryList extends BaseEntity {
+public class FilterSummary extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50, unique = true)
-    private String productCode;
-
     @Column(nullable = false)
     private Long mainCategoryId;
 
-    private Long subCategoryId;
+    @Column(nullable = false, length = 20)
+    private String filterType;
+
+    @Column(nullable = false)
+    private Long filterId;
+
+    @Column(nullable = false, length = 20)
+    private String filterValue;
 
     @Builder
-    public ProductCategoryList(Long id, String productCode, Long mainCategoryId, Long subCategoryId) {
+    public FilterSummary(Long id, Long mainCategoryId, String filterType, Long filterId, String filterValue) {
         this.id = id;
-        this.productCode = productCode;
         this.mainCategoryId = mainCategoryId;
-        this.subCategoryId = subCategoryId;
+        this.filterType = filterType;
+        this.filterId = filterId;
+        this.filterValue = filterValue;
     }
 }
