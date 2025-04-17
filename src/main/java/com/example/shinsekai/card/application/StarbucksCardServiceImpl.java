@@ -51,7 +51,7 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
                 memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
                     dto.getMemberStarbucksCardUuid(), dto.getMemberUuid()
                 ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD))
-                .getStarbucksCard(), dto.getMemberUuid()
+                .getStarbucksCard(), dto.getMemberStarbucksCardUuid()
         );
     }
 
