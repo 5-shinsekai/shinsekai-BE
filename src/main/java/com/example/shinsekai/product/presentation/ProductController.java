@@ -9,6 +9,7 @@ import com.example.shinsekai.product.dto.in.ProductRequestDto;
 import com.example.shinsekai.product.vo.in.ProductRequestVo;
 import com.example.shinsekai.product.vo.out.ProductOutlineResponseVo;
 import com.example.shinsekai.product.vo.out.ProductResponseVo;
+import com.example.shinsekai.util.OneBasedPageable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -79,7 +80,8 @@ public class ProductController {
     @Operation(summary = "전체 판매 중인 상품 코드만 페이징 조회")
     @GetMapping("/product-code/page")
     public BaseResponseEntity<Page<String>> getSellingProductCodes(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+            @OneBasedPageable Pageable pageable
     ) {
         return new BaseResponseEntity<>(productService.getAllSellingProductCodes(pageable));
     }
@@ -98,7 +100,7 @@ public class ProductController {
             @RequestParam(required = false) List<Integer> seasonIds,
             @RequestParam(required = false) List<Long> sizeIds,
             @RequestParam(required = false) Integer priceRangeId,
-            @PageableDefault(size = 10) Pageable pageable
+            @PageableDefault(size = 10) @OneBasedPageable Pageable pageable
     ) {
         return new BaseResponseEntity<>(productFilterService.filterProducts(
                 mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRangeId, pageable
@@ -109,7 +111,7 @@ public class ProductController {
     @GetMapping("/search")
     public BaseResponseEntity<Page<String>> searchProducts(
             @RequestParam String keyword,
-            @PageableDefault(size = 10) Pageable pageable) {
+            @OneBasedPageable Pageable pageable) {
         return new BaseResponseEntity<>(productSearchService.searchByKeyword(keyword, pageable));
     }
 
