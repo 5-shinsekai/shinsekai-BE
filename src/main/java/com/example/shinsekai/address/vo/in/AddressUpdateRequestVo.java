@@ -38,7 +38,6 @@ public class AddressUpdateRequestVo {
     @Pattern(regexp = "^\\s*$|^\\d{3}-\\d{4}-\\d{4}$", message = "INVALID_PHONE_FORMAT")
     private String secondPhoneNumber;
 
-    @NotBlank(message = "INVALID_DELIVERY_MEMO_FORMAT")
     @Size(max = 100, message = "INVALID_DELIVERY_MEMO_FORMAT")
     private String deliveryMemo;
 

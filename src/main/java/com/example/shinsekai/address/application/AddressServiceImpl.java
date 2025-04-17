@@ -55,14 +55,14 @@ public class AddressServiceImpl implements AddressService{
     public void createAddress(AddressCreateRequestDto addressCreateRequestDto) {
 
         // 최초 배송지인지 검사
-        int addressCount = addressRepository.countByMemberUuid(addressCreateRequestDto.getMemberUuid());
+        int activeAddressCount = addressRepository.countActiveByMemberUuid(addressCreateRequestDto.getMemberUuid());
         boolean isMainAddress = false;
         // 최초 등록인 경우
-        if (addressCount == 0) {
+        if (activeAddressCount == 0) {
             isMainAddress = true;
         } 
         // 최초 등록이 아닌 경우
-        else if (addressCount > 0 && addressCount < 10) {
+        else if (activeAddressCount > 0 && activeAddressCount < 10) {
 
             Boolean requestedDtoIsMain =
                     addressCreateRequestDto.getIsMainAddress() == null ? false : addressCreateRequestDto.getIsMainAddress();

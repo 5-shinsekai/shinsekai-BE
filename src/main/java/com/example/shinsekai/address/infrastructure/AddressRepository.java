@@ -15,7 +15,8 @@ import java.util.Optional;
 @Repository
 public interface AddressRepository extends JpaRepository<Address,Long> {
 
-    int countByMemberUuid(String memberUuid);
+    @Query("SELECT COUNT(a) FROM Address a WHERE a.memberUuid = :memberUuid AND (a.isDeleted = false OR a.isDeleted IS NULL)")
+    int countActiveByMemberUuid(@Param("memberUuid") String memberUuid);
 
     Optional<Address> findByMemberUuidAndAddressUuid(String memberUuid, String addressUuid);
 
