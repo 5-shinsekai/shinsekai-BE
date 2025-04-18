@@ -8,7 +8,6 @@ import com.example.shinsekai.season.dto.in.ProductSeasonListUpdateRequestDto;
 import com.example.shinsekai.season.dto.out.ProductSeasonListGetResponseDto;
 import com.example.shinsekai.season.vo.in.ProductSeasonListCreateRequestVo;
 import com.example.shinsekai.season.vo.in.ProductSeasonListUpdateRequestVo;
-import com.example.shinsekai.season.vo.out.ProductSeasonListGetResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,10 +36,10 @@ public class ProductSeasonController {
 
     @Operation(summary = "시즌별 상품 전체 조회")
     @GetMapping("/{seasonId}")
-    public BaseResponseEntity<List<ProductSeasonListGetResponseVo>> getAllProductSeasonList(
+    public BaseResponseEntity<List<String>> getAllProductSeasonList(
             @PathVariable Integer seasonId) {
         return new BaseResponseEntity<>(productSeasonService.getAllProductSeasonList(seasonId).stream()
-                .map(ProductSeasonListGetResponseDto::toVo).toList());
+                .map(ProductSeasonListGetResponseDto::getProductCode).toList());
     }
 
     @Operation(summary = "상품 시즌 수정")
