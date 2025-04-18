@@ -7,13 +7,15 @@ import java.time.LocalDate;
 
 @Getter
 public class SeasonGetResponseVo {
-    private String seasonName;
+    private Integer code;
+    private String name;
     private LocalDate startDate;
     private LocalDate endDate;
 
     @Builder
-    public SeasonGetResponseVo(String seasonName, LocalDate startDate, LocalDate endDate) {
-        this.seasonName = seasonName;
+    public SeasonGetResponseVo(Integer code, String name, LocalDate startDate, LocalDate endDate) {
+        this.code = code;
+        this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
     }
