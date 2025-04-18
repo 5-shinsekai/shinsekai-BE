@@ -2,7 +2,6 @@ package com.example.shinsekai.product.dto.out;
 
 import com.example.shinsekai.product.entity.Product;
 import com.example.shinsekai.product.vo.out.ProductOutlineResponseVo;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 

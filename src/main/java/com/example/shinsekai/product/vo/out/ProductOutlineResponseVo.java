@@ -14,11 +14,7 @@ public class ProductOutlineResponseVo {
     private double productPrice;
     private String thumbnailUrl;
     private int discountRate;
-
-    @JsonProperty("isNew")
     private boolean isNew;
-
-    @JsonProperty("isBest")
     private boolean isBest;
 
     @Builder
