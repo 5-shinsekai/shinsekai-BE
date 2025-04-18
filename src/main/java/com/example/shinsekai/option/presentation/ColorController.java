@@ -6,6 +6,7 @@ import com.example.shinsekai.option.application.ColorService;
 import com.example.shinsekai.option.dto.in.ColorRequestDto;
 import com.example.shinsekai.option.dto.out.ColorResponseDto;
 import com.example.shinsekai.option.vo.in.ColorRequestVo;
+import com.example.shinsekai.option.vo.out.ColorResponseVo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -41,12 +42,13 @@ public class ColorController {
     }
 
     @GetMapping
-    public BaseResponseEntity<List<ColorResponseDto>> getAllColors() {
-        return new BaseResponseEntity<>(colorService.getAllColors());
+    public BaseResponseEntity<List<ColorResponseVo>> getAllColors() {
+        return new BaseResponseEntity<>(colorService.getAllColors().stream()
+                .map(ColorResponseDto::toVo).toList());
     }
 
     @GetMapping("/{id}")
-    public BaseResponseEntity<ColorResponseDto> getColor(@PathVariable Long id) {
-        return new BaseResponseEntity<>(colorService.getColor(id));
+    public BaseResponseEntity<ColorResponseVo> getColor(@PathVariable Long id) {
+        return new BaseResponseEntity<>(colorService.getColor(id).toVo());
     }
 }

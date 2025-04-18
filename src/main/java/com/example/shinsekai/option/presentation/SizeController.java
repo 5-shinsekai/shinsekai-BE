@@ -6,6 +6,7 @@ import com.example.shinsekai.option.application.SizeService;
 import com.example.shinsekai.option.dto.in.SizeRequestDto;
 import com.example.shinsekai.option.dto.out.SizeResponseDto;
 import com.example.shinsekai.option.vo.in.SizeRequestVo;
+import com.example.shinsekai.option.vo.out.SizeResponseVo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -41,12 +42,13 @@ public class SizeController {
     }
 
     @GetMapping
-    public BaseResponseEntity<List<SizeResponseDto>> getAllSizes() {
-        return new BaseResponseEntity<>(sizeService.getAllSizes());
+    public BaseResponseEntity<List<SizeResponseVo>> getAllSizes() {
+        return new BaseResponseEntity<>(sizeService.getAllSizes().stream()
+                .map(SizeResponseDto::toVo).toList());
     }
 
     @GetMapping("/{id}")
-    public BaseResponseEntity<SizeResponseDto> getSizes(@PathVariable Long id) {
-        return new BaseResponseEntity<>(sizeService.getSize(id));
+    public BaseResponseEntity<SizeResponseVo> getSizes(@PathVariable Long id) {
+        return new BaseResponseEntity<>(sizeService.getSize(id).toVo());
     }
 }

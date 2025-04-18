@@ -25,8 +25,8 @@ public class EventGetTitleResponseDto {
 
     public EventGetTitleResponseVo toVo() {
         return EventGetTitleResponseVo.builder()
-                .eventId(eventId)
-                .eventName(eventName)
+                .code(eventId)
+                .name(eventName)
                 .build();
     }
 }

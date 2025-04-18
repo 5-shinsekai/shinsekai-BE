@@ -33,8 +33,8 @@ public class SeasonGetResponseDto {
 
     public SeasonGetResponseVo toVo() {
         return SeasonGetResponseVo.builder()
-                .id(id)
-                .seasonName(seasonName)
+                .code(id)
+                .name(seasonName)
                 .startDate(startDate)
                 .endDate(endDate)
                 .build();
