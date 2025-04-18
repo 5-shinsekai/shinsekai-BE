@@ -48,7 +48,7 @@ public class AddressUpdateRequestDto {
     }
 
 
-    public Address toEntity(Long addressId) {
+    public Address toEntity(Long addressId, Boolean isMainAddress) {
         return Address.builder()
                 .id(addressId)
                 .addressUuid(addressUuid)
