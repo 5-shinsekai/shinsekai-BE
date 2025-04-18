@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class EventGetTitleResponseVo {
-    private Integer eventId;
-    private String eventName;
+    private Integer code;
+    private String name;
 
     @Builder
-    public EventGetTitleResponseVo(Integer eventId, String eventName) {
-        this.eventId = eventId;
-        this.eventName = eventName;
+    public EventGetTitleResponseVo(Integer code, String name) {
+        this.code = code;
+        this.name = name;
     }
 }
