@@ -92,16 +92,37 @@ public class AddressServiceImpl implements AddressService{
                         , addressUpdateRequestDto.getAddressUuid())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
 
-        // 메인 주소지로 저장한다면
-        if (addressUpdateRequestDto.getIsMainAddress() != null && addressUpdateRequestDto.getIsMainAddress()) {
-            Address prevMainAddress =
-                    addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressUpdateRequestDto.getMemberUuid())
-                            .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_SAVE_ADDRESS));
+        Boolean isMainAddressExist =
+                addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressUpdateRequestDto.getMemberUuid())
+                        .isPresent();
 
-            prevMainAddress.clearMainAddress();                 // 기존 주소의 메인주소지 해제
+        Boolean isMainAddress = false;
+
+        // 기본 배송지가 존재한다면
+        if (isMainAddressExist) {
+
+            // 요청 들어온 배송지가 메인 주소지라면
+            if (addressUpdateRequestDto.getIsMainAddress() != null && addressUpdateRequestDto.getIsMainAddress()) {
+                addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressUpdateRequestDto.getMemberUuid()).get()
+                        .clearMainAddress();    // 메인 주소지 여부를 false 처리한다.
+
+                // 저장할 객체를 메인 주소지로 지정
+                isMainAddress = true;
+
+            } else {
+                isMainAddress = false;
+            }
+
+        } 
+        // 기본 배송지가 없다면
+        else {
+            // 저장할 객체를 메인 주소지로 지정
+            isMainAddress = true;
         }
 
-        addressRepository.save(addressUpdateRequestDto.toEntity(address.getId()));
+
+        addressRepository.save(addressUpdateRequestDto.toEntity(address.getId(), isMainAddress));
+
     }
 
     @Override

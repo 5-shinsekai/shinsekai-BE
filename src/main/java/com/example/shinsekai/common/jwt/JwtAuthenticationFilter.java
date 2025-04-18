@@ -66,10 +66,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("token {}", token);
         log.info("storedAccessToken {}", storedAccessToken);
         
-        if (!token.equals(storedAccessToken)) {
-            setErrorResponse(response, BaseResponseStatus.DUPLICATED_LOGIN);
-            return;
-        }
+//        if (!token.equals(storedAccessToken)) {
+//            setErrorResponse(response, BaseResponseStatus.DUPLICATED_LOGIN);
+//            return;
+//        }
 
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(uuid);

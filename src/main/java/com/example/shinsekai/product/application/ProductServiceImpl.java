@@ -1,5 +1,6 @@
 package com.example.shinsekai.product.application;
 
+import com.example.shinsekai.batch.bestProduct.infrastructure.BestProductRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.option.entity.ProductOptionList;
@@ -27,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductOptionListRepository productOptionListRepository;
+    private final BestProductRepository bestProductRepository;
 
     //  상품 생성
     @Override
@@ -57,7 +59,8 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findByProductCodeAndIsDeletedFalse(productCode)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
-        return ProductOutlineResponseDto.from(product);
+        boolean isBest = bestProductRepository.existsByProductCode(productCode);
+        return ProductOutlineResponseDto.from(product,isBest);
     }
 
     //  상품 수정

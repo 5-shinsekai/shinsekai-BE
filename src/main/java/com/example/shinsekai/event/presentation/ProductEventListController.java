@@ -8,7 +8,6 @@ import com.example.shinsekai.event.dto.in.ProductEventListUpdateRequestDto;
 import com.example.shinsekai.event.dto.out.ProductEventListGetResponseDto;
 import com.example.shinsekai.event.vo.in.ProductEventListCreateRequestVo;
 import com.example.shinsekai.event.vo.in.ProductEventListUpdateRequestVo;
-import com.example.shinsekai.event.vo.out.ProductEventListGetResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,10 +36,10 @@ public class ProductEventListController {
 
     @Operation(summary = "기획전별 상품 전체 조회")
     @GetMapping("/{eventId}")
-    public BaseResponseEntity<List<ProductEventListGetResponseVo>> getAllProductEventList(
+    public BaseResponseEntity<List<String>> getAllProductEventList(
             @PathVariable Integer eventId) {
         return new BaseResponseEntity<>(productEventService.getAllProductEventList(eventId).stream()
-                .map(ProductEventListGetResponseDto::toVo).toList());
+                .map(ProductEventListGetResponseDto::getProductCode).toList());
     }
 
     @Operation(summary = "상품 기획전 수정")
