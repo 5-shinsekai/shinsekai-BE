@@ -11,7 +11,7 @@ import lombok.ToString;
 public class AddressCreateRequestVo {
 
     @NotBlank(message = "INVALID_ADDRESS_NICKNAME_FORMAT")
-    @Size(max = 100, message = "INVALID_ADDRESS_NICKNAME_FORMAT")
+    @Size(max = 30, message = "INVALID_ADDRESS_NICKNAME_FORMAT")
     private String addressNickname;
 
     @NotBlank(message = "INVALID_ZIP_NO_FORMAT")
@@ -20,12 +20,15 @@ public class AddressCreateRequestVo {
     private String zipNo;
 
     @NotBlank(message = "INVALID_ROAD_ADDRESS_FORMAT")
+    @Size(max = 50)
     private String roadAddress;
 
     @NotBlank(message = "INVALID_DETAIL_ADDRESS_FORMAT")
+    @Size(max = 100)
     private String detailAddress;
 
     @NotBlank(message = "INVALID_TOTAL_ADDRESS_FORMAT")
+    @Size(max = 150)
     private String totalAddress;
 
     @NotBlank(message = "INVALID_PHONE_FORMAT")
