@@ -29,7 +29,7 @@ public class ProductJsonUploadController {
     public BaseResponseEntity<Void> uploadJson(@RequestBody List<Map<String, Object>> rawList) {
         for (Map<String, Object> raw : rawList) {
             ProductRequestDto dto = JsonProductMapper.toDto(raw);
-            productJsonUploadService.jsonUploadProduct(dto);
+            productJsonUploadService.jsonUploadProduct(dto, raw);
         }
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }

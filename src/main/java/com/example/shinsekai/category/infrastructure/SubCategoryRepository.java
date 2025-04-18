@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> {
     List<SubCategory> findAllByMainCategoryId (Long categoryId, Sort sort);
+    Optional<SubCategory> findByNameAndMainCategoryId(String name, Long mainCategoryId);
 }

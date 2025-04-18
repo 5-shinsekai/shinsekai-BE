@@ -8,4 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface  MainCategoryRepository extends JpaRepository<MainCategory, Long> {
+    Optional<MainCategory> findByName(String name);
 }
