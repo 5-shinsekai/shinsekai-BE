@@ -9,6 +9,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+
+
 @RequiredArgsConstructor
 @Component
 public class BatchScheduler {
@@ -36,13 +38,13 @@ public class BatchScheduler {
     /*
      * 임시 배치 시간 설정 : 매일 오전 10시마다
      * */
-//    @Scheduled(cron = "0 0 10 * * *", initialDelay = 10000)
-//    @Scheduled(initialDelay = 10000, fixedDelay = Long.MAX_VALUE)
+    @Scheduled(cron = "0 0 10 * * *", initialDelay = 10000)
     public void runCartSoftDeleteJob() {
         String time = LocalDateTime.now().toString();
         try {
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("time", time)
+                    .addString("jobName", "cartSoftDeleteJob")
                     .toJobParameters();
             jobLauncher.run(cartSoftDeleteJob, jobParameters);
         } catch (Exception e) {
