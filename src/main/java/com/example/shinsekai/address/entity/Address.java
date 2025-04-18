@@ -27,7 +27,7 @@ public class Address extends BaseEntity {
     @Column(nullable = false, length = 30)
     private String addressNickname;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 30)
     private String zipNo;
 
     @Column(nullable = false, length = 50)
@@ -36,7 +36,7 @@ public class Address extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String detailedAddress;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 150)
     private String totalAddress;
 
     @Column(nullable = false, length = 30)
