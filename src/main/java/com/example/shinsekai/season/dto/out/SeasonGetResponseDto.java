@@ -9,12 +9,14 @@ import java.time.LocalDate;
 
 @Getter
 public class SeasonGetResponseDto {
+    private Integer id;
     private String seasonName;
     private LocalDate startDate;
     private LocalDate endDate;
 
     @Builder
-    public SeasonGetResponseDto(String seasonName, LocalDate startDate, LocalDate endDate) {
+    public SeasonGetResponseDto(Integer id, String seasonName, LocalDate startDate, LocalDate endDate) {
+        this.id = id;
         this.seasonName = seasonName;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -22,6 +24,7 @@ public class SeasonGetResponseDto {
 
     public static SeasonGetResponseDto from(Season season) {
         return SeasonGetResponseDto.builder()
+                .id(season.getId())
                 .seasonName(season.getSeasonName())
                 .startDate(season.getStartDate())
                 .endDate(season.getEndDate())
@@ -30,6 +33,7 @@ public class SeasonGetResponseDto {
 
     public SeasonGetResponseVo toVo() {
         return SeasonGetResponseVo.builder()
+                .id(id)
                 .seasonName(seasonName)
                 .startDate(startDate)
                 .endDate(endDate)
