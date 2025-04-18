@@ -1,6 +1,5 @@
 package com.example.shinsekai.batch.deleteCart;
 
-import com.example.shinsekai.batch.bestProduct.domain.PurchaseProductCategory;
 import com.example.shinsekai.cart.entity.Cart;
 import com.example.shinsekai.cart.infrastructure.CartRepository;
 import jakarta.persistence.EntityManagerFactory;
