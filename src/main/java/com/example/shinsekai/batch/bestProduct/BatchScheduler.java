@@ -38,7 +38,7 @@ public class BatchScheduler {
     /*
      * 임시 배치 시간 설정 : 매일 오전 10시마다
      * */
-    @Scheduled(cron = "0 0 10 * * *", initialDelay = 10000)
+    @Scheduled(cron = "0 0 10 * * *")
     public void runCartSoftDeleteJob() {
         String time = LocalDateTime.now().toString();
         try {
