@@ -1,4 +1,4 @@
-package com.example.shinsekai.batch.bestProduct.domain;
+package com.example.shinsekai.batch.bestProduct;
 
 import jakarta.persistence.*;
 import lombok.*;

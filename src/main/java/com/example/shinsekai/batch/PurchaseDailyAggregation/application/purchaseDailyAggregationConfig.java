@@ -1,20 +1,20 @@
-package com.example.shinsekai.batch.bestProduct.application;
+package com.example.shinsekai.batch.PurchaseDailyAggregation.application;
 
-import com.example.shinsekai.batch.bestProduct.domain.BestProduct;
-import com.example.shinsekai.batch.bestProduct.domain.purchaseDailyAggregation;
-import com.example.shinsekai.batch.bestProduct.infrastructure.purchaseDailyAggregationRepository;
+import com.example.shinsekai.batch.PurchaseDailyAggregation.domain.purchaseDailyAggregation;
+import com.example.shinsekai.batch.PurchaseDailyAggregation.infrastructure.purchaseDailyAggregationRepository;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.DuplicateJobException;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -26,43 +26,39 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class BestProductJobConfig {
+public class purchaseDailyAggregationConfig {
 
     private final EntityManagerFactory entityManagerFactory;
     private final purchaseDailyAggregationRepository purchaseDailyAggregationRepository;
-
-    private final int chunkSize = 1000;
+    private final int chunkSize = 1;
 
     // Job 설정
     @Bean
-    public Job bestProductJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws DuplicateJobException {
-        Job job = new JobBuilder("bestProductJob", jobRepository)
-                .start(bestProductStep(jobRepository, transactionManager))
+    public Job purchaseDailyAggregationJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws DuplicateJobException {
+        Job job = new JobBuilder("purchaseDailyAggregationJob", jobRepository)
+                .start(purchaseDailyAggregationStep(jobRepository, transactionManager))
                 .build();
         return job;
     }
 
     // Step 설정
     @Bean
-    public Step bestProductStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("bestProductStep", jobRepository)
+    public Step purchaseDailyAggregationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("purchaseDailyAggregationStep", jobRepository)
                 .<purchaseDailyAggregation, purchaseDailyAggregation>chunk(chunkSize, transactionManager)
-                .reader(purchaseProductReader()) // ItemReader 설정
-                .writer(bestProductWriter()) // ItemWriter 설정
+                .reader(purchaseDailyAggregationReader(null)) // ItemReader 설정
+                .writer(purchaseDailyAggregationWriter(null)) // ItemWriter 설정
                 .transactionManager(transactionManager)
                 .build();
     }
 
     // ItemReader 설정
     @Bean
-    public JpaPagingItemReader<purchaseDailyAggregation> purchaseProductReader() {
+    @StepScope
+    public JpaPagingItemReader<purchaseDailyAggregation> purchaseDailyAggregationReader(@Value("#{jobParameters['aggregationDate']}") LocalDate aggregationDate) {
 
-        LocalDateTime startDate = LocalDate.now().minusDays(6).atStartOfDay();
-        LocalDateTime endDate = LocalDate.now().plusDays(1).atStartOfDay();
-
-//        LocalDateTime endDate = LocalDateTime.now(); // 현재 시각
-//        LocalDateTime startDate = endDate.minusDays(1); // 24시간 전
-
+        LocalDateTime startDate = aggregationDate.atStartOfDay();
+        LocalDateTime endDate = aggregationDate.plusDays(1).atStartOfDay();
         String jpql = String.format(
                 "select new %s(ppl.productCode, ppl.productName, pcl.mainCategoryId, SUM(ppl.quantity)) " +
                         "from PurchaseProductList ppl " +
@@ -74,7 +70,7 @@ public class BestProductJobConfig {
         );
 
         return new JpaPagingItemReaderBuilder<purchaseDailyAggregation>()
-                .name("bestProductReader")
+                .name("purchaseDailyAggregationReader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString(jpql)
                 .parameterValues(Map.of(
@@ -85,16 +81,16 @@ public class BestProductJobConfig {
                 .build();
     }
 
-    // ItemProcessor 설정
-    @Bean
-    public ItemProcessor<purchaseDailyAggregation, BestProduct> itemProcessor() {
-        return new BestProductProcessor();
-    }
-
-
     // ItemWriter 설정
     @Bean
-    public ItemWriter<purchaseDailyAggregation> bestProductWriter() {
-        return purchaseDailyAggregationRepository::saveAll;
+    @StepScope
+    public ItemWriter<purchaseDailyAggregation> purchaseDailyAggregationWriter(@Value("#{jobParameters['aggregationDate']}") LocalDate aggregationDate) {
+
+        return items -> {
+            for (purchaseDailyAggregation item : items) {
+                item.setAggregateAt(aggregationDate);
+            }
+            purchaseDailyAggregationRepository.saveAll(items);
+        };
     }
 }
