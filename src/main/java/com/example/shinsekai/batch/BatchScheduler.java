@@ -1,4 +1,4 @@
-package com.example.shinsekai.batch.PurchaseDailyAggregation;
+package com.example.shinsekai.batch;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -18,6 +18,7 @@ public class BatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job purchaseDailyAggregationJob;
     private final Job purchaseWeeklyAggregationJob;
+    private final Job bestProductJob;
     private final Job cartSoftDeleteJob;
 
 
@@ -37,7 +38,7 @@ public class BatchScheduler {
                     .toJobParameters();
             jobLauncher.run(purchaseDailyAggregationJob, jobParameters);
         } catch (Exception e) {
-            throw new RuntimeException("배치 실행 중 오류 발생", e);
+            throw new RuntimeException("일일 집계 배치 실행 중 오류 발생", e);
         }
     }
 
@@ -59,7 +60,25 @@ public class BatchScheduler {
                     .toJobParameters();
             jobLauncher.run(purchaseWeeklyAggregationJob, jobParameters);
         } catch (Exception e) {
-            throw new RuntimeException("배치 실행 중 오류 발생", e);
+            throw new RuntimeException("주간 집계 배치 실행 중 오류 발생", e);
+        }
+    }
+
+//    @Scheduled(cron = "0/10 * * * * *")
+    @Scheduled(cron = "0/10 * * * * *")
+    @Scheduled(cron = "0 0 12 ? * MON")
+    public void runBestProductJob() {
+        try {
+            LocalDate rankDate = LocalDate.now().minusDays(1); // 집계할 날짜
+            String time = LocalDateTime.now().toString(); // 집계하는 날짜
+
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addString("time", time)
+                    .addLocalDate("rankDate", rankDate)
+                    .toJobParameters();
+            jobLauncher.run(bestProductJob, jobParameters);
+        } catch (Exception e) {
+            throw new RuntimeException("베스트 상품 배치 실행 중 오류 발생", e);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.example.shinsekai.batch.PurchaseDailyAggregation.application;
 
-import com.example.shinsekai.batch.PurchaseDailyAggregation.domain.purchaseDailyAggregation;
-import com.example.shinsekai.batch.PurchaseDailyAggregation.infrastructure.purchaseDailyAggregationRepository;
+import com.example.shinsekai.batch.PurchaseDailyAggregation.domain.PurchaseDailyAggregation;
+import com.example.shinsekai.batch.PurchaseDailyAggregation.infrastructure.PurchaseDailyAggregationRepository;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +26,11 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class purchaseDailyAggregationConfig {
+public class PurchaseDailyAggregationConfig {
 
     private final EntityManagerFactory entityManagerFactory;
-    private final purchaseDailyAggregationRepository purchaseDailyAggregationRepository;
-    private final int chunkSize = 1;
+    private final PurchaseDailyAggregationRepository purchaseDailyAggregationRepository;
+    private final int chunkSize = 1000;
 
     // Job 설정
     @Bean
@@ -45,7 +45,7 @@ public class purchaseDailyAggregationConfig {
     @Bean
     public Step purchaseDailyAggregationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("purchaseDailyAggregationStep", jobRepository)
-                .<purchaseDailyAggregation, purchaseDailyAggregation>chunk(chunkSize, transactionManager)
+                .<PurchaseDailyAggregation, PurchaseDailyAggregation>chunk(chunkSize, transactionManager)
                 .reader(purchaseDailyAggregationReader(null)) // ItemReader 설정
                 .writer(purchaseDailyAggregationWriter(null)) // ItemWriter 설정
                 .transactionManager(transactionManager)
@@ -55,7 +55,7 @@ public class purchaseDailyAggregationConfig {
     // ItemReader 설정
     @Bean
     @StepScope
-    public JpaPagingItemReader<purchaseDailyAggregation> purchaseDailyAggregationReader(@Value("#{jobParameters['aggregationDate']}") LocalDate aggregationDate) {
+    public JpaPagingItemReader<PurchaseDailyAggregation> purchaseDailyAggregationReader(@Value("#{jobParameters['aggregationDate']}") LocalDate aggregationDate) {
 
         LocalDateTime startDate = aggregationDate.atStartOfDay();
         LocalDateTime endDate = aggregationDate.plusDays(1).atStartOfDay();
@@ -66,10 +66,10 @@ public class purchaseDailyAggregationConfig {
                         "where ppl.createdAt >= :startDate and ppl.createdAt < :endDate " +
                         "group by pcl.mainCategoryId, ppl.productCode, ppl.productName  " +
                         "order by pcl.mainCategoryId, ppl.productCode asc",
-                purchaseDailyAggregation.class.getName()
+                PurchaseDailyAggregation.class.getName()
         );
 
-        return new JpaPagingItemReaderBuilder<purchaseDailyAggregation>()
+        return new JpaPagingItemReaderBuilder<PurchaseDailyAggregation>()
                 .name("purchaseDailyAggregationReader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString(jpql)
@@ -84,10 +84,10 @@ public class purchaseDailyAggregationConfig {
     // ItemWriter 설정
     @Bean
     @StepScope
-    public ItemWriter<purchaseDailyAggregation> purchaseDailyAggregationWriter(@Value("#{jobParameters['aggregationDate']}") LocalDate aggregationDate) {
+    public ItemWriter<PurchaseDailyAggregation> purchaseDailyAggregationWriter(@Value("#{jobParameters['aggregationDate']}") LocalDate aggregationDate) {
 
         return items -> {
-            for (purchaseDailyAggregation item : items) {
+            for (PurchaseDailyAggregation item : items) {
                 item.setAggregateAt(aggregationDate);
             }
             purchaseDailyAggregationRepository.saveAll(items);

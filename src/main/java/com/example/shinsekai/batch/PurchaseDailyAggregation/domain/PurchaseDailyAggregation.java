@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @ToString
 @NoArgsConstructor
 @Entity
-public class purchaseDailyAggregation {
+public class PurchaseDailyAggregation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +24,7 @@ public class purchaseDailyAggregation {
     private LocalDate aggregateAt;
 
     @Builder
-    public purchaseDailyAggregation(String productCode, String productName, Long mainCategoryId, Long quantity) {
+    public PurchaseDailyAggregation(String productCode, String productName, Long mainCategoryId, Long quantity) {
         this.productCode = productCode;
         this.productName = productName;
         this.mainCategoryId = mainCategoryId;

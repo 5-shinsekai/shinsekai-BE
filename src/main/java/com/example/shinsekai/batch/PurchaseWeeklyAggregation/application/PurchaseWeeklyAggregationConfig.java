@@ -1,8 +1,8 @@
 package com.example.shinsekai.batch.PurchaseWeeklyAggregation.application;
 
-import com.example.shinsekai.batch.PurchaseDailyAggregation.domain.purchaseDailyAggregation;
-import com.example.shinsekai.batch.PurchaseWeeklyAggregation.domain.purchaseWeeklyAggregation;
-import com.example.shinsekai.batch.PurchaseWeeklyAggregation.infrastructure.purchaseWeeklyAggregationRepository;
+import com.example.shinsekai.batch.PurchaseDailyAggregation.domain.PurchaseDailyAggregation;
+import com.example.shinsekai.batch.PurchaseWeeklyAggregation.domain.PurchaseWeeklyAggregation;
+import com.example.shinsekai.batch.PurchaseWeeklyAggregation.infrastructure.PurchaseWeeklyAggregationRepository;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,16 +23,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class purchaseWeeklyAggregationConfig {
+public class PurchaseWeeklyAggregationConfig {
 
     private final EntityManagerFactory entityManagerFactory;
-    private final purchaseWeeklyAggregationRepository purchaseWeeklyAggregationRepository;
+    private final PurchaseWeeklyAggregationRepository purchaseWeeklyAggregationRepository;
 
     private final int chunkSize = 1000;
 
@@ -49,7 +48,7 @@ public class purchaseWeeklyAggregationConfig {
     @Bean
     public Step purchaseWeeklyAggregationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("purchaseWeeklyAggregationStep", jobRepository)
-                .<purchaseDailyAggregation, purchaseWeeklyAggregation>chunk(chunkSize, transactionManager)
+                .<PurchaseDailyAggregation, PurchaseWeeklyAggregation>chunk(chunkSize, transactionManager)
                 .reader(purchaseWeeklyAggregationReader(null,null)) // ItemReader 설정
                 .processor(purchaseWeeklyAggregationProcessor(null, null))
                 .writer(purchaseWeeklyAggregationWriter()) // ItemWriter 설정
@@ -60,7 +59,7 @@ public class purchaseWeeklyAggregationConfig {
     // ItemReader 설정
     @Bean
     @StepScope
-    public JpaPagingItemReader<purchaseDailyAggregation> purchaseWeeklyAggregationReader(
+    public JpaPagingItemReader<PurchaseDailyAggregation> purchaseWeeklyAggregationReader(
             @Value("#{jobParameters['startDate']}") LocalDate startDate,
             @Value("#{jobParameters['endDate']}") LocalDate endDate
     ) {
@@ -71,10 +70,10 @@ public class purchaseWeeklyAggregationConfig {
                         "WHERE p.aggregateAt >= :startDate AND p.aggregateAt <= :endDate " +
                         "GROUP BY p.productCode, p.mainCategoryId, p.productName " +
                         "ORDER BY p.productCode",
-                purchaseDailyAggregation.class.getName()
+                PurchaseDailyAggregation.class.getName()
         );
 
-        return new JpaPagingItemReaderBuilder<purchaseDailyAggregation>()
+        return new JpaPagingItemReaderBuilder<PurchaseDailyAggregation>()
                 .name("purchaseWeeklyAggregationReader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString(jpql)
@@ -88,11 +87,11 @@ public class purchaseWeeklyAggregationConfig {
 
     @Bean
     @StepScope
-    public ItemProcessor<purchaseDailyAggregation, purchaseWeeklyAggregation> purchaseWeeklyAggregationProcessor(
+    public ItemProcessor<PurchaseDailyAggregation, PurchaseWeeklyAggregation> purchaseWeeklyAggregationProcessor(
             @Value("#{jobParameters['startDate']}") LocalDate startDate,
             @Value("#{jobParameters['endDate']}") LocalDate endDate
     ) {
-        return daily -> purchaseWeeklyAggregation.builder()
+        return daily -> PurchaseWeeklyAggregation.builder()
                 .productCode(daily.getProductCode())
                 .productName(daily.getProductName())
                 .mainCategoryId(daily.getMainCategoryId())
@@ -105,7 +104,7 @@ public class purchaseWeeklyAggregationConfig {
     // ItemWriter 설정
     @Bean
     @StepScope
-    public ItemWriter<purchaseWeeklyAggregation> purchaseWeeklyAggregationWriter() {
+    public ItemWriter<PurchaseWeeklyAggregation> purchaseWeeklyAggregationWriter() {
         return purchaseWeeklyAggregationRepository::saveAll;
     }
 }
