@@ -44,7 +44,8 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
         List<ProductOptionList> optionLists = productOptionListRepository.findAllByProductCode(productCode);
-        return ProductResponseDto.from(product, optionLists);
+        boolean isBest = bestProductRepository.existsByProductCode(productCode);
+        return ProductResponseDto.from(product, optionLists, isBest);
     }
 
     //  ProductCode 페이징 조회
@@ -60,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
         boolean isBest = bestProductRepository.existsByProductCode(productCode);
-        return ProductOutlineResponseDto.from(product,isBest);
+        return ProductOutlineResponseDto.from(product, isBest);
     }
 
     //  상품 수정

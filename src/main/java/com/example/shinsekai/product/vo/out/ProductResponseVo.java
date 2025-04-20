@@ -23,6 +23,8 @@ public class ProductResponseVo {
     private boolean isEngraving;
     private int discountRate;
     private List<Long> productOptionIds;
+    private boolean isNew;
+    private boolean isBest;
 
     @Builder
     public ProductResponseVo(
@@ -37,7 +39,9 @@ public class ProductResponseVo {
             boolean isFrozen,
             boolean isEngraving,
             int discountRate,
-            List<Long> productOptionIds) {
+            List<Long> productOptionIds,
+            boolean isNew,
+            boolean isBest) {
         this.productCode = productCode;
         this.productName = productName;
         this.productPrice = productPrice;
@@ -50,5 +54,7 @@ public class ProductResponseVo {
         this.isEngraving = isEngraving;
         this.discountRate = discountRate;
         this.productOptionIds = productOptionIds;
+        this.isNew = isNew;
+        this.isBest = isBest;
     }
 }
