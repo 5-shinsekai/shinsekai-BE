@@ -70,6 +70,14 @@ public class RedisProvider {
         );
     }
 
+    public void setSignInData(String state, String signInData) {
+        redisTemplate.opsForValue().set(state, signInData);
+    }
+
+    public String getSignInData(String state) {
+        return redisTemplate.opsForValue().get(state);
+    }
+
     public Long getExpire(String key) {
         return redisTemplate.getExpire(key, TimeUnit.MILLISECONDS);
     }
