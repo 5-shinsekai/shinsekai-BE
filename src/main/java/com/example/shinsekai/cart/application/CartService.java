@@ -5,12 +5,17 @@ import com.example.shinsekai.cart.dto.in.CartCheckedUpdateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartDeleteRequestDto;
 import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
+import com.example.shinsekai.cart.dto.out.CartGetDetailResponseDto;
 import com.example.shinsekai.cart.dto.out.CartGroupedByProductTypeDto;
+import com.example.shinsekai.cart.dto.out.CartUuidGroupedByProductTypeDto;
+import com.example.shinsekai.cart.vo.out.CartGetDetailResponseVo;
 
 import java.util.List;
 
 public interface CartService {
-    CartGroupedByProductTypeDto getAllCarts(String memberUuid); // memberUuid받아오기
+    CartGroupedByProductTypeDto getAllCarts(String memberUuid);
+    CartUuidGroupedByProductTypeDto getAllCartsUuid(String memberUuid);
+    CartGetDetailResponseDto getAllCartsDetail(String memberUuid);
     void createCart(CartCreateRequestDto cartCreateRequestDto);
     void updateCart(CartUpdateRequestDto cartUpdateRequestDto);
     void deleteAllCart(String memberUuid);

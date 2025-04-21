@@ -1,7 +1,5 @@
 package com.example.shinsekai.cart.dto.out;
 
-import com.example.shinsekai.cart.entity.Cart;
-import com.example.shinsekai.cart.vo.out.CartGetResponseVo;
 import com.example.shinsekai.cart.vo.out.CartGroupedByProductTypeVo;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +18,15 @@ public class CartGroupedByProductTypeDto {
         this.frozenProducts = frozenProducts;
     }
 
-    public CartGroupedByProductTypeVo toVo(){
+    public static CartGroupedByProductTypeDto ofGrouped(List<CartGetResponseDto> frozen,
+                                                        List<CartGetResponseDto> ordinary) {
+        return CartGroupedByProductTypeDto.builder()
+                .frozenProducts(frozen)
+                .ordinaryProducts(ordinary)
+                .build();
+    }
+
+    public CartGroupedByProductTypeVo toVo() {
         return CartGroupedByProductTypeVo.builder()
                 .ordinaryProducts(ordinaryProducts.stream()
                         .map(CartGetResponseDto::toVo).toList())

@@ -1,17 +1,19 @@
 package com.example.shinsekai.batch;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class BatchScheduler {
@@ -19,7 +21,7 @@ public class BatchScheduler {
     private final Job purchaseDailyAggregationJob;
     private final Job purchaseWeeklyAggregationJob;
     private final Job bestProductJob;
-    private final Job cartSoftDeleteJob;
+    private final @Lazy Job cartSoftDeleteJob;
 
 
 //    @Scheduled(cron = "0/10 * * * * *")
@@ -76,9 +78,9 @@ public class BatchScheduler {
     }
 
     /*
-     * 임시 배치 시간 설정 : 매일 오전 10시마다
+     * 임시 배치 시간 설정 : 매일 오전 4시마다
      * */
-    @Scheduled(cron = "0 0 10 * * *")
+    @Scheduled(cron = "0 0 04 * * *")
     public void runCartSoftDeleteJob() {
         String time = LocalDateTime.now().toString();
         try {
@@ -87,9 +89,9 @@ public class BatchScheduler {
                     .addString("jobName", "cartSoftDeleteJob")
                     .toJobParameters();
             jobLauncher.run(cartSoftDeleteJob, jobParameters);
+            log.info("장바구니 자동 삭제 배치 실행 성공");
         } catch (Exception e) {
-            throw new RuntimeException("배치 실행 중 오류 발생", e);
+            throw new RuntimeException("장바구니 자동 삭제 배치 실행 중 오류 발생", e);
         }
     }
 }
-

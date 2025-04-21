@@ -11,10 +11,16 @@ import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
     List<Cart> findAllByMemberUuidAndCartUuidInAndIsDeletedFalse(String memberUuid, List<String> cartUuids);
+
     Optional<Cart> findByMemberUuidAndCartUuidAndIsDeletedFalse(String memberUuid, String cartUuid);
+
     List<Cart> findAllByMemberUuidAndProductCodeAndIsDeletedFalse(String memberUuid, String productCode);
+
     List<Cart> findAllByMemberUuidAndIsDeletedFalse(String memberUuid);
+
     List<Cart> findAllByMemberUuidAndCheckedTrueAndIsDeletedFalse(String memberUuid);
+
+    Optional<Cart> findByCartUuidAndIsDeletedFalse(String cartUuid);
 
 
     @Modifying
@@ -31,8 +37,8 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query("SELECT c FROM Cart c WHERE c.memberUuid = :memberUuid AND c.productCode = :productCode " +
             "AND c.productOptionListId = :productOptionListId AND c.isDeleted = false")
     Optional<Cart> findCartByMemberAndProductAndOption(@Param("memberUuid") String memberUuid,
-                                  @Param("productCode") String productCode,
-                                  @Param("productOptionListId") Long productOptionListId);
+                                                       @Param("productCode") String productCode,
+                                                       @Param("productOptionListId") Long productOptionListId);
 
     @Modifying
     @Query("UPDATE Cart c SET c.checked = :checked " +
