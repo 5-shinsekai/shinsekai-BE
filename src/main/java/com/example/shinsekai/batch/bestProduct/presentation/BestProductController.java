@@ -23,7 +23,7 @@ public class BestProductController {
 
     @Operation(summary = "카테고리별 베스트 상품 조회", description = "카테고리별로 상품을 반환합니다.")
     @GetMapping
-    public BaseResponseEntity<List<BestProductResponseDto>> getBestProductsByCategory(
+    public BaseResponseEntity<List<String>> getBestProductsByCategory(
             @RequestParam Long mainCategoryId
     ) {
         return new BaseResponseEntity<>(bestProductService.getProductRankByMainCategory(mainCategoryId));

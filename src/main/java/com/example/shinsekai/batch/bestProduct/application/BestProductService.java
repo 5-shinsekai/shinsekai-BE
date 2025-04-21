@@ -13,9 +13,7 @@ public class BestProductService {
 
     private final BestProductRepository bestProductRepository;
 
-    public List<BestProductResponseDto> getProductRankByMainCategory(Long mainCategoryId) {
-        return bestProductRepository.findByMainCategoryId(mainCategoryId).stream()
-                .map(BestProductResponseDto::from)
-                .toList();
+    public List<String> getProductRankByMainCategory(Long mainCategoryId) {
+        return bestProductRepository.findProductCodesByMainCategoryOrderedByRank(mainCategoryId);
     }
 }
