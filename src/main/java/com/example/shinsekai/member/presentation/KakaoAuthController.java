@@ -13,8 +13,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,8 +31,10 @@ import java.util.UUID;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+@Slf4j
+@Tag(name = "Kakao", description = "카카오 소셜 로그인관련 API")
 @RestController
-@RequestMapping("/api/v1/social")
+@RequestMapping("/api/v1/social/kakao")
 @RequiredArgsConstructor
 public class KakaoAuthController {
 
@@ -43,9 +47,9 @@ public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
     private final RedisProvider redisProvider;
 
-    @Operation(summary = "소셜 로그인 요청")
+    @Operation(summary = "카카오 로그인 요청")
     @GetMapping("/login")
-    public ResponseEntity<Void> requestSocialLogin(@RequestParam String callbackUrl) throws UnsupportedEncodingException {
+    public ResponseEntity<Void> requestSocialLogin(@RequestParam String callbackUrl)throws UnsupportedEncodingException {
 
         String rawState = UUID.randomUUID() + "|" + callbackUrl;
         String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8.toString());
@@ -63,7 +67,7 @@ public class KakaoAuthController {
         return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
     }
 
-    @Operation(summary = "카카오 소셜 로그인")
+    @Operation(summary = "카카오 로그인 후처리")
     @GetMapping("/callback")
     public ResponseEntity<Void> kakaoCallback(HttpServletRequest request) throws UnsupportedEncodingException {
 
@@ -79,20 +83,12 @@ public class KakaoAuthController {
         // 2. 토큰으로 사용자 정보 요청
         KakaoUserResponseDto userResponseDto = kakaoAuthService.getUserInfo(tokenResponse.getAccessToken());
 
-        // 3. (스타벅스) 토큰 생성
-        SignInResponseDto signInResponseDto = kakaoAuthService.socialLogin(userResponseDto);
+        log.info("userResponseDto {}", userResponseDto);
 
-        // 생성된 멤버 정보 스트링으로 바꾸기
-        String json;
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            json = objectMapper.writeValueAsString(signInResponseDto);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        // 스트링으로 바꿨으면 redis에 저장 key: uuid / value: 스트링으로 바뀐 멤버 정보
-        redisProvider.setSignInData(uuid, json);
+        // 3. 사용자 인증
+        //    (스타벅스) AccessToken&RefreshToken 생성
+        //    SecurityContextHolder에 회원 정보 저장, 회원 정보(토큰 포함) Redis에 저장
+        kakaoAuthService.socialLogin(userResponseDto, uuid);
 
         // 클라이언트로 리다이렉트하기 ( + searchParam: state )
         String callbackUrl = url
@@ -120,17 +116,17 @@ public class KakaoAuthController {
     }
 
     @Operation(summary = "카카오 소셜 회원으로 등록")
-    @PutMapping("/update")
+    @PutMapping("/register")
 
-    public BaseResponseEntity<Void> updateSocialMember(
+    public BaseResponseEntity<Void> registerSocialMember(
             @RequestBody SocialMemberUpdateRequestVo socialMemberUpdateRequestVo) {
 
-        kakaoAuthService.updateSocialMember(SocialMemberUpdateRequestDto.from(socialMemberUpdateRequestVo));
+        kakaoAuthService.registerSocialMember(SocialMemberUpdateRequestDto.from(socialMemberUpdateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "로그인 후 카카오 소셜 회원으로 등록")
-    @PutMapping("/login-and-update")
+    @PutMapping("/login-and-register")
     public BaseResponseEntity<SignInResponseDto> loginAndUpdateSocialMember(
             @RequestBody SocialMemberUpdateRequestVo requestVo) {
         SignInResponseDto signInResponseDto

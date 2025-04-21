@@ -142,8 +142,6 @@ public class AddressServiceImpl implements AddressService{
             throw new BaseException(BaseResponseStatus.FAILED_TO_DELETE_MAIN_ADDRESS);
         }
 
-        log.info("address {}", address.toString());
-
         address.softDeleted();
     }
 }
