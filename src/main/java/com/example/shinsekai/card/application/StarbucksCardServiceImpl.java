@@ -2,6 +2,7 @@ package com.example.shinsekai.card.application;
 
 import com.example.shinsekai.card.dto.in.MemberStarbucksListDto;
 import com.example.shinsekai.card.dto.in.StarbucksCardRequestDto;
+import com.example.shinsekai.card.dto.in.TransferStarbucksCardDto;
 import com.example.shinsekai.card.dto.in.UseStarbucksCardRequestDto;
 import com.example.shinsekai.card.dto.out.StarbucksCardResponseDto;
 import com.example.shinsekai.card.entity.MemberStarbucksCardList;
@@ -10,17 +11,12 @@ import com.example.shinsekai.card.infrastructure.MemberStarbucksListRepository;
 import com.example.shinsekai.card.infrastructure.StarbucksCardRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
-import com.example.shinsekai.common.jwt.JwtTokenProvider;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -118,5 +114,28 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
         ).orElseThrow(()->new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD))
          .getStarbucksCard().chargeRemainAmount(useStarbucksCardRequestDto.getPrice());
     }
+
+    @Override
+    @Transactional
+    public void transferRemainAmount(TransferStarbucksCardDto dto) {
+        StarbucksCard source =
+                memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+                        dto.getSourceMemberStarbucksCardUuid(),dto.getMemeberUuid()
+                ).orElseThrow(()->new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getStarbucksCard();
+
+        StarbucksCard target =
+                memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+                        dto.getTargetMemberStarbucksCardUuid(),dto.getMemeberUuid()
+                ).orElseThrow(()->new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getStarbucksCard();
+
+        //이전 할 잔액 유효성 검사
+        if(source.getRemainAmount() < dto.getRemainAmount())
+            throw new BaseException(BaseResponseStatus.NO_CHARGE_STARBUCKS_CARD);
+
+        target.chargeRemainAmount(dto.getRemainAmount());
+        source.useRemainAmount(dto.getRemainAmount());
+    }
+
+
 }
 
