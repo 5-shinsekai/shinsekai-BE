@@ -1,7 +1,6 @@
 package com.example.shinsekai.batch.bestProduct.presentation;
 
 import com.example.shinsekai.batch.bestProduct.application.BestProductService;
-import com.example.shinsekai.batch.bestProduct.dto.out.BestProductResponseDto;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
