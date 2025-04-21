@@ -24,7 +24,7 @@ public class BatchScheduler {
 
 
 //    @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0 0 11 * * *")
+    @Scheduled(cron = "0 0 16 * * *")
     public void runPurchaseDailyAggregationJob() {
         try {
             LocalDate aggregationDate = LocalDate.now().minusDays(1); // 집계할 날짜
@@ -41,7 +41,7 @@ public class BatchScheduler {
     }
 
 //    @Scheduled(cron = "0/15 * * * * *")
-    @Scheduled(cron = "0 30 11 ? * MON")
+    @Scheduled(cron = "0 10 16 * * MON")
     public void runPurchaseWeeklyAggregationJob() {
         try {
             LocalDate startDate = LocalDate.now().minusDays(7); // 집계할 날짜
@@ -59,8 +59,8 @@ public class BatchScheduler {
         }
     }
 
-//    @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0 0 12 ? * MON")
+//    @Scheduled(cron = "0/30 * * * * *")
+    @Scheduled(cron = "0 20 16 ? * MON")
     public void runBestProductJob() {
         try {
             LocalDate rankDate = LocalDate.now().minusDays(1); // 집계할 날짜

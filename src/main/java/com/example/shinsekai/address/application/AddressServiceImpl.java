@@ -28,7 +28,7 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public List<AddressResponseDto> getAddressList(String memberUuid) {
-        return addressRepository.findActiveByMemberUuid(
+        return addressRepository.findActiveMemberByMemberUuid(
                         memberUuid,
                         Sort.by(Sort.Order.desc("isMainAddress"), Sort.Order.desc("createdAt"))
                 )
@@ -56,7 +56,7 @@ public class AddressServiceImpl implements AddressService{
 
         // 최초 배송지인지 검사
         int activeAddressCount = addressRepository.countActiveByMemberUuid(addressCreateRequestDto.getMemberUuid());
-        boolean isMainAddress = false;
+        Boolean isMainAddress = false;
         // 최초 등록인 경우
         if (activeAddressCount == 0) {
             isMainAddress = true;
@@ -120,7 +120,6 @@ public class AddressServiceImpl implements AddressService{
             isMainAddress = true;
         }
 
-
         addressRepository.save(addressUpdateRequestDto.toEntity(address.getId(), isMainAddress));
 
     }
@@ -139,7 +138,7 @@ public class AddressServiceImpl implements AddressService{
         Address address = addressRepository.findByMemberUuidAndAddressUuid(memberUuid, addressUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
 
-        if (address.getIsMainAddress() == true) {
+        if (address.getIsMainAddress()) {
             throw new BaseException(BaseResponseStatus.FAILED_TO_DELETE_MAIN_ADDRESS);
         }
 

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
+import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
@@ -19,6 +20,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -39,7 +41,7 @@ public class ProductScoreStepConfig {
                 .dataSource(dataSource) // dataSource만 설정
                 .rowMapper(new ProductScoreStepConfig.ProductScoreRowMapper())
                 .queryProvider(productScoreQueryProvider())
-                .parameterValues(Map.of("1", rankDate))
+                .parameterValues(Map.of("rankDate", rankDate))
                 .build();
     }
 
@@ -64,11 +66,15 @@ public class ProductScoreStepConfig {
             aggregate_at_end
       FROM purchase_weekly_aggregation pwa
       LEFT JOIN product_like pl ON pl.product_code = pwa.product_code
-      WHERE pwa.aggregate_at_end = ?
+      WHERE pwa.aggregate_at_end = :rankDate
       GROUP BY pwa.main_category_id, pwa.product_code, pwa.product_name) AS sub
 """);
-        factory.setSortKey("product_score");
+        Map<String, Order> sortKeys = new LinkedHashMap<>();
+        sortKeys.put("aggregate_at_end", Order.ASCENDING);
+        sortKeys.put("main_category_id", Order.ASCENDING);
+        sortKeys.put("product_code", Order.ASCENDING);
 
+        factory.setSortKeys(sortKeys);
 
         return factory.getObject();
     }
