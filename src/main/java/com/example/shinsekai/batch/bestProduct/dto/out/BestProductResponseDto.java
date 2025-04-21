@@ -1,3 +1,4 @@
+/*
 package com.example.shinsekai.batch.bestProduct.dto.out;
 
 import com.example.shinsekai.batch.bestProduct.domain.BestProduct;
@@ -25,3 +26,4 @@ public class BestProductResponseDto {
                 .build();
     }
 }
+*/
