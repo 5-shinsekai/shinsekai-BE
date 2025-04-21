@@ -110,7 +110,6 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
         redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), accessToken, accessExpireTime);
         redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
 
-        log.info("socialLogin_3");
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(member.getMemberUuid());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -137,6 +136,8 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
         Member member = memberRepository.findByLoginId(socialMemberUpdateRequestDto.getLoginId())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
 
+        log.info("loginAndUpdateSocialMember_1");
+
         Authentication authentication = jwtTokenProvider.authenticate(member, socialMemberUpdateRequestDto.getPassword());
         if (!authentication.isAuthenticated()) {
             throw new BaseException(BaseResponseStatus.FAILED_TO_LOGIN);
@@ -149,6 +150,17 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
                 null,
                 userDetails.getAuthorities()
         );
+
+        String accessToken = jwtTokenProvider.generateToken(TokenType.ACCESS, member);
+        String refreshToken = jwtTokenProvider.generateToken(TokenType.REFRESH, member);
+
+        log.info("loginAndUpdateSocialMember_2");
+
+        redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), accessToken, accessExpireTime);
+        redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
+
+        log.info("loginAndUpdateSocialMember_3");
+
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         // 소셜 계정으로 전환
