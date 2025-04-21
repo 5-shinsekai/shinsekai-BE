@@ -23,7 +23,7 @@ public class BatchScheduler {
 
 
 //    @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0 0 16 * * *")
+    @Scheduled(cron = "0 34 21 * * *")
     public void runPurchaseDailyAggregationJob() {
         try {
             LocalDate aggregationDate = LocalDate.now().minusDays(1); // 집계할 날짜
