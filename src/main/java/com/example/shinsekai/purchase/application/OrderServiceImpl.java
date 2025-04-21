@@ -58,10 +58,10 @@ public class OrderServiceImpl implements OrderService{
                 , cancelOrderRequestDto.getRefundAmount(),cancelOrderRequestDto.getMemberUuid()));
 
         //스타벅스 잔액 충전
-        starbucksCardService.useRemainAmount(UseStarbucksCardRequestDto.builder()
+        starbucksCardService.chargeRemainAmount(UseStarbucksCardRequestDto.builder()
                 .memberStarbucksCardUuid(cancelOrderRequestDto.getMemberStarbucksCardUuid())
                 .memberUuid(cancelOrderRequestDto.getMemberUuid())
-                .price(cancelOrderRequestDto.getRefundAmount() * -1)
+                .price(cancelOrderRequestDto.getRefundAmount())
                 .build());
 
         //구매 취소
