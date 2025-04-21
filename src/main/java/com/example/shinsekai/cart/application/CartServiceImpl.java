@@ -4,8 +4,7 @@ import com.example.shinsekai.cart.dto.in.CartCheckedUpdateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartDeleteRequestDto;
 import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
-import com.example.shinsekai.cart.dto.out.CartGetResponseDto;
-import com.example.shinsekai.cart.dto.out.CartGroupedByProductTypeDto;
+import com.example.shinsekai.cart.dto.out.*;
 import com.example.shinsekai.cart.entity.Cart;
 import com.example.shinsekai.cart.infrastructure.CartRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
@@ -92,10 +91,32 @@ public class CartServiceImpl implements CartService {
                 .map(CartGetResponseDto::from)
                 .toList();
 
-        return CartGroupedByProductTypeDto.builder()
-                .frozenProducts(frozen)
-                .ordinaryProducts(ordinary)
-                .build();
+        return CartGroupedByProductTypeDto.ofGrouped(frozen, ordinary);
+    }
+
+    @Override
+    public CartUuidGroupedByProductTypeDto getAllCartsUuid(String memberUuid) {
+        List<Cart> cartList = cartRepository.findAllByMemberUuidAndIsDeletedFalse(memberUuid);
+
+        List<CartGetUuidResponseDto> frozen = cartList.stream()
+                .filter(Cart::getIsFrozen)
+                .map(CartGetUuidResponseDto::from)
+                .toList();
+
+        List<CartGetUuidResponseDto> ordinary = cartList.stream()
+                .filter(cart -> !cart.getIsFrozen())
+                .map(CartGetUuidResponseDto::from)
+                .toList();
+
+        return CartUuidGroupedByProductTypeDto.ofGrouped(frozen, ordinary);
+    }
+
+    @Override
+    public CartGetDetailResponseDto getAllCartsDetail(String cartUuid) {
+        return CartGetDetailResponseDto.from(
+                cartRepository.findByCartUuidAndIsDeletedFalse(cartUuid).orElseThrow(
+                        () -> new BaseException(BaseResponseStatus.INVALID_CART_ACCESS))
+        );
     }
 
     @Override
@@ -112,10 +133,7 @@ public class CartServiceImpl implements CartService {
                 .map(CartGetResponseDto::from)
                 .toList();
 
-        return CartGroupedByProductTypeDto.builder()
-                .frozenProducts(frozen)
-                .ordinaryProducts(ordinary)
-                .build();
+        return CartGroupedByProductTypeDto.ofGrouped(frozen, ordinary);
     }
 
     @Override
