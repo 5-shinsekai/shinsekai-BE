@@ -110,6 +110,7 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
         redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), accessToken, accessExpireTime);
         redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
 
+        log.info("socialLogin_3");
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(member.getMemberUuid());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -117,6 +118,9 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
                 null,
                 userDetails.getAuthorities()
         );
+
+        log.info("socialLogin_4");
+
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         return SignInResponseDto.of(member, accessToken, refreshToken);
