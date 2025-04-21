@@ -4,7 +4,6 @@ import com.example.shinsekai.option.entity.ProductOptionList;
 import com.example.shinsekai.product.entity.Product;
 import com.example.shinsekai.product.entity.ProductStatus;
 import com.example.shinsekai.product.vo.out.ProductResponseVo;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +11,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponseDto {
 
@@ -29,9 +26,43 @@ public class ProductResponseDto {
     private boolean isEngraving;
     private int discountRate;
     private List<Long> productOptionIds;
+    private boolean isNew;
+    private boolean isBest;
 
 
-    public static ProductResponseDto from(Product product, List<ProductOptionList> productOptionLists) {
+    @Builder
+    public ProductResponseDto(String productCode,
+                              String productName,
+                              double productPrice,
+                              ProductStatus productStatus,
+                              String productSummary,
+                              String contentImages,
+                              String thumbnailUrl,
+                              int userPurchaseLimit,
+                              boolean isFrozen,
+                              boolean isEngraving,
+                              int discountRate,
+                              List<Long> productOptionIds,
+                              boolean isNew,
+                              boolean isBest) {
+        this.productCode = productCode;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productStatus = productStatus;
+        this.productSummary = productSummary;
+        this.contentImages = contentImages;
+        this.thumbnailUrl = thumbnailUrl;
+        this.userPurchaseLimit = userPurchaseLimit;
+        this.isFrozen = isFrozen;
+        this.isEngraving = isEngraving;
+        this.discountRate = discountRate;
+        this.productOptionIds = productOptionIds;
+        this.isNew = isNew;
+        this.isBest = isBest;
+    }
+
+
+    public static ProductResponseDto from(Product product, List<ProductOptionList> productOptionLists, boolean isBest) {
         List<Long> productOptionIds = productOptionLists.stream()
                 .map(ProductOptionList::getId)
                 .toList();
@@ -49,6 +80,8 @@ public class ProductResponseDto {
                 .isEngraving(product.isEngraving())
                 .discountRate(product.getDiscountRate())
                 .productOptionIds(productOptionIds)
+                .isNew(product.isNewProduct())
+                .isBest(isBest)
                 .build();
     }
 
@@ -82,6 +115,8 @@ public class ProductResponseDto {
                 .isEngraving(isEngraving)
                 .discountRate(discountRate)
                 .productOptionIds(productOptionIds)
+                .isNew(isNew)
+                .isBest(isBest)
                 .build();
     }
 }

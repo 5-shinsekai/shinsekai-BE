@@ -1,6 +1,5 @@
 package com.example.shinsekai.product.vo.out;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
