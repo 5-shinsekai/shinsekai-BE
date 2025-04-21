@@ -5,6 +5,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class BatchScheduler {
     private final Job purchaseDailyAggregationJob;
     private final Job purchaseWeeklyAggregationJob;
     private final Job bestProductJob;
-    private final Job cartSoftDeleteJob;
+    private final @Lazy Job cartSoftDeleteJob;
 
 
 //    @Scheduled(cron = "0/10 * * * * *")
@@ -76,9 +77,9 @@ public class BatchScheduler {
     }
 
     /*
-     * 임시 배치 시간 설정 : 매일 오전 10시마다
+     * 임시 배치 시간 설정 : 매일 오전 4시마다
      * */
-    @Scheduled(cron = "0 0 10 * * *")
+    @Scheduled(cron = "0 0 04 * * *")
     public void runCartSoftDeleteJob() {
         String time = LocalDateTime.now().toString();
         try {
@@ -92,4 +93,3 @@ public class BatchScheduler {
         }
     }
 }
-
