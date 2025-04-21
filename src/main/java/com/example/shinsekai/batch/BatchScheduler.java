@@ -1,6 +1,7 @@
 package com.example.shinsekai.batch;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class BatchScheduler {
@@ -88,8 +89,9 @@ public class BatchScheduler {
                     .addString("jobName", "cartSoftDeleteJob")
                     .toJobParameters();
             jobLauncher.run(cartSoftDeleteJob, jobParameters);
+            log.info("장바구니 자동 삭제 배치 실행 성공");
         } catch (Exception e) {
-            throw new RuntimeException("배치 실행 중 오류 발생", e);
+            throw new RuntimeException("장바구니 자동 삭제 배치 실행 중 오류 발생", e);
         }
     }
 }
