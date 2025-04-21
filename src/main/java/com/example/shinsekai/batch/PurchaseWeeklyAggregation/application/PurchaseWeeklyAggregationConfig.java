@@ -38,10 +38,9 @@ public class PurchaseWeeklyAggregationConfig {
     // Job 설정
     @Bean
     public Job purchaseWeeklyAggregationJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws DuplicateJobException {
-        Job job = new JobBuilder("purchaseWeeklyAggregationJob", jobRepository)
+        return new JobBuilder("purchaseWeeklyAggregationJob", jobRepository)
                 .start(purchaseWeeklyAggregationStep(jobRepository, transactionManager))
                 .build();
-        return job;
     }
 
     // Step 설정
@@ -66,7 +65,7 @@ public class PurchaseWeeklyAggregationConfig {
 
         String jpql = String.format(
                 "select new %s(p.productCode, p.productName, p.mainCategoryId, SUM(p.quantity)) " +
-                        "FROM purchaseDailyAggregation p " +
+                        "FROM PurchaseDailyAggregation p " +
                         "WHERE p.aggregateAt >= :startDate AND p.aggregateAt <= :endDate " +
                         "GROUP BY p.productCode, p.mainCategoryId, p.productName " +
                         "ORDER BY p.productCode",

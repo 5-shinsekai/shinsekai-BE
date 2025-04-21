@@ -22,11 +22,8 @@ public class BatchScheduler {
     private final Job cartSoftDeleteJob;
 
 
-    /*
-    * 임시 배치 시간 설정 : 매일 오전 10시마다
-    * */
 //    @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0 0 10 * * *")
+    @Scheduled(cron = "0 0 11 * * *")
     public void runPurchaseDailyAggregationJob() {
         try {
             LocalDate aggregationDate = LocalDate.now().minusDays(1); // 집계할 날짜
@@ -42,11 +39,8 @@ public class BatchScheduler {
         }
     }
 
-    /*
-     * 임시 배치 시간 설정 : 매주 월요일 오전 11시마다
-     * */
-//    @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0 0 11 ? * MON")
+//    @Scheduled(cron = "0/15 * * * * *")
+    @Scheduled(cron = "0 30 11 ? * MON")
     public void runPurchaseWeeklyAggregationJob() {
         try {
             LocalDate startDate = LocalDate.now().minusDays(7); // 집계할 날짜
@@ -65,7 +59,6 @@ public class BatchScheduler {
     }
 
 //    @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0/10 * * * * *")
     @Scheduled(cron = "0 0 12 ? * MON")
     public void runBestProductJob() {
         try {

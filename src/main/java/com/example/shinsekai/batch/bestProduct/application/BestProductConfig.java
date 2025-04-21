@@ -20,7 +20,6 @@ import javax.sql.DataSource;
 @Configuration
 public class BestProductConfig {
 
-    private final DataSource dataSource;
     private final BestProductStepConfig bestProductStepConfig;
     private final ProductScoreStepConfig productScoreStepConfig;
     private final int CHUNK_SIZE = 1000;

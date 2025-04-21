@@ -27,6 +27,7 @@ public class BestProductStepConfig {
     private final DataSource dataSource;
     private final BestProductRepository bestProductRepository;
     private final int PAGE_SIZE = 1000;
+    private final int RANK_SIZE = 30;
 
     @Bean
     @StepScope
@@ -37,7 +38,10 @@ public class BestProductStepConfig {
                 .dataSource(dataSource) // dataSource만 설정
                 .rowMapper(new BestProductRowMapper())
                 .queryProvider(bestProductQueryProvider())
-                .parameterValues(Map.of("1", rankDate))
+                .parameterValues(Map.of(
+                        "1", rankDate,
+                        "2", RANK_SIZE
+                ))
                 .build();
     }
 
@@ -57,7 +61,8 @@ public class BestProductStepConfig {
                 "FROM product_score ps " +
                 "LEFT JOIN product p ON p.product_code = ps.product_code " +
                 "WHERE ps.calculation_at = ? AND p.is_deleted = 0" +
-                ") ranked");
+                ") ranked " +
+                "WHERE product_rank <= ?");
 
         factory.setSortKey("product_rank");
         return factory.getObject();
