@@ -3,6 +3,7 @@ package com.example.shinsekai.batch.bestProduct.application;
 import com.example.shinsekai.batch.bestProduct.domain.BestProduct;
 import com.example.shinsekai.batch.bestProduct.infrastructure.BestProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
@@ -20,6 +21,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class BestProductStepConfig {
@@ -55,16 +57,18 @@ public class BestProductStepConfig {
         factory.setDataSource(dataSource);
         factory.setSelectClause("SELECT *");
         factory.setFromClause("FROM ( " +
+                "SELECT * FROM ( " +
                 "SELECT ps.main_category_id, ps.product_code, " +
                 "ROW_NUMBER() OVER (PARTITION BY ps.main_category_id ORDER BY ps.product_score DESC, p.created_at DESC) AS product_rank, " +
                 "ps.calculation_at " +
                 "FROM product_score ps " +
-                "LEFT JOIN product p ON p.product_code = ps.product_code " +
+                "JOIN product p ON p.product_code = ps.product_code " +
                 "WHERE ps.calculation_at = ? AND p.is_deleted = 0" +
                 ") ranked " +
-                "WHERE product_rank <= ?");
+                "WHERE product_rank <= ?" +
+                ") final");
 
-        factory.setSortKey("product_rank");
+        factory.setSortKey("product_code");
         return factory.getObject();
     }
 

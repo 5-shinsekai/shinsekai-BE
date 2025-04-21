@@ -51,12 +51,6 @@ public class MemberServiceImpl implements MemberService {
                     throw new BaseException(BaseResponseStatus.DUPLICATED_EMAIL);
                 });
 
-        // 닉네임 중복 체크
-        memberRepository.findByNickname(signUpRequestDto.getNickname())
-                .ifPresent(member -> {
-                    throw new BaseException(BaseResponseStatus.SAME_NICKNAME);
-                });
-
         // 휴대전화 번호 중복체크
         memberRepository.findByPhone(signUpRequestDto.getPhone())
                 .ifPresent(member -> {

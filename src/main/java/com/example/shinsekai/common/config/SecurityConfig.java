@@ -47,12 +47,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(
-                                        "/api/v1/kakao/**",
+                                        "/api/v1/social/**",
                                         "/redis/**",
                                         "/api/v1/agreement/**",
                                         "/api/v1/email/**",
                                         "/api/v1/member/**",
-                                        "/api/v1/cart/**",
                                         "/api/v1/size/**",
                                         "/api/v1/color/**",
                                         "/api/v1/product-options/**",
@@ -67,10 +66,6 @@ public class SecurityConfig {
                                         "/api/v1/event/**",
                                         "/api/v1/product-event/**",
                                         "/api/v1/vendor/**",
-                                        "/api/v1/starbucks-card/**",
-                                        "/api/v1/external/starbucks-card/**",
-                                        "/api/v1/purchase/**",
-                                        "/api/v1/payment/**",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/error"
