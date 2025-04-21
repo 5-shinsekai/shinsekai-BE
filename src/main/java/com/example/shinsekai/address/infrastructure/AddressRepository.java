@@ -25,6 +25,6 @@ public interface AddressRepository extends JpaRepository<Address,Long> {
     Optional<Address> findByMemberUuidAndIsMainAddressIsTrue(String memberUuid);
 
     @Query("SELECT a FROM Address a WHERE a.memberUuid = :memberUuid AND (a.isDeleted = false OR a.isDeleted IS NULL)")
-    List<Address> findActiveByMemberUuid(@Param("memberUuid") String memberUuid, Sort sort);
+    List<Address> findActiveMemberByMemberUuid(@Param("memberUuid") String memberUuid, Sort sort);
 
 }
