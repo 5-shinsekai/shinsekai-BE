@@ -4,12 +4,10 @@ import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.redis.RedisProvider;
 import com.example.shinsekai.member.application.KakaoAuthService;
-import com.example.shinsekai.member.application.MemberService;
 import com.example.shinsekai.member.dto.in.SocialMemberUpdateRequestDto;
 import com.example.shinsekai.member.dto.out.KakaoTokenResponseDto;
 import com.example.shinsekai.member.dto.out.KakaoUserResponseDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
-import com.example.shinsekai.member.vo.out.SignInResponseVo;
 import com.example.shinsekai.member.vo.in.SocialMemberUpdateRequestVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,9 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.net.http.HttpResponse;
 import java.util.UUID;
 
 import java.net.URLEncoder;
@@ -44,9 +39,6 @@ public class KakaoAuthController {
 
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
-
-    @Value("${url}")
-    private String starbucksUrl;
 
     private final KakaoAuthService kakaoAuthService;
     private final RedisProvider redisProvider;
