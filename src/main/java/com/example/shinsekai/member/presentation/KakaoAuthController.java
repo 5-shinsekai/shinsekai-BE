@@ -115,6 +115,7 @@ public class KakaoAuthController {
     @GetMapping("/{uuid}")
     public BaseResponseEntity<JsonNode> reRequest(@PathVariable String uuid) {
         String jsonString = redisProvider.getSignInData(uuid);
+        redisProvider.deleteValue(uuid);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonObject;
         try {
