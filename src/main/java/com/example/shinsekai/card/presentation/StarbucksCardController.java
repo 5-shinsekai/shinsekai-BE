@@ -3,18 +3,18 @@ package com.example.shinsekai.card.presentation;
 import com.example.shinsekai.card.application.StarbucksCardService;
 import com.example.shinsekai.card.dto.in.MemberStarbucksListDto;
 import com.example.shinsekai.card.dto.in.StarbucksCardRequestDto;
+import com.example.shinsekai.card.dto.in.TransferStarbucksCardDto;
 import com.example.shinsekai.card.dto.in.UseStarbucksCardRequestDto;
 import com.example.shinsekai.card.dto.out.StarbucksCardResponseDto;
-import com.example.shinsekai.card.entity.StarbucksCard;
 import com.example.shinsekai.card.vo.in.ChargeStarbucksCardVo;
 import com.example.shinsekai.card.vo.in.StarbucksCardRequestVo;
+import com.example.shinsekai.card.vo.in.TransferStarbucksCardVo;
 import com.example.shinsekai.card.vo.out.StarbucksCardResponseVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +70,7 @@ public class StarbucksCardController {
     }
 
     @Operation(summary = "스타벅스 카드 충전")
-    @PutMapping("charge")
+    @PutMapping("/charge")
     public  BaseResponseEntity<Void> chargeStarbucksCard(@RequestBody ChargeStarbucksCardVo starbucksCardRequestVo) {
         starbucksCardService.chargeRemainAmount(
                 UseStarbucksCardRequestDto.builder()
@@ -78,6 +78,15 @@ public class StarbucksCardController {
                         .memberUuid(jwtTokenProvider.getMemberUuid())
                         .price(starbucksCardRequestVo.getPrice())
                         .build());
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @Operation(summary = "스타벅스 카드 잔액 이전")
+    @PostMapping("/transfer")
+    public BaseResponseEntity<Void> transferStarbucksCardRemainAmount(@RequestBody TransferStarbucksCardVo starbucksCardRequestVo) {
+        starbucksCardService.transferRemainAmount(
+                TransferStarbucksCardDto.from(starbucksCardRequestVo, jwtTokenProvider.getMemberUuid())
+        );
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }
