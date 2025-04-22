@@ -29,8 +29,6 @@ public class MemberServiceImpl implements MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisProvider redisProvider;
     private final PasswordEncoder passwordEncoder;
-    private final AgreementRepository agreementRepository;
-    private final MemberAgreementListRepository memberAgreementListRepository;
 
     @Override
     @Transactional
