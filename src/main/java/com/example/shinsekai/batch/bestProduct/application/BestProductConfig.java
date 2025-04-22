@@ -21,7 +21,7 @@ public class BestProductConfig {
 
     private final BestProductStepConfig bestProductStepConfig;
     private final ProductScoreStepConfig productScoreStepConfig;
-    private final int CHUNK_SIZE = 1000;
+    private final int CHUNK_SIZE = 200;
 
     @Bean
     public Job bestProductJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
