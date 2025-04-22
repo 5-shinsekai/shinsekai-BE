@@ -47,7 +47,9 @@ public class ProductFilterRepositoryImpl implements ProductFilterRepositoryCusto
         builder.and(product.productStatus.eq(ProductStatus.SELLING));
 
         // Main Category 단일 조건
-        builder.and(categoryList.mainCategoryId.eq(mainCategoryId));
+        if (mainCategoryId != null) {
+            builder.and(categoryList.mainCategoryId.eq(mainCategoryId));
+        }
 
         // Sub Category 다중 조건
         if (subCategoryIds != null && !subCategoryIds.isEmpty()) {
