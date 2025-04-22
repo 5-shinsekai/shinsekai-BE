@@ -28,7 +28,6 @@ public class SignUpRequestDto {
     private Gender gender;
     private String name;
     private LocalDate birth;
-    private List<Long> agreementIdList;
 
     public Member toEntity(PasswordEncoder passwordEncoder) {
         return Member.builder()
@@ -55,8 +54,7 @@ public class SignUpRequestDto {
                 String phone,
                 Gender gender,
                 String name,
-                LocalDate birth,
-                List<Long> agreementIdList
+                LocalDate birth
     ) {
         this.memberUuid = memberUuid;
         this.loginId = loginId;
@@ -67,7 +65,6 @@ public class SignUpRequestDto {
         this.gender = gender;
         this.name = name;
         this.birth = birth;
-        this.agreementIdList = agreementIdList;
     }
 
     public static SignUpRequestDto from(SignUpRequestVo signUpRequestVo) {
@@ -81,7 +78,6 @@ public class SignUpRequestDto {
                 .gender(signUpRequestVo.getGender())
                 .name(signUpRequestVo.getName())
                 .birth(signUpRequestVo.getBirth())
-                .agreementIdList(signUpRequestVo.getAgreementIdList())
                 .build();
     }
 
