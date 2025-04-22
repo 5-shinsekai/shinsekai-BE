@@ -11,6 +11,8 @@ import com.example.shinsekai.member.dto.out.KakaoUserResponseDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
 import com.example.shinsekai.member.entity.Member;
 import com.example.shinsekai.member.infrastructure.MemberRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class KakaoAuthServiceImpl implements KakaoAuthService{
+public class KakaoAuthServiceImpl implements KakaoAuthService {
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
@@ -96,21 +98,9 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
     }
 
     @Override
-    public SignInResponseDto socialLogin(KakaoUserResponseDto userResponseDto) {
+    public void socialLogin(KakaoUserResponseDto userResponseDto, String uuid) {
         Member member = memberRepository.findBySocialId(userResponseDto.getId())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_FIND_SOCIAL_MEMBER));
-
-        log.info("socialLogin_1");
-
-        String accessToken = jwtTokenProvider.generateToken(TokenType.ACCESS, member);
-        String refreshToken = jwtTokenProvider.generateToken(TokenType.REFRESH, member);
-
-        log.info("socialLogin_2");
-
-        redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), accessToken, accessExpireTime);
-        redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
-
-        log.info("socialLogin_3");
+                .orElseThrow(() -> new RuntimeException(userResponseDto.getId().toString()));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(member.getMemberUuid());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -119,20 +109,34 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
                 userDetails.getAuthorities()
         );
 
-        log.info("socialLogin_4");
+        String accessToken = jwtTokenProvider.generateToken(TokenType.ACCESS, member);
+        String refreshToken = jwtTokenProvider.generateToken(TokenType.REFRESH, member);
 
+        redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
+        
+        // 최종 로그인 처리
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        return SignInResponseDto.of(member, accessToken, refreshToken);
+        // 생성된 멤버 정보 스트링으로 바꾸기
+        String json;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            json = objectMapper.writeValueAsString(SignInResponseDto.of(member, accessToken, refreshToken));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // 스트링으로 바꿨으면 redis에 저장 key: uuid / value: 스트링으로 바뀐 멤버 정보
+        redisProvider.setSignInData(uuid, json);
     }
 
     @Override
     @Transactional
-    public void updateSocialMember(SocialMemberUpdateRequestDto socialMemberUpdateRequestDto) {
+    public void registerSocialMember(SocialMemberUpdateRequestDto socialMemberUpdateRequestDto) {
         Member member = memberRepository.findByMemberUuid(jwtTokenProvider.getMemberUuid())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
-        member.updateSocialMember(socialMemberUpdateRequestDto.getSocialId());
+        member.registerSocialMember(socialMemberUpdateRequestDto.getSocialId());
     }
 
     @Override
@@ -155,20 +159,21 @@ public class KakaoAuthServiceImpl implements KakaoAuthService{
                 userDetails.getAuthorities()
         );
 
+        log.info("loginAndUpdateSocialMember_2");
+
         String accessToken = jwtTokenProvider.generateToken(TokenType.ACCESS, member);
         String refreshToken = jwtTokenProvider.generateToken(TokenType.REFRESH, member);
 
-        log.info("loginAndUpdateSocialMember_2");
+        log.info("loginAndUpdateSocialMember_3");
 
-        redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), accessToken, accessExpireTime);
         redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
 
-        log.info("loginAndUpdateSocialMember_3");
+        log.info("loginAndUpdateSocialMember_4");
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         // 소셜 계정으로 전환
-        member.updateSocialMember(socialMemberUpdateRequestDto.getSocialId());
+        member.registerSocialMember(socialMemberUpdateRequestDto.getSocialId());
 
         return jwtTokenProvider.createToken(member);
     }

@@ -8,9 +8,8 @@ import com.example.shinsekai.email.properties.MailProperties;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.redis.RedisProvider;
+import com.example.shinsekai.email.templete.MemberEmailBuilder;
 import com.example.shinsekai.email.templete.RestockEmailBuilder;
-import com.example.shinsekai.email.templete.TempPasswordBuilder;
-import com.example.shinsekai.email.templete.VerificationEmailBuilder;
 import com.example.shinsekai.member.entity.Member;
 import com.example.shinsekai.member.infrastructure.MemberRepository;
 import jakarta.mail.internet.InternetAddress;
@@ -35,8 +34,9 @@ public class EmailServiceImpl implements EmailService{
     private final JavaMailSender mailSender;
     private final MailProperties mailProperties;
     private final RedisProvider redisProvider;
-    private final VerificationEmailBuilder verificationEmailBuilder;
-    private final TempPasswordBuilder tempPasswordBuilder;
+//    private final VerificationEmailBuilder verificationEmailBuilder;
+//    private final TempPasswordBuilder tempPasswordBuilder;
+    private final MemberEmailBuilder memberEmailBuilder;
     private final PasswordEncoder passwordEncoder;
     private final RestockEmailBuilder restockEmailBuilder;
 
@@ -53,7 +53,7 @@ public class EmailServiceImpl implements EmailService{
         // 메일을 html로 만들고 보낸다.
         buildAndSend(emailVerificationRequestDto.getEmail(), mailType, verificationCode);
 
-        // 데이터를 저장한다.
+        // redis에 데이터를 저장한다.
         saveCode(emailVerificationRequestDto.getEmail(), mailType, verificationCode);
     }
 
@@ -92,15 +92,15 @@ public class EmailServiceImpl implements EmailService{
     @Transactional
     public void sendTempPassword(SendTempRequestDto sendTempRequestDto) {
 
+        Member member = memberRepository
+                .findByLoginIdAndEmail(sendTempRequestDto.getLoginId(), sendTempRequestDto.getEmail())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
+
         // 임시 비밀번호 생성
         String tempPw = generateTempPassword();
 
         // 메일을 html로 만들고 보낸다.
         buildAndSend(sendTempRequestDto.getEmail(), EmailType.TEMP_PW, tempPw);
-
-        Member member = memberRepository
-                .findByLoginIdAndEmail(sendTempRequestDto.getLoginId(), sendTempRequestDto.getEmail())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_USER));
 
         // 임시 비밀번호 저장
         member.saveTempPassword(passwordEncoder.encode(tempPw));
@@ -130,14 +130,29 @@ public class EmailServiceImpl implements EmailService{
             String html;
 
             switch (mailType) {
+                case SIGN_UP -> {
+                    html = memberEmailBuilder.buildMemberEmail("회원가입 인증 코드 안내",
+                            "본인 확인을 위해 아래 인증 코드를 입력해주세요.",
+                            item,
+                            "코드는 5분 동안 유효합니다.");  // 인증번호
+                }
+                case FIND_LOGIN_ID -> {
+                    html = memberEmailBuilder.buildMemberEmail("아이디 찾기 인증 코드 안내",
+                            "본인 확인을 위해 아래 인증 코드를 입력해주세요.",
+                            item,
+                            "코드는 5분 동안 유효합니다.");  // 인증번호
+                }
                 case TEMP_PW -> {
-                    html = tempPasswordBuilder.buildTempPasswordEmail(item);    // item: 임시비밀번호
+                    html = memberEmailBuilder.buildMemberEmail("임시 비밀번호 안내",
+                            "요청하신 임시 비밀번호가 아래와 같이 발급되었습니다.",
+                            item,
+                            "로그인 후 즉시 비밀번호를 변경하시기 바랍니다.");  // 임시 비밀번호
                 }
                 case RESTOCK_NOTIFY -> {
                     html = restockEmailBuilder.buildRestockNotifyEmail(item); // item: 상품명
                 }
                 default -> {
-                    html = verificationEmailBuilder.buildVerificationEmail(item);     // item: 인증코드
+                    throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL);
                 }
             }
 

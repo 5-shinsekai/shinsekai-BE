@@ -27,7 +27,7 @@ public class RestockEmailBuilder {
                             ※ 이 메일은 알림 수신 신청에 따라 발송된 안내 메일입니다.
                         </p>
                         
-                        <a href="https://www.spharosacademy.com/" style="display: inline-block; background-color: #00704A; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-size: 16px; margin-top: 20px;">
+                        <a href="https://spharos.shop/main" style="display: inline-block; background-color: #00704A; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-size: 16px; margin-top: 20px;">
                             스파로스 아카데미 홈페이지 방문
                         </a>
                         
