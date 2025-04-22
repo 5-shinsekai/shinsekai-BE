@@ -4,7 +4,10 @@ import com.example.shinsekai.cart.dto.in.CartCheckedUpdateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartCreateRequestDto;
 import com.example.shinsekai.cart.dto.in.CartDeleteRequestDto;
 import com.example.shinsekai.cart.dto.in.CartUpdateRequestDto;
-import com.example.shinsekai.cart.dto.out.*;
+import com.example.shinsekai.cart.dto.out.CartGetResponseDto;
+import com.example.shinsekai.cart.dto.out.CartGetUuidResponseDto;
+import com.example.shinsekai.cart.dto.out.CartGroupedByProductTypeDto;
+import com.example.shinsekai.cart.dto.out.CartUuidGroupedByProductTypeDto;
 import com.example.shinsekai.cart.entity.Cart;
 import com.example.shinsekai.cart.infrastructure.CartRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
@@ -112,8 +115,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartGetDetailResponseDto getAllCartsDetail(String cartUuid) {
-        return CartGetDetailResponseDto.from(
+    public CartGetResponseDto getAllCartsDetail(String cartUuid) {
+        return CartGetResponseDto.from(
                 cartRepository.findByCartUuidAndIsDeletedFalse(cartUuid).orElseThrow(
                         () -> new BaseException(BaseResponseStatus.INVALID_CART_ACCESS))
         );

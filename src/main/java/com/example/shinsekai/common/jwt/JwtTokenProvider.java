@@ -128,7 +128,6 @@ public class JwtTokenProvider {
 
         log.info("JwtTokenProvider_createToken_here_2");
 
-        redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), accessToken, accessExpireTime);
         redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), refreshToken, refreshExpireTime);
 
         log.info("JwtTokenProvider_createToken_here_3");
@@ -185,7 +184,6 @@ public class JwtTokenProvider {
         String newRefreshToken = generateToken(TokenType.REFRESH, member);
 
         // redis에 저장
-        redisProvider.setToken(TokenType.ACCESS, member.getMemberUuid(), newAccessToken, accessExpireTime);
         redisProvider.setToken(TokenType.REFRESH, member.getMemberUuid(), newRefreshToken, refreshExpireTime);
 
         return SignInResponseDto.of(member, newAccessToken, newRefreshToken);

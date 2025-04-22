@@ -15,16 +15,12 @@ public class KakaoUserResponseDto {
     @Getter
     @ToString
     public static class KakaoAccount {
-        private String email;
         private Profile profile;
 
         @Getter
         @ToString
         public static class Profile {
             private String nickname;
-
-            @JsonProperty("profile_image_url")
-            private String profileImageUrl;
         }
     }
 }

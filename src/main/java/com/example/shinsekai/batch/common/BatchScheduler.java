@@ -1,4 +1,4 @@
-package com.example.shinsekai.batch;
+package com.example.shinsekai.batch.common;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,6 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ public class BatchScheduler {
 
 
 //    @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0 0 10 * * *")
+//    @Scheduled(cron = "0 0 10 * * *")
     public void runPurchaseDailyAggregationJob() {
         try {
             log.info("일일 집계 배치 실행 시작");
@@ -34,6 +33,7 @@ public class BatchScheduler {
 
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("time", time)
+                    .addString("jobName", "purchaseDailyAggregationJob")
                     .addLocalDate("aggregationDate", aggregationDate)
                     .toJobParameters();
             jobLauncher.run(purchaseDailyAggregationJob, jobParameters);
@@ -44,7 +44,7 @@ public class BatchScheduler {
     }
 
 //    @Scheduled(cron = "0/15 * * * * *")
-    @Scheduled(cron = "0 20 10 * * *")
+//    @Scheduled(cron = "0 20 10 * * *")
     public void runPurchaseWeeklyAggregationJob() {
         try {
             log.info("주간 집계 배치 실행 시작");
@@ -54,6 +54,7 @@ public class BatchScheduler {
 
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("time", time)
+                    .addString("jobName", "purchaseWeeklyAggregationJob")
                     .addLocalDate("startDate", startDate)
                     .addLocalDate("endDate", endDate)
                     .toJobParameters();
@@ -65,7 +66,7 @@ public class BatchScheduler {
     }
 
 //    @Scheduled(cron = "0/30 * * * * *")
-    @Scheduled(cron = "0 40 10 * * *")
+//    @Scheduled(cron = "0 40 10 * * *")
     public void runBestProductJob() {
         try {
             log.info("베스트 상품 배치 실행 시작");
@@ -74,6 +75,7 @@ public class BatchScheduler {
 
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("time", time)
+                    .addString("jobName", "bestProductJob")
                     .addLocalDate("rankDate", rankDate)
                     .toJobParameters();
             jobLauncher.run(bestProductJob, jobParameters);
@@ -86,7 +88,7 @@ public class BatchScheduler {
     /*
      * 임시 배치 시간 설정 : 매일 오전 4시마다
      * */
-    @Scheduled(cron = "0 0 04 * * *")
+//    @Scheduled(cron = "0 0 04 * * *")
     public void runCartSoftDeleteJob() {
         String time = LocalDateTime.now().toString();
         try {
