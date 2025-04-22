@@ -7,12 +7,18 @@ import com.example.shinsekai.purchase.dto.in.PurchaseProductListRequestDto;
 import com.example.shinsekai.purchase.dto.in.PurchaseRequestDto;
 import com.example.shinsekai.purchase.dto.out.PurchaseProductListResponseDto;
 import com.example.shinsekai.purchase.dto.out.PurchaseResponseDto;
+import com.example.shinsekai.purchase.dto.out.PurchaseStatusResponseDto;
+import com.example.shinsekai.purchase.entity.Purchase;
+import com.example.shinsekai.purchase.entity.PurchaseStatus;
 import com.example.shinsekai.purchase.infrastructure.PurchaseProductListRepository;
 import com.example.shinsekai.purchase.infrastructure.PurchaseRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -59,5 +65,23 @@ public class PurchaseServiceImpl implements PurchaseService {
                 .stream()
                 .map(PurchaseProductListResponseDto::from)
                 .toList();
+    }
+
+    @Override
+    public PurchaseStatusResponseDto findPurchaseStatusByMemberUuid(String memberUuid) {
+        Map<PurchaseStatus, Long> statusCountMap = purchaseRepository.findByMemberUuidAndCreatedAtBetween(
+                        memberUuid,
+                        LocalDateTime.now().minusMonths(3),
+                        LocalDateTime.now()
+                ).stream()
+                .collect(Collectors.groupingBy(Purchase::getPurchaseStatus, Collectors.counting()));
+
+        return PurchaseStatusResponseDto.builder()
+                .paymentCompleted(statusCountMap.getOrDefault(PurchaseStatus.PAYMENT_COMPLETED, 0L).intValue())
+                .preparing(statusCountMap.getOrDefault(PurchaseStatus.PREPARING, 0L).intValue())
+                .shipping(statusCountMap.getOrDefault(PurchaseStatus.SHIPPING, 0L).intValue())
+                .delivered(statusCountMap.getOrDefault(PurchaseStatus.DELIVERED, 0L).intValue())
+                .cancelled(statusCountMap.getOrDefault(PurchaseStatus.CANCELLED, 0L).intValue())
+                .build();
     }
 }

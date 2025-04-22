@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum PurchaseStatus {
-    DONE,
-    CANCEL;
+    PAYMENT_COMPLETED,
+    PREPARING, //주문완료
+    SHIPPING,
+    DELIVERED,
+    CANCELLED;
 }
