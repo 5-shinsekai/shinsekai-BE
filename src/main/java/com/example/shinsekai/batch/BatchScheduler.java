@@ -25,9 +25,10 @@ public class BatchScheduler {
 
 
 //    @Scheduled(cron = "0/10 * * * * *")
-    @Scheduled(cron = "0 0 16 * * *")
+    @Scheduled(cron = "0 0 10 * * *")
     public void runPurchaseDailyAggregationJob() {
         try {
+            log.info("일일 집계 배치 실행 시작");
             LocalDate aggregationDate = LocalDate.now().minusDays(1); // 집계할 날짜
             String time = LocalDateTime.now().toString(); // 집계하는 날짜
 
@@ -36,15 +37,17 @@ public class BatchScheduler {
                     .addLocalDate("aggregationDate", aggregationDate)
                     .toJobParameters();
             jobLauncher.run(purchaseDailyAggregationJob, jobParameters);
+            log.info("일일 집계 배치 실행 성공");
         } catch (Exception e) {
             throw new RuntimeException("일일 집계 배치 실행 중 오류 발생", e);
         }
     }
 
 //    @Scheduled(cron = "0/15 * * * * *")
-    @Scheduled(cron = "0 10 16 * * MON")
+    @Scheduled(cron = "0 20 10 * * *")
     public void runPurchaseWeeklyAggregationJob() {
         try {
+            log.info("주간 집계 배치 실행 시작");
             LocalDate startDate = LocalDate.now().minusDays(7); // 집계할 날짜
             LocalDate endDate = LocalDate.now().minusDays(1); // 집계할 날짜
             String time = LocalDateTime.now().toString(); // 집계하는 날짜
@@ -55,15 +58,17 @@ public class BatchScheduler {
                     .addLocalDate("endDate", endDate)
                     .toJobParameters();
             jobLauncher.run(purchaseWeeklyAggregationJob, jobParameters);
+            log.info("주간 집계 배치 실행 성공");
         } catch (Exception e) {
             throw new RuntimeException("주간 집계 배치 실행 중 오류 발생", e);
         }
     }
 
 //    @Scheduled(cron = "0/30 * * * * *")
-    @Scheduled(cron = "0 20 16 ? * MON")
+    @Scheduled(cron = "0 40 10 * * *")
     public void runBestProductJob() {
         try {
+            log.info("베스트 상품 배치 실행 시작");
             LocalDate rankDate = LocalDate.now().minusDays(1); // 집계할 날짜
             String time = LocalDateTime.now().toString(); // 집계하는 날짜
 
@@ -72,6 +77,7 @@ public class BatchScheduler {
                     .addLocalDate("rankDate", rankDate)
                     .toJobParameters();
             jobLauncher.run(bestProductJob, jobParameters);
+            log.info("베스트 상품 배치 실행 성공");
         } catch (Exception e) {
             throw new RuntimeException("베스트 상품 배치 실행 중 오류 발생", e);
         }
