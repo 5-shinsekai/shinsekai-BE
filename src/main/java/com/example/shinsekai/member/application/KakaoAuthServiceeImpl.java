@@ -100,7 +100,7 @@ public class KakaoAuthServiceeImpl implements KakaoAuthService {
     @Override
     public void socialLogin(KakaoUserResponseDto userResponseDto, String uuid) {
         Member member = memberRepository.findBySocialId(userResponseDto.getId())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_FIND_SOCIAL_MEMBER));
+                .orElseThrow(() -> new RuntimeException(userResponseDto.getId().toString()));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(member.getMemberUuid());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
