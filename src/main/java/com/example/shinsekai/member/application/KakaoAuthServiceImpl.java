@@ -31,7 +31,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class KakaoAuthServiceeImpl implements KakaoAuthService {
+public class KakaoAuthServiceImpl implements KakaoAuthService {
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
