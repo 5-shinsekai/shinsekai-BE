@@ -9,7 +9,7 @@ import com.example.shinsekai.cart.vo.in.CartCheckedUpdateRequestVo;
 import com.example.shinsekai.cart.vo.in.CartCreateRequestVo;
 import com.example.shinsekai.cart.vo.in.CartDeleteRequestVo;
 import com.example.shinsekai.cart.vo.in.CartUpdateRequestVo;
-import com.example.shinsekai.cart.vo.out.CartGetDetailResponseVo;
+import com.example.shinsekai.cart.vo.out.CartGetResponseVo;
 import com.example.shinsekai.cart.vo.out.CartGroupedByProductTypeVo;
 import com.example.shinsekai.cart.vo.out.CartUuidGroupedByProductTypeVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
@@ -55,7 +55,7 @@ public class CartController {
 
     @Operation(summary = "장바구니 detail 조회")
     @GetMapping("/{cartUuid}")
-    public BaseResponseEntity<CartGetDetailResponseVo> getAllCartsDetail(@PathVariable String cartUuid) {
+    public BaseResponseEntity<CartGetResponseVo> getAllCartsDetail(@PathVariable String cartUuid) {
         return new BaseResponseEntity<>(cartService.getAllCartsDetail(cartUuid)
                 .toVo());
     }
