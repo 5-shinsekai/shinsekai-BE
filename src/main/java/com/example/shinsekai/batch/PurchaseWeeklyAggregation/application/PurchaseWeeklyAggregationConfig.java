@@ -33,7 +33,7 @@ public class PurchaseWeeklyAggregationConfig {
     private final EntityManagerFactory entityManagerFactory;
     private final PurchaseWeeklyAggregationRepository purchaseWeeklyAggregationRepository;
 
-    private final int chunkSize = 1000;
+    private final int chunkSize = 200;
 
     // Job 설정
     @Bean

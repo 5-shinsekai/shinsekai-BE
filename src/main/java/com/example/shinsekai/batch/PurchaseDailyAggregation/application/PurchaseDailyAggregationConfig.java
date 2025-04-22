@@ -30,7 +30,7 @@ public class PurchaseDailyAggregationConfig {
 
     private final EntityManagerFactory entityManagerFactory;
     private final PurchaseDailyAggregationRepository purchaseDailyAggregationRepository;
-    private final int chunkSize = 1000;
+    private final int chunkSize = 200;
 
     // Job 설정
     @Bean
