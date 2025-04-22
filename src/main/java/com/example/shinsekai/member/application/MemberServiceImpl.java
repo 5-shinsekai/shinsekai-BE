@@ -1,6 +1,5 @@
 package com.example.shinsekai.member.application;
 
-import com.example.shinsekai.agreement.dto.in.MemberAgreementListCreateRequestDto;
 import com.example.shinsekai.agreement.infrastructure.AgreementRepository;
 import com.example.shinsekai.agreement.infrastructure.MemberAgreementListRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
@@ -21,8 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,8 +29,6 @@ public class MemberServiceImpl implements MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisProvider redisProvider;
     private final PasswordEncoder passwordEncoder;
-    private final AgreementRepository agreementRepository;
-    private final MemberAgreementListRepository memberAgreementListRepository;
 
     @Override
     @Transactional
@@ -56,14 +51,6 @@ public class MemberServiceImpl implements MemberService {
                 .ifPresent(member -> {
                     throw new BaseException(BaseResponseStatus.DUPLICATED_PHONE);
                 });
-
-        // 약관 동의 저장
-        List<Long> agreementIdList = signUpRequestDto.getAgreementIdList();
-        agreementRepository.findAllById(agreementIdList).stream()
-                .map(agreement -> MemberAgreementListCreateRequestDto
-                        .of(signUpRequestDto.getMemberUuid(), agreement)
-                        .toEntity())
-                .forEach(memberAgreementListRepository::save);
 
         memberRepository.save(signUpRequestDto.toEntity(passwordEncoder));
     }
