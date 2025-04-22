@@ -23,7 +23,7 @@ spring:
         registration:
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
-            redirect-uri: ${SERVER_URL}/api/v1/social/callback
+            redirect-uri: ${SERVER_URL}/api/v1/kakao/callback
             authorization-grant-type: authorization_code
             client-name: Kakao
             scope:
