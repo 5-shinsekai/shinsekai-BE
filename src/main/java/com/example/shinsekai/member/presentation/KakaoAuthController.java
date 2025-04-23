@@ -9,6 +9,7 @@ import com.example.shinsekai.member.dto.out.KakaoTokenResponseDto;
 import com.example.shinsekai.member.dto.out.KakaoUserResponseDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
 import com.example.shinsekai.member.vo.in.SocialMemberUpdateRequestVo;
+import com.example.shinsekai.member.vo.out.KakaoAuthUrlVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,7 +50,7 @@ public class KakaoAuthController {
 
     @Operation(summary = "카카오 로그인 요청")
     @GetMapping("/login")
-    public ResponseEntity<Void> requestSocialLogin(@RequestParam String callbackUrl)throws UnsupportedEncodingException {
+    public BaseResponseEntity<KakaoAuthUrlVo> requestSocialLogin(@RequestParam String callbackUrl)throws UnsupportedEncodingException {
 
         String rawState = UUID.randomUUID() + "|" + callbackUrl;
         String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8.toString());
@@ -62,9 +63,11 @@ public class KakaoAuthController {
                 + "&response_type=code"
                 + "&state=" + encodedState;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(kakaoAuthUrl));
-        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create(kakaoAuthUrl));
+//        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
+
+        return new BaseResponseEntity<>(new KakaoAuthUrlVo(kakaoAuthUrl));
     }
 
     @Operation(summary = "카카오 로그인 후처리")

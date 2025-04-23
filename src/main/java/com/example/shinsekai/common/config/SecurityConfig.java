@@ -25,7 +25,7 @@ import java.util.List;
 public class SecurityConfig {
 
     @Value("${client-url}")
-    private String frontendUrl;
+    private String clientUrl;
 
     private final AuthenticationProvider daoAuthenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -36,7 +36,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("*");
-        config.addAllowedOrigin(frontendUrl); // 프론트 주소 정확히 명시
+        config.addAllowedOrigin(clientUrl);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setExposedHeaders(List.of("Authorization, Content-Type, X-CSRF-TOKEN", "Set-Cookie"));
