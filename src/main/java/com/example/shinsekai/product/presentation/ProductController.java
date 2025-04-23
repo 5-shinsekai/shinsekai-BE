@@ -42,11 +42,10 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 수정")
-    @PutMapping("/{productCode}")
+    @PutMapping
     public BaseResponseEntity<Void> updateProduct(
-            @PathVariable String productCode,
             @RequestBody ProductRequestVo productRequestVo) {
-        productService.updateProduct(productCode, ProductRequestDto.from(productRequestVo));
+        productService.updateProduct(ProductRequestDto.from(productRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 

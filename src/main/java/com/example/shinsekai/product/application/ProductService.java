@@ -16,7 +16,7 @@ public interface ProductService {
 
     ProductResponseDto getSellingProduct(String productCode);
 
-    void updateProduct(String productCode, ProductRequestDto productRequestDto);
+    void updateProduct(ProductRequestDto productRequestDto);
 
     void toggleProductStatus(String productCode);
 
