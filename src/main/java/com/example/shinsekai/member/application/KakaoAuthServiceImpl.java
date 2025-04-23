@@ -28,6 +28,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -98,10 +100,14 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
     }
 
     @Override
-    public void socialLogin(KakaoUserResponseDto userResponseDto, String uuid) {
-        Member member = memberRepository.findBySocialId(userResponseDto.getId())
-                .orElseThrow(() -> new RuntimeException(userResponseDto.getId().toString()));
+    public String socialLogin(KakaoUserResponseDto userResponseDto, String uuid) {
+        Optional<Member> memberOptional = memberRepository.findBySocialId(userResponseDto.getId());
 
+        if(memberOptional.isEmpty()) {
+            return userResponseDto.getId().toString();
+        }
+
+        Member member = memberOptional.get();
         UserDetails userDetails = userDetailsService.loadUserByUsername(member.getMemberUuid());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails,
@@ -128,6 +134,8 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
 
         // 스트링으로 바꿨으면 redis에 저장 key: uuid / value: 스트링으로 바뀐 멤버 정보
         redisProvider.setSignInData(uuid, json);
+
+        return "";
     }
 
     @Override

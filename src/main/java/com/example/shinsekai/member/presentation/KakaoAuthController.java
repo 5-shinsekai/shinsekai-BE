@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,7 +73,7 @@ public class KakaoAuthController {
 
     @Operation(summary = "카카오 로그인 후처리")
     @GetMapping("/callback")
-    public ResponseEntity<Void> kakaoCallback(HttpServletRequest request) throws UnsupportedEncodingException {
+    public ResponseEntity<String> kakaoCallback(HttpServletRequest request) throws UnsupportedEncodingException {
 
         String rawState = URLDecoder.decode(request.getParameter("state"), StandardCharsets.UTF_8.toString());
 
@@ -91,15 +92,36 @@ public class KakaoAuthController {
         // 3. 사용자 인증
         //    (스타벅스) AccessToken&RefreshToken 생성
         //    SecurityContextHolder에 회원 정보 저장, 회원 정보(토큰 포함) Redis에 저장
-        kakaoAuthService.socialLogin(userResponseDto, uuid);
+        String socialId = kakaoAuthService.socialLogin(userResponseDto, uuid);
+        String isSuccess = "false";
 
-        // 클라이언트로 리다이렉트하기 ( + searchParam: state )
-        String callbackUrl = url
-                + "?uuid=" + uuid;
+        if("".equals(socialId)){
+            isSuccess = "true";
+        }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(callbackUrl));
-        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
+
+
+//        // 클라이언트로 리다이렉트하기 ( + searchParam: state )
+//        String callbackUrl = url
+//                + "?uuid=" + uuid;
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create(callbackUrl));
+//        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
+
+        // 최종 리디렉션 대신 메시지를 보내는 HTML 반환
+        String html = """
+          <script>
+            window.opener.postMessage({
+              uuid: '%s',
+              social_id: '%s',
+              is_success: '%s',
+            }, '%s');
+            window.close();
+          </script>
+        """.formatted(uuid, socialId, url, isSuccess); // `url` = 프론트 origin
+
+        return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(html);
     }
 
     @Operation(summary = "회원 정보 요청")
