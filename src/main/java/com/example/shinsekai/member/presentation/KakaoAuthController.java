@@ -46,6 +46,9 @@ public class KakaoAuthController {
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
 
+    @Value("${client-url}")
+    private String clientUrl;
+
     private final KakaoAuthService kakaoAuthService;
     private final RedisProvider redisProvider;
 
@@ -114,7 +117,7 @@ public class KakaoAuthController {
               uuid: '%s',
               social_id: '%s',
               is_success: '%s',
-            }, '%s');
+            }, clientUrl);
           </script>
         """.formatted(uuid, socialId, isSuccess, url); // `url` = 프론트 origin
 
