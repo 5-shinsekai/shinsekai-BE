@@ -42,6 +42,7 @@ jwt:
     access-expire-time: 172800000
     refresh-expire-time: 1209600000
 
+client-url: ${CLIENT_URL}
 
 toss:
   secret-key: ${TOSS_SECRET_KEY}

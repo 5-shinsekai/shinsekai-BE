@@ -81,6 +81,7 @@ jobs:
             echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
             echo "SERVER_URL=${{ secrets.SERVER_URL }}" >> .env
             echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
+            echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> .env
             
             docker pull ${{ steps.login-ecr.outputs.registry }}/shinsekai-server:latest
             docker-compose down
