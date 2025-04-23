@@ -2,6 +2,7 @@ package com.example.shinsekai.common.config;
 
 import com.example.shinsekai.common.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,7 +24,9 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    //private final AuthenticationProvider oAuthAuthenticationProvider;
+    @Value("${client-url}")
+    private String frontendUrl;
+
     private final AuthenticationProvider daoAuthenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -33,6 +36,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("*");
+        config.addAllowedOrigin(frontendUrl); // 프론트 주소 정확히 명시
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setExposedHeaders(List.of("Authorization, Content-Type, X-CSRF-TOKEN", "Set-Cookie"));
@@ -47,6 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(
+                                        "api/v1/sse/**",
                                         "/api/v1/social/**",
                                         "/redis/**",
                                         "/api/v1/agreement/**",
