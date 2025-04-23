@@ -15,8 +15,7 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.JpaPagingItemReader;
-import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.batch.item.database.JpaCursorItemReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +32,7 @@ public class PurchaseWeeklyAggregationConfig {
     private final EntityManagerFactory entityManagerFactory;
     private final PurchaseWeeklyAggregationRepository purchaseWeeklyAggregationRepository;
 
-    private final int chunkSize = 200;
+    private final int chunkSize = 500;
 
     // Job 설정
     @Bean
@@ -58,7 +57,7 @@ public class PurchaseWeeklyAggregationConfig {
     // ItemReader 설정
     @Bean
     @StepScope
-    public JpaPagingItemReader<PurchaseDailyAggregation> purchaseWeeklyAggregationReader(
+    public JpaCursorItemReader<PurchaseDailyAggregation> purchaseWeeklyAggregationReader(
             @Value("#{jobParameters['startDate']}") LocalDate startDate,
             @Value("#{jobParameters['endDate']}") LocalDate endDate
     ) {
@@ -72,17 +71,19 @@ public class PurchaseWeeklyAggregationConfig {
                 PurchaseDailyAggregation.class.getName()
         );
 
-        return new JpaPagingItemReaderBuilder<PurchaseDailyAggregation>()
-                .name("purchaseWeeklyAggregationReader")
-                .entityManagerFactory(entityManagerFactory)
-                .queryString(jpql)
-                .parameterValues(Map.of(
-                        "startDate", startDate,
-                        "endDate", endDate
-                ))
-                .pageSize(chunkSize)
-                .build();
+
+        JpaCursorItemReader<PurchaseDailyAggregation> reader = new JpaCursorItemReader<>();
+        reader.setName("purchaseWeeklyAggregationReader");
+        reader.setEntityManagerFactory(entityManagerFactory);
+        reader.setQueryString(jpql);
+        reader.setParameterValues(Map.of(
+                "startDate", startDate,
+                "endDate", endDate
+        ));
+
+        return reader;
     }
+
 
     @Bean
     @StepScope
