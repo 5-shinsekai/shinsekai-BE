@@ -57,44 +57,6 @@ public class BestProductStepConfig {
         return reader;
     }
 
-
-//    @Bean
-//    @StepScope
-//    public JdbcPagingItemReader<BestProduct> bestProductReader(@Value("#{jobParameters['rankDate']}") LocalDate rankDate) throws Exception {
-//        return new JdbcPagingItemReaderBuilder<BestProduct>()
-//                .name("jdbcPagingItemReader")
-//                .fetchSize(PAGE_SIZE)
-//                .dataSource(dataSource) // dataSource만 설정
-//                .rowMapper(new BestProductRowMapper())
-//                .queryProvider(bestProductQueryProvider())
-//                .parameterValues(Map.of(
-//                        "1", rankDate,
-//                        "2", RANK_SIZE
-//                ))
-//                .build();
-//    }
-//
-//
-//    public PagingQueryProvider bestProductQueryProvider() throws Exception {
-//        SqlPagingQueryProviderFactoryBean factory = new SqlPagingQueryProviderFactoryBean();
-//        factory.setDataSource(dataSource);
-//        factory.setSelectClause("SELECT *");
-//        factory.setFromClause("FROM ( " +
-//                "SELECT * FROM ( " +
-//                "SELECT ps.main_category_id, ps.product_code, " +
-//                "ROW_NUMBER() OVER (PARTITION BY ps.main_category_id ORDER BY ps.product_score DESC, p.created_at DESC) AS product_rank, " +
-//                "ps.calculation_at " +
-//                "FROM product_score ps " +
-//                "JOIN product p ON p.product_code = ps.product_code " +
-//                "WHERE ps.calculation_at = ? AND p.is_deleted = 0" +
-//                ") ranked " +
-//                "WHERE product_rank <= ?" +
-//                ") final");
-//
-//        factory.setSortKey("product_code");
-//        return factory.getObject();
-//    }
-
     @Bean
     public ItemWriter<BestProduct> bestProductWriter() {
         return bestProductRepository::saveAll;
