@@ -45,7 +45,7 @@ public class Purchase extends BaseEntity {
     private Double productTotalPrice;
 
     public void cancelPurchase(String cancelReason) {
-        this.purchaseStatus = PurchaseStatus.CANCEL;
+        this.purchaseStatus = PurchaseStatus.CANCELLED;
         this.cancelReason = cancelReason;
     }
 }

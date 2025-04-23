@@ -34,8 +34,6 @@ public class EmailServiceImpl implements EmailService{
     private final JavaMailSender mailSender;
     private final MailProperties mailProperties;
     private final RedisProvider redisProvider;
-//    private final VerificationEmailBuilder verificationEmailBuilder;
-//    private final TempPasswordBuilder tempPasswordBuilder;
     private final MemberEmailBuilder memberEmailBuilder;
     private final PasswordEncoder passwordEncoder;
     private final RestockEmailBuilder restockEmailBuilder;

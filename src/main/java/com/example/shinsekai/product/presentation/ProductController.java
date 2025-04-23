@@ -95,7 +95,7 @@ public class ProductController {
     @Operation(summary = "상품 복합 조건 검색")
     @GetMapping("/filter")
     public BaseResponseEntity<Page<String>> filterProductsByFilters(
-            @RequestParam Long mainCategoryId,
+            @RequestParam(required = false) Long mainCategoryId,
             @RequestParam(required = false) List<Long> subCategoryIds,
             @RequestParam(required = false) List<Integer> seasonIds,
             @RequestParam(required = false) List<Long> sizeIds,

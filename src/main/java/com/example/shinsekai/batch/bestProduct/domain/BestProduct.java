@@ -2,6 +2,8 @@ package com.example.shinsekai.batch.bestProduct.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Comment;
+
 import java.time.LocalDate;
 
 @Getter
@@ -16,7 +18,9 @@ public class BestProduct {
     private Long id;
     private String productCode;
     private Long mainCategoryId;
-    private Integer quantity;
     private Integer productRank;
-    private LocalDate orderDate;
+    @Comment("랭킹 날짜")
+    private LocalDate rankAt;
+
+
 }
