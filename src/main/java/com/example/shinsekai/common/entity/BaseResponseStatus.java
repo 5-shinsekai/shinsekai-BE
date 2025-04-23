@@ -116,6 +116,7 @@ public enum BaseResponseStatus {
     EXIST_NOTIFICATION_SETTING(HttpStatus.BAD_REQUEST, false, 5002, "유저의 알림 설정이 이미 존재합니다."),
     NO_EXIST_NOTIFICATION(HttpStatus.NOT_FOUND, false, 5003, "존재하지 않는 알림입니다."),
     CANNOT_SHARE(HttpStatus.BAD_REQUEST, false, 5004, "공유할 수 없는 유저입니다."),
+    SUCCESS_TO_SSE_CONNECT(HttpStatus.OK, true, 5005, "sse 연결에 성공했습니다."),
 
     /**
      * 6000: gpt-api error

@@ -35,10 +35,16 @@ public class RestockNotification {
     private LocalDateTime validUntil;
 
     @Column(nullable = false)
-    private boolean notified = false;
+    private Boolean mailNotified = false;
+
+    @Column(nullable = false)
+    private Boolean sseNotified = false;
 
     @Column
-    private LocalDateTime notifiedAt;
+    private LocalDateTime mailNotifiedAt;
+
+    @Column
+    private LocalDateTime sseNotifiedAt;
 
     @Builder
     public RestockNotification(
@@ -52,8 +58,13 @@ public class RestockNotification {
         this.validUntil = validUntil;
     }
 
-    public void markAsNotified() {
-        this.notified = true;
-        this.notifiedAt = LocalDateTime.now();
+    public void markAsMailNotified() {
+        this.mailNotified = true;
+        this.mailNotifiedAt = LocalDateTime.now();
+    }
+
+    public void markAsSseNotified() {
+        this.sseNotified = true;
+        this.sseNotifiedAt = LocalDateTime.now();
     }
 }
