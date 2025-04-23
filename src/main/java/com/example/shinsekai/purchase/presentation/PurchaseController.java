@@ -10,6 +10,7 @@ import com.example.shinsekai.purchase.dto.out.PurchaseResponseDto;
 import com.example.shinsekai.purchase.vo.in.CancelOrderRequestVo;
 import com.example.shinsekai.purchase.vo.in.OrderRequestVo;
 import com.example.shinsekai.purchase.vo.out.PurchaseResponseVo;
+import com.example.shinsekai.purchase.vo.out.PurchaseStatusResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,12 @@ public class PurchaseController {
     public List<PurchaseResponseVo> findPurchase(){
         return purchaseService.findMemberPurchaseList(jwtTokenProvider.getMemberUuid())
                 .stream().map(PurchaseResponseDto::toVo).toList();
+    }
+
+    @Operation(summary = "회원별 주문/배송 현황 조회")
+    @GetMapping("/status")
+    public BaseResponseEntity<PurchaseStatusResponseVo> findPurchaseStatusByMemberUuid(){
+        return new BaseResponseEntity<>(purchaseService.findPurchaseStatusByMemberUuid(jwtTokenProvider.getMemberUuid()).toVo());
     }
 
     @Operation(summary = "구매 정보 저장")
