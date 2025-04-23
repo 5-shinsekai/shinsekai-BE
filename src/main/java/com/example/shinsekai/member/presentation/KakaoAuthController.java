@@ -117,9 +117,9 @@ public class KakaoAuthController {
               uuid: '%s',
               social_id: '%s',
               is_success: '%s',
-            }, clientUrl);
+            }, '%s');
           </script>
-        """.formatted(uuid, socialId, isSuccess);
+        """.formatted(uuid, socialId, isSuccess, clientUrl);
 
         return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(html);
     }
