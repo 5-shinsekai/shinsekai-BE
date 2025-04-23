@@ -38,7 +38,7 @@ public class Product extends BaseEntity {
     private String productSummary; // 제품요약
 
     @Lob
-    @Column(name = "content_images", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "content_images", nullable = false, columnDefinition = "LONGTEXT")
     private String contentImages; // 제품설명 이미지
 
     /*    @Column(name = "VIEW_COUNT", nullable = false)
