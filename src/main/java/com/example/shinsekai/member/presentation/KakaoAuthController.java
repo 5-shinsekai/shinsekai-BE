@@ -119,7 +119,7 @@ public class KakaoAuthController {
               is_success: '%s',
             }, clientUrl);
           </script>
-        """.formatted(uuid, socialId, isSuccess, url); // `url` = 프론트 origin
+        """.formatted(uuid, socialId, isSuccess);
 
         return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(html);
     }
