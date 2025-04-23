@@ -10,7 +10,7 @@ import com.example.shinsekai.member.dto.out.SignInResponseDto;
 public interface KakaoAuthService {
     KakaoTokenResponseDto getAccessToken(String code);
     KakaoUserResponseDto getUserInfo(String accessToken);
-    void socialLogin(KakaoUserResponseDto userResponse, String uuid);
+    String socialLogin(KakaoUserResponseDto userResponse, String uuid);
     void registerSocialMember(SocialMemberUpdateRequestDto socialMemberUpdateRequestDto);
     SignInResponseDto loginAndUpdateSocialMember(SocialMemberUpdateRequestDto socialMemberUpdateRequestDto);
 }
