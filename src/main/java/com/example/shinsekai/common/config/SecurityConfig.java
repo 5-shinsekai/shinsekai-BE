@@ -24,7 +24,7 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${url}")
+    @Value("${client-url}")
     private String frontendUrl;
 
     private final AuthenticationProvider daoAuthenticationProvider;
