@@ -16,8 +16,8 @@ public class ProductFilterServiceImpl implements ProductFilterService {
 
     @Override
     public Page<String> filterProducts(Long mainCategoryId, List<Long> subCategoryIds, List<Integer> seasonIds,
-                                       List<Long> sizeIds, Integer priceRangeId, Pageable pageable) {
+                                       List<Long> sizeIds, List<Long> colorIds, Integer priceRangeId, Pageable pageable) {
         return productFilterRepository.filterProductCodes(
-                mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRangeId, pageable);
+                mainCategoryId, subCategoryIds, seasonIds, sizeIds, colorIds, priceRangeId, pageable);
     }
 }

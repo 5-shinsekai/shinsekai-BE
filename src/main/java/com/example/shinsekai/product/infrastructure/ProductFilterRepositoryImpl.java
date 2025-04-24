@@ -32,6 +32,7 @@ public class ProductFilterRepositoryImpl implements ProductFilterRepositoryCusto
             List<Long> subCategoryIds,
             List<Integer> seasonIds,
             List<Long> sizeIds,
+            List<Long> colorIds,
             Integer priceRangeId,
             Pageable pageable
     ) {
@@ -64,6 +65,11 @@ public class ProductFilterRepositoryImpl implements ProductFilterRepositoryCusto
         // 사이즈 다중 조건
         if (sizeIds != null && !sizeIds.isEmpty()) {
             builder.and(optionList.sizeId.in(sizeIds));
+        }
+
+        // 색상 다중 조건
+        if (colorIds != null && !colorIds.isEmpty()) {
+            builder.and(optionList.colorId.in(colorIds));
         }
 
         // 가격 조건 (실구매가 = productPrice * (1 - discountRate / 100.0))
