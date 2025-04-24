@@ -42,11 +42,10 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 수정")
-    @PutMapping("/{productCode}")
+    @PutMapping
     public BaseResponseEntity<Void> updateProduct(
-            @PathVariable String productCode,
             @RequestBody ProductRequestVo productRequestVo) {
-        productService.updateProduct(productCode, ProductRequestDto.from(productRequestVo));
+        productService.updateProduct(ProductRequestDto.from(productRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 
@@ -99,11 +98,12 @@ public class ProductController {
             @RequestParam(required = false) List<Long> subCategoryIds,
             @RequestParam(required = false) List<Integer> seasonIds,
             @RequestParam(required = false) List<Long> sizeIds,
+            @RequestParam(required = false) List<Long> colorIds,
             @RequestParam(required = false) Integer priceRangeId,
             @PageableDefault(size = 10) @OneBasedPageable Pageable pageable
     ) {
         return new BaseResponseEntity<>(productFilterService.filterProducts(
-                mainCategoryId, subCategoryIds, seasonIds, sizeIds, priceRangeId, pageable
+                mainCategoryId, subCategoryIds, seasonIds, sizeIds, colorIds, priceRangeId, pageable
         ));
     }
 

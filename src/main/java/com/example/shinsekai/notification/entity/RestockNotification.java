@@ -28,7 +28,7 @@ public class RestockNotification {
     @Column(nullable = false)
     private Long productOptionId;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private LocalDateTime requestedAt;
 
     @Column(nullable = false)

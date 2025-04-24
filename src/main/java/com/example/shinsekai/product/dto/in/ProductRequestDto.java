@@ -74,6 +74,7 @@ public class ProductRequestDto {
 
     public static ProductRequestDto from(ProductRequestVo productRequestVo) {
         return ProductRequestDto.builder()
+                .productCode(productRequestVo.getProductCode())
                 .productName(productRequestVo.getProductName())
                 .productPrice(productRequestVo.getProductPrice())
                 .productStatus(productRequestVo.getProductStatus())

@@ -18,8 +18,13 @@ public class OneBasedPageableResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        int page = Integer.parseInt(Optional.ofNullable(webRequest.getParameter("page")).orElse("1"));
-        int size = Integer.parseInt(Optional.ofNullable(webRequest.getParameter("size")).orElse("10"));
+
+        String pageParam = webRequest.getParameter("page");
+        String sizeParam = webRequest.getParameter("size");
+
+        int page = (pageParam == null || pageParam.trim().isEmpty()) ? 1 : Integer.parseInt(pageParam);
+        int size = (sizeParam == null || sizeParam.trim().isEmpty()) ? 10 : Integer.parseInt(sizeParam);
+
         return PageRequest.of(page - 1, size);
     }
 }

@@ -67,12 +67,11 @@ public class ProductServiceImpl implements ProductService {
     //  상품 수정
     @Override
     @Transactional
-    public void updateProduct(String productCode, ProductRequestDto productRequestDto) {
-        Product product = productRepository.findByProductCode(productCode)
+    public void updateProduct(ProductRequestDto productRequestDto) {
+        Product product = productRepository.findByProductCode(productRequestDto.getProductCode())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT));
 
         product.update(productRequestDto);
-        ProductResponseDto.from(productRepository.save(product));
     }
 
     //  상품 상태 변경 (SELLING ↔ HIDDEN)
