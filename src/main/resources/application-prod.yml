@@ -7,9 +7,9 @@ spring:
     hikari:
       maximum-pool-size: 80
       minimum-idle: 30
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      connection-timeout: 30000
+      idle-timeout: 300000
+      max-lifetime: 900000
+      connection-timeout: 10000
   data:
     redis:
       host: redis
