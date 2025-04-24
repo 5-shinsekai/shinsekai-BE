@@ -15,7 +15,9 @@ import java.util.Optional;
 @Repository
 public interface AddressRepository extends JpaRepository<Address,Long> {
 
-    @Query("SELECT COUNT(a) FROM Address a WHERE a.memberUuid = :memberUuid AND (a.isDeleted = false OR a.isDeleted IS NULL)")
+    @Query("SELECT COUNT(a) FROM Address a" +
+            "WHERE a.memberUuid = :memberUuid AND " +
+            "(a.isDeleted = false OR a.isDeleted IS NULL)")
     int countActiveByMemberUuid(@Param("memberUuid") String memberUuid);
 
     Optional<Address> findByMemberUuidAndAddressUuid(String memberUuid, String addressUuid);
@@ -24,7 +26,9 @@ public interface AddressRepository extends JpaRepository<Address,Long> {
 
     Optional<Address> findByMemberUuidAndIsMainAddressIsTrue(String memberUuid);
 
-    @Query("SELECT a FROM Address a WHERE a.memberUuid = :memberUuid AND (a.isDeleted = false OR a.isDeleted IS NULL)")
+    @Query("SELECT a FROM Address a" +
+            "WHERE a.memberUuid = :memberUuid" +
+            "AND (a.isDeleted = false OR a.isDeleted IS NULL)")
     List<Address> findActiveMemberByMemberUuid(@Param("memberUuid") String memberUuid, Sort sort);
 
 }

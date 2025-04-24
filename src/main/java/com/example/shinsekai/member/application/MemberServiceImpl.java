@@ -1,7 +1,5 @@
 package com.example.shinsekai.member.application;
 
-import com.example.shinsekai.agreement.infrastructure.AgreementRepository;
-import com.example.shinsekai.agreement.infrastructure.MemberAgreementListRepository;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
