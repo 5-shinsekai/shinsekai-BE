@@ -5,12 +5,15 @@ import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.notification.application.RestockNotificationService;
 import com.example.shinsekai.notification.dto.in.RestockNotificationRequestDto;
+import com.example.shinsekai.notification.dto.out.RestockNotificationResponseDto;
 import com.example.shinsekai.notification.vo.in.RestockNotificationRequestVo;
+import com.example.shinsekai.notification.vo.out.RestockNotificationResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Restock", description = "재입고 알림 API")
 @RestController
@@ -20,6 +23,16 @@ public class RestockNotificationController {
 
     private final RestockNotificationService restockNotificationService;
     private final JwtTokenProvider jwtTokenProvider;
+
+    @Operation(summary = "재입고 전체 조회")
+    @GetMapping("/find_all")
+    public BaseResponseEntity<List<RestockNotificationResponseVo>> findAll() {
+        return new BaseResponseEntity<>(restockNotificationService.findAll()
+                .stream()
+                .map(RestockNotificationResponseDto::toVo)
+                .toList());
+    }
+
 
     @Operation(summary = "재입고 알림 신청")
     @PostMapping("/notify")
