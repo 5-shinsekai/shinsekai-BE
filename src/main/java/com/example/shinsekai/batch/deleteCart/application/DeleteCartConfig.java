@@ -30,7 +30,7 @@ public class DeleteCartConfig {
     private final CartRepository cartRepository;
     private final DataSource dataSource;
 
-    private final int chunkSize = 100;
+    private final int chunkSize = 500;
 
     @Bean
     public Job cartSoftDeleteJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws DuplicateJobException {
