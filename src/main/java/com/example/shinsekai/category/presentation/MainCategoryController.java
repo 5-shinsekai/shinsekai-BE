@@ -49,11 +49,10 @@ public class MainCategoryController {
     }
 
     @Operation(summary = "메인 카테고리 수정")
-    @PutMapping("/{categoryId}")
+    @PutMapping
     public BaseResponseEntity<Void> updateMainCategory(
-            @PathVariable Long categoryId,
             @RequestBody MainCategoryUpdateRequestVo mainCategoryUpdateRequestVo) {
-        mainCategoryService.updateMainCategory(MainCategoryUpdateRequestDto.from(categoryId, mainCategoryUpdateRequestVo));
+        mainCategoryService.updateMainCategory(MainCategoryUpdateRequestDto.from(mainCategoryUpdateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }
