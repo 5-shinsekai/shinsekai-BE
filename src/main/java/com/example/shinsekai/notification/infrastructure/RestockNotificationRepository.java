@@ -31,9 +31,14 @@ public interface RestockNotificationRepository extends JpaRepository<RestockNoti
             "AND r.mailNotified = false " +
             "AND r.sseNotified = false " +
             "AND r.validUntil > CURRENT_TIMESTAMP")
-    List<RestockNotification> findValidUnnotifiedByProductOptionId(@Param("productOptionId") Long productOptionId);
+    List<RestockNotification> findValidUnnotificationByProductOptionId(@Param("productOptionId") Long productOptionId);
 
-
+    @Query("SELECT r FROM RestockNotification r " +
+            "WHERE r.memberUuid = :memberUuid " +
+            "AND r.mailNotified = true " +
+            "AND r.sseNotified = false " +
+            "AND r.validUntil > CURRENT_TIMESTAMP")
+    List<RestockNotification> findUnSseNotificationByProductOptionId(@Param("memberUuid") String memberUuid);
 
     @Query(value = """
         SELECT c.product_name
@@ -49,4 +54,5 @@ public interface RestockNotificationRepository extends JpaRepository<RestockNoti
     List<String> findProductNamesToNotifyByMember(@Param("memberUuid") String memberUuid);
 
     List<RestockNotification> findByMemberUuidAndSseNotifiedIsFalse(String memberUuid);
+
 }
