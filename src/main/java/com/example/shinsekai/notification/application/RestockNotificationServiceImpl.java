@@ -63,7 +63,7 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
     @Transactional
     public void notifyForRestockedOption(Long productOptionId) {
         List<RestockNotification> notifications = restockNotificationRepository
-                .findAllByProductOptionIdAndMailNotifiedFalseAndSseNotifiedFalseAndValidUntilAfter(productOptionId, LocalDateTime.now());
+                .findValidUnnotifiedByProductOptionId(productOptionId);
 
         for (RestockNotification notice : notifications) {
 
