@@ -24,7 +24,7 @@ public class SseService {
 
     @Transactional
     public SseEmitter connect(String memberUuid) {
-        SseEmitter emitter = new SseEmitter(15 * 60 * 1000L); // 15분 유효
+        SseEmitter emitter = new SseEmitter(5 * 60 * 1000L); // 5분 유효
         emitters.put(memberUuid, emitter);
 
         // 과거 알림 먼저 전송
@@ -39,7 +39,10 @@ public class SseService {
 
         // sse 보냄 체크
         List<RestockNotification> restockNotificationList = restockNotificationRepository.findByMemberUuidAndSseNotifiedIsFalse(memberUuid);
-        restockNotificationList.forEach(RestockNotification::markAsSseNotified);
+        restockNotificationList
+                .stream()
+                .filter(RestockNotification::getMailNotified)
+                .forEach(RestockNotification::markAsSseNotified);
 
         // 연결 끊기거나 오류 나면 emitter 제거
         emitter.onCompletion(() -> emitters.remove(memberUuid));

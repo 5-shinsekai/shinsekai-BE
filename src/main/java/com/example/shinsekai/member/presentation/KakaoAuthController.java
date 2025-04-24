@@ -57,7 +57,7 @@ public class KakaoAuthController {
     public BaseResponseEntity<KakaoAuthUrlVo> requestSocialLogin(@RequestParam String callbackUrl)throws UnsupportedEncodingException {
 
         String rawState = UUID.randomUUID() + "|" + callbackUrl;
-        String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8.toString());
+        String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8);
 
         String clientId = this.clientId; // 실제 클라이언트 ID로 대체
         String redirectUri = this.redirectUri;
@@ -67,10 +67,6 @@ public class KakaoAuthController {
                 + "&response_type=code"
                 + "&state=" + encodedState;
 
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(URI.create(kakaoAuthUrl));
-//        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
-
         return new BaseResponseEntity<>(new KakaoAuthUrlVo(kakaoAuthUrl));
     }
 
@@ -78,7 +74,7 @@ public class KakaoAuthController {
     @GetMapping("/callback")
     public ResponseEntity<String> kakaoCallback(HttpServletRequest request) throws UnsupportedEncodingException {
 
-        String rawState = URLDecoder.decode(request.getParameter("state"), StandardCharsets.UTF_8.toString());
+        String rawState = URLDecoder.decode(request.getParameter("state"), StandardCharsets.UTF_8);
 
         String[] parts = rawState.split("\\|");
         String uuid = parts[0];
@@ -101,14 +97,6 @@ public class KakaoAuthController {
         if("".equals(socialId)) {
             isSuccess = "true";
         }
-
-//        // 클라이언트로 리다이렉트하기 ( + searchParam: state )
-//        String callbackUrl = url
-//                + "?uuid=" + uuid;
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(URI.create(callbackUrl));
-//        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
 
         // 최종 리디렉션 대신 메시지를 보내는 HTML 반환
         String html = """

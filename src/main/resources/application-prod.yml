@@ -4,6 +4,12 @@ spring:
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 80
+      minimum-idle: 30
+      idle-timeout: 300000
+      max-lifetime: 900000
+      connection-timeout: 10000
   data:
     redis:
       host: redis

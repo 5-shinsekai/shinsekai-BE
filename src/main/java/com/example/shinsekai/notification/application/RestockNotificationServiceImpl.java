@@ -56,13 +56,6 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
             throw new BaseException(BaseResponseStatus.EXIST_NOTIFICATION_SETTING);
         }
 
-//        RestockNotification notification = RestockNotification.builder()
-//                .memberUuid(memberUuid)
-//                .productOptionId(dto.getProductOptionId())
-//                .requestedAt(LocalDateTime.now())
-//                .validUntil(LocalDateTime.now().plusDays(dto.getDurationDays()))
-//                .build();
-
         restockNotificationRepository.save(dto.toEntity(memberUuid));
     }
 
@@ -70,7 +63,7 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
     @Transactional
     public void notifyForRestockedOption(Long productOptionId) {
         List<RestockNotification> notifications = restockNotificationRepository
-                .findAllByProductOptionIdAndMailNotifiedFalseAndSseNotifiedFalseAndValidUntilAfter(productOptionId, LocalDateTime.now());
+                .findValidUnnotifiedByProductOptionId(productOptionId);
 
         for (RestockNotification notice : notifications) {
 

@@ -16,10 +16,14 @@ public interface RestockNotificationRepository extends JpaRepository<RestockNoti
 
     boolean existsByMemberUuidAndProductOptionIdAndMailNotifiedFalseAndSseNotifiedFalse(String memberUuid, Long productOptionId);
 
-    List<RestockNotification> findAllByProductOptionIdAndMailNotifiedFalseAndSseNotifiedFalseAndValidUntilAfter(
-            Long productOptionId,
-            LocalDateTime now
-    );
+    @Query("SELECT r FROM RestockNotification r " +
+            "WHERE r.productOptionId = :productOptionId " +
+            "AND r.mailNotified = false " +
+            "AND r.sseNotified = false " +
+            "AND r.validUntil > CURRENT_TIMESTAMP")
+    List<RestockNotification> findValidUnnotifiedByProductOptionId(@Param("productOptionId") Long productOptionId);
+
+
 
     @Query(value = """
         SELECT c.product_name
