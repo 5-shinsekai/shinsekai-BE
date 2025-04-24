@@ -12,9 +12,19 @@ import java.util.List;
 @Repository
 public interface RestockNotificationRepository extends JpaRepository<RestockNotification, Long> {
 
-    List<RestockNotification> findAll();
+    List<RestockNotification> findByMemberUuid(String memberUuid);
 
     boolean existsByMemberUuidAndProductOptionIdAndMailNotifiedFalseAndSseNotifiedFalse(String memberUuid, Long productOptionId);
+
+    @Query("SELECT r FROM RestockNotification r " +
+            "WHERE r.productOptionId = :productOptionId " +
+            "AND r.memberUuid = :memberUuid " +
+            "AND r.mailNotified = false " +
+            "AND r.sseNotified = false " +
+            "AND r.validUntil > CURRENT_TIMESTAMP")
+    List<RestockNotification> findValidUnnotifiedByMemberUuidAndProductOptionId(
+           @Param("productOptionId") Long productOptionId,  @Param("memberUuid") String memberUuid);
+
 
     @Query("SELECT r FROM RestockNotification r " +
             "WHERE r.productOptionId = :productOptionId " +

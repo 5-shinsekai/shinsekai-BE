@@ -35,8 +35,8 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
     private final EmailService emailService;
 
     @Override
-    public List<RestockNotificationResponseDto> findAll() {
-        List<RestockNotification> result = restockNotificationRepository.findAll();
+    public List<RestockNotificationResponseDto> findMyMemberUuid(String memberUuid) {
+        List<RestockNotification> result = restockNotificationRepository.findByMemberUuid(memberUuid);
         return result.stream()
                 .map(RestockNotificationResponseDto::from)
                 .toList();
@@ -51,8 +51,8 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
             throw new BaseException(BaseResponseStatus.INVALID_RESTOCK_NOTIFICATION_CONDITION);
         }
 
-        if (restockNotificationRepository.existsByMemberUuidAndProductOptionIdAndMailNotifiedFalseAndSseNotifiedFalse(
-                memberUuid, dto.getProductOptionId())) {
+        if (restockNotificationRepository.findValidUnnotifiedByMemberUuidAndProductOptionId(
+                dto.getProductOptionId(), memberUuid).isEmpty()) {
             throw new BaseException(BaseResponseStatus.EXIST_NOTIFICATION_SETTING);
         }
 
@@ -87,7 +87,7 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
                 notice.markAsSseNotified();
 
                 // 접속해 있는 회원에게 sse로 재입고 알림을 보냄
-                sseService.sendToMember(notice.getMemberUuid(), product.getProductName() + "이(가) 재입고되었습니다!");
+                sseService.sendToMember(notice.getMemberUuid(), product.getProductCode(), product.getProductName());
             }
 
         }

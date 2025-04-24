@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RestockNotificationService {
 
-    List<RestockNotificationResponseDto> findAll();
+    List<RestockNotificationResponseDto> findMyMemberUuid(String memberUuid);
 
     void register(String memberUuid,RestockNotificationRequestDto dto);
 
