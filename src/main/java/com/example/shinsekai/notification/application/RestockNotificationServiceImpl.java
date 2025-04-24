@@ -6,6 +6,7 @@ import com.example.shinsekai.email.application.EmailService;
 import com.example.shinsekai.member.entity.Member;
 import com.example.shinsekai.member.infrastructure.MemberRepository;
 import com.example.shinsekai.notification.dto.in.RestockNotificationRequestDto;
+import com.example.shinsekai.notification.dto.out.RestockNotificationResponseDto;
 import com.example.shinsekai.notification.entity.RestockNotification;
 import com.example.shinsekai.notification.infrastructure.RestockNotificationRepository;
 import com.example.shinsekai.option.entity.OptionStatus;
@@ -34,6 +35,14 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
     private final EmailService emailService;
 
     @Override
+    public List<RestockNotificationResponseDto> findAll() {
+        List<RestockNotification> result = restockNotificationRepository.findAll();
+        return result.stream()
+                .map(RestockNotificationResponseDto::from)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public void register(String memberUuid, RestockNotificationRequestDto dto) {
         ProductOptionList productOptionList = productOptionListRepository.findById(dto.getProductOptionId())
@@ -47,14 +56,14 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
             throw new BaseException(BaseResponseStatus.EXIST_NOTIFICATION_SETTING);
         }
 
-        RestockNotification notification = RestockNotification.builder()
-                .memberUuid(memberUuid)
-                .productOptionId(dto.getProductOptionId())
-                .requestedAt(LocalDateTime.now())
-                .validUntil(LocalDateTime.now().plusDays(dto.getDurationDays()))
-                .build();
+//        RestockNotification notification = RestockNotification.builder()
+//                .memberUuid(memberUuid)
+//                .productOptionId(dto.getProductOptionId())
+//                .requestedAt(LocalDateTime.now())
+//                .validUntil(LocalDateTime.now().plusDays(dto.getDurationDays()))
+//                .build();
 
-        restockNotificationRepository.save(notification);
+        restockNotificationRepository.save(dto.toEntity(memberUuid));
     }
 
     @Override

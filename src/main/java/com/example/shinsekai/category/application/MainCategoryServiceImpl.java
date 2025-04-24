@@ -54,7 +54,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
     public void updateMainCategory(MainCategoryUpdateRequestDto mainCategoryUpdateRequestDto) {
         MainCategory mainCategory = mainCategoryRepository.findById(mainCategoryUpdateRequestDto.getId())
                 .orElseThrow(
-                        () -> new BaseException(BaseResponseStatus.NO_EXIST_PRODUCT)
+                        () -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY)
                 );
 
         mainCategoryRepository.save( mainCategoryUpdateRequestDto.toEntity(mainCategory));

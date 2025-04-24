@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface RestockNotificationRepository extends JpaRepository<RestockNotification, Long> {
 
+    List<RestockNotification> findAll();
+
     boolean existsByMemberUuidAndProductOptionIdAndMailNotifiedFalseAndSseNotifiedFalse(String memberUuid, Long productOptionId);
 
     List<RestockNotification> findAllByProductOptionIdAndMailNotifiedFalseAndSseNotifiedFalseAndValidUntilAfter(

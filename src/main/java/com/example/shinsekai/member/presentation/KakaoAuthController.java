@@ -46,6 +46,9 @@ public class KakaoAuthController {
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
 
+    @Value("${client-url}")
+    private String clientUrl;
+
     private final KakaoAuthService kakaoAuthService;
     private final RedisProvider redisProvider;
 
@@ -95,11 +98,9 @@ public class KakaoAuthController {
         String socialId = kakaoAuthService.socialLogin(userResponseDto, uuid);
         String isSuccess = "false";
 
-        if("".equals(socialId)){
+        if("".equals(socialId)) {
             isSuccess = "true";
         }
-
-
 
 //        // 클라이언트로 리다이렉트하기 ( + searchParam: state )
 //        String callbackUrl = url
@@ -117,9 +118,8 @@ public class KakaoAuthController {
               social_id: '%s',
               is_success: '%s',
             }, '%s');
-            window.close();
           </script>
-        """.formatted(uuid, socialId, url, isSuccess); // `url` = 프론트 origin
+        """.formatted(uuid, socialId, isSuccess, clientUrl);
 
         return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(html);
     }

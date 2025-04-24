@@ -50,11 +50,10 @@ public class SubCategoryController {
     }
 
     @Operation(summary = "하위(sub) 카테고리 수정")
-    @PutMapping("/{categoryId}")
+    @PutMapping
     public BaseResponseEntity<Void> updateSubCategory(
-            @PathVariable Long categoryId,
             @RequestBody SubCategoryUpdateRequestVo subCategoryUpdateRequestVo) {
-        subCategoryService.updateSubCategory(SubCategoryUpdateRequestDto.from(categoryId, subCategoryUpdateRequestVo));
+        subCategoryService.updateSubCategory(SubCategoryUpdateRequestDto.from(subCategoryUpdateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }
