@@ -101,18 +101,13 @@ public class KakaoAuthController {
             isSuccess = "true";
         }
 
-        // 최종 리디렉션 대신 메시지를 보내는 HTML 반환
-        String html = """
-          <script>
-            window.opener.postMessage({
-              uuid: '%s',
-              social_id: '%s',
-              is_success: '%s',
-            }, '%s');
-          </script>
-        """.formatted(uuid, socialId, isSuccess, clientUrl);
+        // 클라이언트로 리다이렉트하기 ( + searchParam: state )
+        String callbackUrl = url
+                + "?uuid=" + uuid;
 
-        return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(html);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(callbackUrl));
+        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
     }
 
     @Operation(summary = "회원 정보 요청")
