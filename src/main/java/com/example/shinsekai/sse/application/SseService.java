@@ -40,7 +40,7 @@ public class SseService {
         });
 
         // sse 보냄 체크
-        List<RestockNotification> restockNotificationList = restockNotificationRepository.findByMemberUuidAndSseNotifiedIsFalse(memberUuid);
+        List<RestockNotification> restockNotificationList = restockNotificationRepository.findUnSseNotificationByProductOptionId(memberUuid);
         restockNotificationList
                 .stream()
                 .filter(RestockNotification::getMailNotified)
