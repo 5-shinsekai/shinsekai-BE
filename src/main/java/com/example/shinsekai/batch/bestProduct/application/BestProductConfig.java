@@ -9,8 +9,10 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 
@@ -21,12 +23,14 @@ public class BestProductConfig {
 
     private final BestProductStepConfig bestProductStepConfig;
     private final ProductScoreStepConfig productScoreStepConfig;
-    private final int CHUNK_SIZE = 200;
+    private final JdbcTemplate jdbcTemplate;
+    private final int CHUNK_SIZE = 500;
 
     @Bean
     public Job bestProductJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws Exception {
         Job job = new JobBuilder("bestProductJob", jobRepository)
                 .start(productScoreStep(jobRepository, transactionManager))
+                .next(deleteBestProductStep(jobRepository, transactionManager))
                 .next(bestProductStep(jobRepository, transactionManager))
                 .build();
         return job;
@@ -44,8 +48,19 @@ public class BestProductConfig {
                 .build();
     }
 
+    // Step 2: 순위테이블 삭제
+    @Bean
+    public Step deleteBestProductStep(JobRepository jobRepository,
+                                      PlatformTransactionManager transactionManager) {
+        return new StepBuilder("deleteBestProductStep", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+                    jdbcTemplate.update("DELETE FROM best_product");
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
+                .build();
+    }
 
-    // Step 2: 순위 계산
+    // Step 3: 순위 계산
     @Bean
     public Step bestProductStep(JobRepository jobRepository,
                                 PlatformTransactionManager transactionManager) throws Exception {

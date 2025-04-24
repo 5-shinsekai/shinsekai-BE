@@ -9,6 +9,7 @@ import com.example.shinsekai.member.dto.out.KakaoTokenResponseDto;
 import com.example.shinsekai.member.dto.out.KakaoUserResponseDto;
 import com.example.shinsekai.member.dto.out.SignInResponseDto;
 import com.example.shinsekai.member.vo.in.SocialMemberUpdateRequestVo;
+import com.example.shinsekai.member.vo.out.KakaoAuthUrlVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,12 +46,15 @@ public class KakaoAuthController {
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
 
+    @Value("${client-url}")
+    private String clientUrl;
+
     private final KakaoAuthService kakaoAuthService;
     private final RedisProvider redisProvider;
 
     @Operation(summary = "카카오 로그인 요청")
     @GetMapping("/login")
-    public ResponseEntity<Void> requestSocialLogin(@RequestParam String callbackUrl)throws UnsupportedEncodingException {
+    public BaseResponseEntity<KakaoAuthUrlVo> requestSocialLogin(@RequestParam String callbackUrl)throws UnsupportedEncodingException {
 
         String rawState = UUID.randomUUID() + "|" + callbackUrl;
         String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8.toString());
@@ -62,14 +67,16 @@ public class KakaoAuthController {
                 + "&response_type=code"
                 + "&state=" + encodedState;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(kakaoAuthUrl));
-        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create(kakaoAuthUrl));
+//        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
+
+        return new BaseResponseEntity<>(new KakaoAuthUrlVo(kakaoAuthUrl));
     }
 
     @Operation(summary = "카카오 로그인 후처리")
     @GetMapping("/callback")
-    public ResponseEntity<Void> kakaoCallback(HttpServletRequest request) throws UnsupportedEncodingException {
+    public ResponseEntity<String> kakaoCallback(HttpServletRequest request) throws UnsupportedEncodingException {
 
         String rawState = URLDecoder.decode(request.getParameter("state"), StandardCharsets.UTF_8.toString());
 
@@ -88,15 +95,33 @@ public class KakaoAuthController {
         // 3. 사용자 인증
         //    (스타벅스) AccessToken&RefreshToken 생성
         //    SecurityContextHolder에 회원 정보 저장, 회원 정보(토큰 포함) Redis에 저장
-        kakaoAuthService.socialLogin(userResponseDto, uuid);
+        String socialId = kakaoAuthService.socialLogin(userResponseDto, uuid);
+        String isSuccess = "false";
 
-        // 클라이언트로 리다이렉트하기 ( + searchParam: state )
-        String callbackUrl = url
-                + "?uuid=" + uuid;
+        if("".equals(socialId)) {
+            isSuccess = "true";
+        }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(callbackUrl));
-        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
+//        // 클라이언트로 리다이렉트하기 ( + searchParam: state )
+//        String callbackUrl = url
+//                + "?uuid=" + uuid;
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create(callbackUrl));
+//        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
+
+        // 최종 리디렉션 대신 메시지를 보내는 HTML 반환
+        String html = """
+          <script>
+            window.opener.postMessage({
+              uuid: '%s',
+              social_id: '%s',
+              is_success: '%s',
+            }, '%s');
+          </script>
+        """.formatted(uuid, socialId, isSuccess, clientUrl);
+
+        return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(html);
     }
 
     @Operation(summary = "회원 정보 요청")
