@@ -38,7 +38,7 @@ public class DynamicBatchScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(cron = "0 0 * * * *")
     public void checkAndUpdateCrons() {
         List<String> jobNames = List.of("purchaseDailyAggregationJob", "purchaseWeeklyAggregationJob", "bestProductJob", "cartSoftDeleteJob");
         for (String jobName : jobNames) {
