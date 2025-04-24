@@ -107,6 +107,8 @@ public class EmailServiceImpl implements EmailService{
     @Override
     @Transactional
     public void sendRestockEmail(String toEmail, String productName) {
+        memberRepository.findByEmail(toEmail)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL));
         buildAndSend(toEmail,EmailType.RESTOCK_NOTIFY, productName);
     }
 

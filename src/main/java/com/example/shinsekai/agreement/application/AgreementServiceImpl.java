@@ -49,8 +49,8 @@ public class AgreementServiceImpl implements AgreementService{
     @Override
     @Transactional
     public void updateAgreement(AgreementUpdateRequestDto agreementUpdateRequestDto) {
-        Agreement agreement = agreementRepository.findById(agreementUpdateRequestDto.getAgreementId()).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.NO_EXIST_AGREEMENT));
+        Agreement agreement = agreementRepository.findById(agreementUpdateRequestDto.getAgreementId())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_AGREEMENT));
         agreementRepository.save(agreementUpdateRequestDto.toEntity(agreement));
     }
 
@@ -70,7 +70,7 @@ public class AgreementServiceImpl implements AgreementService{
 
     @Override
     public List<AgreementResponseDto> getAgreementByMemberUuid(String memberUuid) {
-        return memberAgreementListRepository.findMemberAgreementListByMemberUuidAndIsAgreeIsTrue(memberUuid)
+        return memberAgreementListRepository.findMemberAgreementListByMemberUuidAndIsAgreeTrue(memberUuid)
                 .stream()
                 .map(memberAgreementList ->
                         AgreementResponseDto.from(memberAgreementList.getAgreement()))
@@ -79,13 +79,10 @@ public class AgreementServiceImpl implements AgreementService{
 
     @Override
     public AgreementResponseDto getAgreementByMemberUuidAndAgreementId(String memberUuid, Long agreementId) {
-        return memberAgreementListRepository.findMemberAgreementListByMemberUuidAndIsAgreeIsTrue(memberUuid)
-                .stream()
-                .filter(memberAgreementList
-                        -> memberAgreementList.getAgreement().getId().equals(agreementId))
-                .findFirst()
-                .map(memberAgreementList
-                        -> AgreementResponseDto.from(memberAgreementList.getAgreement()))
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_AGREEMENT));
+        Agreement agreement = memberAgreementListRepository
+                .findMemberAgreementListByMemberUuidAndAgreementIdAndIsAgreeTrue(memberUuid, agreementId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_AGREEMENT))
+                .getAgreement();
+        return AgreementResponseDto.from(agreement);
     }
 }

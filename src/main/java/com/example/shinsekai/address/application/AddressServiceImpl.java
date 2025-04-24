@@ -64,8 +64,8 @@ public class AddressServiceImpl implements AddressService{
         // 최초 등록이 아닌 경우
         else if (activeAddressCount > 0 && activeAddressCount < 10) {
 
-            Boolean requestedDtoIsMain =
-                    addressCreateRequestDto.getIsMainAddress() == null ? false : addressCreateRequestDto.getIsMainAddress();
+            boolean requestedDtoIsMain =
+                    addressCreateRequestDto.getIsMainAddress() != null && addressCreateRequestDto.getIsMainAddress();
             if (requestedDtoIsMain) {
                 Address prevMainAddress =
                         addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressCreateRequestDto.getMemberUuid())
@@ -92,11 +92,11 @@ public class AddressServiceImpl implements AddressService{
                         , addressUpdateRequestDto.getAddressUuid())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS));
 
-        Boolean isMainAddressExist =
+        boolean isMainAddressExist =
                 addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressUpdateRequestDto.getMemberUuid())
                         .isPresent();
 
-        Boolean isMainAddress = false;
+        boolean isMainAddress = false;
 
         // 기본 배송지가 존재한다면
         if (isMainAddressExist) {
@@ -108,9 +108,6 @@ public class AddressServiceImpl implements AddressService{
 
                 // 저장할 객체를 메인 주소지로 지정
                 isMainAddress = true;
-
-            } else {
-                isMainAddress = false;
             }
 
         } 

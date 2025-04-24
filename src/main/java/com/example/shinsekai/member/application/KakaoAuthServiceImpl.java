@@ -60,7 +60,6 @@ public class KakaoAuthServiceImpl implements KakaoAuthService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-
         log.info("headers {}", headers);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
