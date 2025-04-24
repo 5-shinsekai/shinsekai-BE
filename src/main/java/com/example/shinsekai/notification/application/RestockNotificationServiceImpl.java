@@ -52,9 +52,8 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
         }
 
         if (restockNotificationRepository.findValidUnnotifiedByMemberUuidAndProductOptionId(
-                dto.getProductOptionId(), memberUuid).isEmpty()) {
+                dto.getProductOptionId(), memberUuid).size() > 0)
             throw new BaseException(BaseResponseStatus.EXIST_NOTIFICATION_SETTING);
-        }
 
         restockNotificationRepository.save(dto.toEntity(memberUuid));
     }
