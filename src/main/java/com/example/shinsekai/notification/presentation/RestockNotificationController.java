@@ -25,9 +25,10 @@ public class RestockNotificationController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "재입고 전체 조회")
-    @GetMapping("/find_all")
+    @GetMapping("/find")
     public BaseResponseEntity<List<RestockNotificationResponseVo>> findAll() {
-        return new BaseResponseEntity<>(restockNotificationService.findAll()
+
+        return new BaseResponseEntity<>(restockNotificationService.findMyMemberUuid(jwtTokenProvider.getMemberUuid())
                 .stream()
                 .map(RestockNotificationResponseDto::toVo)
                 .toList());

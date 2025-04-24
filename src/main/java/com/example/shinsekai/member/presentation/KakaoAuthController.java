@@ -53,8 +53,9 @@ public class KakaoAuthController {
     private final RedisProvider redisProvider;
 
     @Operation(summary = "카카오 로그인 요청")
+    @CrossOrigin(origins = "*") // 어느 프론트든 다 허용
     @GetMapping("/login")
-    public BaseResponseEntity<KakaoAuthUrlVo> requestSocialLogin(@RequestParam String callbackUrl)throws UnsupportedEncodingException {
+    public  ResponseEntity<Void> requestSocialLogin(@RequestParam String callbackUrl) {
 
         String rawState = UUID.randomUUID() + "|" + callbackUrl;
         String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8);
@@ -67,7 +68,9 @@ public class KakaoAuthController {
                 + "&response_type=code"
                 + "&state=" + encodedState;
 
-        return new BaseResponseEntity<>(new KakaoAuthUrlVo(kakaoAuthUrl));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(kakaoAuthUrl));
+        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
     }
 
     @Operation(summary = "카카오 로그인 후처리")

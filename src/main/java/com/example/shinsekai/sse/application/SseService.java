@@ -5,10 +5,12 @@ import com.example.shinsekai.notification.entity.RestockNotification;
 import com.example.shinsekai.notification.infrastructure.RestockNotificationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -58,13 +60,20 @@ public class SseService {
         return emitter;
     }
 
-    public void sendToMember(String memberUuid, String message) {
+    public void sendToMember(String memberUuid, String productCode, String productName) {
         SseEmitter emitter = emitters.get(memberUuid);
         if (emitter != null) {
             try {
+                // JSON으로 보낼 객체 생성
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("productCode", productCode);
+                payload.put("productName", productName);
+                payload.put("timestamp", System.currentTimeMillis()); // 예시로 타임스탬프 추가
+
                 emitter.send(SseEmitter.event()
                         .name("restock")
-                        .data(message));
+                        .data(payload, MediaType.APPLICATION_JSON)); // JSON으로 보냄
+
             } catch (IOException e) {
                 emitter.completeWithError(e);
                 emitters.remove(memberUuid);
