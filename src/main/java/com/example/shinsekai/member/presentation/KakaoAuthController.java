@@ -51,9 +51,27 @@ public class KakaoAuthController {
     private final RedisProvider redisProvider;
 
     @Operation(summary = "카카오 로그인 요청")
-    @CrossOrigin(origins = "${client-url}")
     @GetMapping("/login")
-    public  ResponseEntity<Void> requestSocialLogin(@RequestParam String callbackUrl) {
+    public  BaseResponseEntity<KakaoAuthUrlVo> requestSocialLogin(@RequestParam String callbackUrl) {
+        String rawState = UUID.randomUUID() + "|" + callbackUrl;
+        String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8);
+
+        String clientId = this.clientId;
+        String redirectUri = this.redirectUri;
+        String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize"
+                + "?client_id=" + clientId
+                + "&redirect_uri=" + redirectUri
+                + "&response_type=code"
+                + "&state=" + encodedState;
+
+        return new BaseResponseEntity<>(KakaoAuthUrlVo.builder().url(kakaoAuthUrl).build());
+    }
+
+
+    @Operation(summary = "고장난 카카오 로그인 요청")
+    @CrossOrigin(origins = "${client-url}")
+    @GetMapping("/malfunctioned_login")
+    public  ResponseEntity<Void> malfunctionedRequestSocialLogin(@RequestParam String callbackUrl) {
 
         String rawState = UUID.randomUUID() + "|" + callbackUrl;
         String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8);
@@ -73,7 +91,7 @@ public class KakaoAuthController {
 
     @Operation(summary = "카카오 로그인 후처리")
     @GetMapping("/callback")
-    public ResponseEntity<String> kakaoCallback(HttpServletRequest request) throws UnsupportedEncodingException {
+    public ResponseEntity<String> kakaoCallback(HttpServletRequest request) {
 
         String rawState = URLDecoder.decode(request.getParameter("state"), StandardCharsets.UTF_8);
 
@@ -111,7 +129,7 @@ public class KakaoAuthController {
     }
 
     @Operation(summary = "회원 정보 요청")
-    @GetMapping("/{uuid}")
+    @GetMapping("{uuid}")
     public BaseResponseEntity<JsonNode> reRequest(@PathVariable String uuid) {
         String jsonString = redisProvider.getSignInData(uuid);
         redisProvider.deleteValue(uuid);
