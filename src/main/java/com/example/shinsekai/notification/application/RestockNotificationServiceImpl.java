@@ -82,11 +82,8 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
 
             // memberUuid로 서버 접속 여부 체크
             if(sseService.isUserConnected(member.getMemberUuid())) {
-                // sse 보냄 체크
-                notice.markAsSseNotified();
-
-                // 접속해 있는 회원에게 sse로 재입고 알림을 보냄
-                sseService.sendToMember(notice.getMemberUuid(), product.getProductCode(), product.getProductName());
+                // 접속해 있는 회원에게 sse로 재입고 알림을 보냄(DB에 sse보냄 체크 로직도 포함)
+                sseService.sendToMember(notice.getMemberUuid(), productOptionId, product.getProductCode(), product.getProductName());
             }
 
         }
