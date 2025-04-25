@@ -79,7 +79,7 @@ public class SseService {
         return emitter;
     }
 
-    public void sendToMember(String memberUuid, String productCode, String productName) {
+    public void sendToMember(String memberUuid, Long productOptionId, String productCode, String productName) {
         SseEmitter emitter = emitters.get(memberUuid);
         if (emitter != null) {
             try {
@@ -97,6 +97,12 @@ public class SseService {
                 emitter.completeWithError(e);
                 emitters.remove(memberUuid);
             }
+
+            // sse 보냄 체크
+            restockNotificationRepository
+                    .findValidUnSseNotifiedByMemberUuidAndProductOptionId(productOptionId, memberUuid)
+                    .forEach(RestockNotification::markAsSseNotified);
+
         }
     }
 
