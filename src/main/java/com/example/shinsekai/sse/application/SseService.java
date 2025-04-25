@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +32,20 @@ public class SseService {
         SseEmitter emitter = new SseEmitter(5 * 60 * 1000L); // 5분 유효
         emitters.put(memberUuid, emitter);
 
+        // 연결 끊기거나 오류 나면 emitter 제거
+        emitter.onCompletion(() -> emitters.remove(memberUuid));
+        emitter.onTimeout(() -> emitters.remove(memberUuid));
+        emitter.onError(e -> emitters.remove(memberUuid));
+
+        // 연결 확인 이벤트 전송
+        try {
+            emitter.send(SseEmitter.event().name("connected").data(BaseResponseStatus.SUCCESS_TO_SSE_CONNECT));
+        } catch (IOException e) {
+            emitter.completeWithError(e);
+            return emitter;
+        }
+
+        /************************** 비즈니스 로직 시작 **************************/
         // 과거 알림 먼저 전송
         List<String> unreadNotifications = restockNotificationRepository.findProductNamesToNotifyByMember(memberUuid);
         unreadNotifications.forEach(msg -> {
@@ -46,16 +63,18 @@ public class SseService {
                 .filter(RestockNotification::getMailNotified)
                 .forEach(RestockNotification::markAsSseNotified);
 
-        // 연결 끊기거나 오류 나면 emitter 제거
-        emitter.onCompletion(() -> emitters.remove(memberUuid));
-        emitter.onTimeout(() -> emitters.remove(memberUuid));
-        emitter.onError(e -> emitters.remove(memberUuid));
+        /************************** 비즈니스 로직 종료 **************************/
 
-        try {
-            emitter.send(SseEmitter.event().name("connected").data(BaseResponseStatus.SUCCESS_TO_SSE_CONNECT));
-        } catch (IOException e) {
-            emitter.completeWithError(e);
-        }
+        // Heartbeat: 주기적으로 빈 이벤트 전송해서 연결 유지
+        ScheduledExecutorService heartbeatExecutor = Executors.newSingleThreadScheduledExecutor();
+        heartbeatExecutor.scheduleAtFixedRate(() -> {
+            try {
+                emitter.send(SseEmitter.event().comment("heartbeat"));
+            } catch (IOException e) {
+                emitter.completeWithError(e);
+            }
+        }, 0, 15, TimeUnit.SECONDS); // 15초마다
+
 
         return emitter;
     }
