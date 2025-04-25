@@ -120,4 +120,40 @@ public class ProductJsonUploadService {
 
         productSeasonListRepository.save(seasonList);
     }
+
+    @Transactional
+    public void jsonUploadPartOfProduct(ProductRequestDto dto, Map<String, Object> rawJson) {
+        ProductResponseDto product = ProductResponseDto.from(productRepository.save(dto.toEntity()));
+        productRepository.flush();
+        String productCode = product.getProductCode();
+
+        List<String> categoryNames = (List<String>) rawJson.get("카테고리");
+        String mainCategoryName = categoryNames.get(0);
+        String subCategoryName = categoryNames.size() > 1 ? categoryNames.get(1) : null;
+
+        long mainCategoryId = findOrCreateMainCategory(mainCategoryName);
+        Long subCategoryId = (subCategoryName != null)
+                ? findOrCreateSubCategory(subCategoryName, mainCategoryId)
+                : null;
+
+        ProductCategoryList categoryList = ProductCategoryList.builder()
+                .productCode(productCode)
+                .mainCategoryId(mainCategoryId)
+                .subCategoryId(subCategoryId)
+                .build();
+
+        productCategoryListRepository.save(categoryList);
+
+        ProductOptionList optionList = ProductOptionList.builder()
+                .productCode(productCode)
+                .colorId(randomId())
+                .sizeId(randomId())
+                .optionStatus(OptionStatus.IN_STOCK)
+                .optionPrice(1000)
+                .stockCount(randomStock(10, 100))
+                .minStockCount(10)
+                .build();
+
+        productOptionListRepository.save(optionList);
+    }
 }
