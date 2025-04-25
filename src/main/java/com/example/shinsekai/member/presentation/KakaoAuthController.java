@@ -46,21 +46,19 @@ public class KakaoAuthController {
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
 
-    @Value("${client-url}")
-    private String clientUrl;
 
     private final KakaoAuthService kakaoAuthService;
     private final RedisProvider redisProvider;
 
     @Operation(summary = "카카오 로그인 요청")
-    @CrossOrigin(origins = "*") // 어느 프론트든 다 허용
+    @CrossOrigin(origins = "${client-url}")
     @GetMapping("/login")
     public  ResponseEntity<Void> requestSocialLogin(@RequestParam String callbackUrl) {
 
         String rawState = UUID.randomUUID() + "|" + callbackUrl;
         String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8);
 
-        String clientId = this.clientId; // 실제 클라이언트 ID로 대체
+        String clientId = this.clientId;
         String redirectUri = this.redirectUri;
         String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize"
                 + "?client_id=" + clientId
@@ -103,7 +101,9 @@ public class KakaoAuthController {
 
         // 클라이언트로 리다이렉트하기 ( + searchParam: state )
         String callbackUrl = url
-                + "?uuid=" + uuid;
+                + "?uuid=" + uuid
+                + "&isSuccess=" + isSuccess
+                + "&socialId=" + socialId;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(callbackUrl));
