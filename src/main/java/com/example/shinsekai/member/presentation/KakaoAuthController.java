@@ -67,28 +67,6 @@ public class KakaoAuthController {
         return new BaseResponseEntity<>(KakaoAuthUrlVo.builder().url(kakaoAuthUrl).build());
     }
 
-
-    @Operation(summary = "고장난 카카오 로그인 요청")
-    @CrossOrigin(origins = "${client-url}")
-    @GetMapping("/malfunctioned_login")
-    public  ResponseEntity<Void> malfunctionedRequestSocialLogin(@RequestParam String callbackUrl) {
-
-        String rawState = UUID.randomUUID() + "|" + callbackUrl;
-        String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8);
-
-        String clientId = this.clientId;
-        String redirectUri = this.redirectUri;
-        String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize"
-                + "?client_id=" + clientId
-                + "&redirect_uri=" + redirectUri
-                + "&response_type=code"
-                + "&state=" + encodedState;
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(kakaoAuthUrl));
-        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 Redirect
-    }
-
     @Operation(summary = "카카오 로그인 후처리")
     @GetMapping("/callback")
     public ResponseEntity<String> kakaoCallback(HttpServletRequest request) {
