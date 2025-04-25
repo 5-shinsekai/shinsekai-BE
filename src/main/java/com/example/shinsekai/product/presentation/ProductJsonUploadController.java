@@ -24,12 +24,22 @@ public class ProductJsonUploadController {
 
     private final ProductJsonUploadService productJsonUploadService;
 
-    @Operation(summary = "JSON 샘플 상품 일괄 업로드 (Postman 용)")
+    @Operation(summary = "JSON 샘플 상품 일괄 업로드 ")
     @PostMapping("/create")
     public BaseResponseEntity<Void> uploadJson(@RequestBody List<Map<String, Object>> rawList) {
         for (Map<String, Object> raw : rawList) {
             ProductRequestDto dto = JsonProductMapper.toDto(raw);
             productJsonUploadService.jsonUploadProduct(dto, raw);
+        }
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
+    }
+
+    @Operation(summary = "JSON 샘플 상품 일부분 업로드 ")
+    @PostMapping("/create-part")
+    public BaseResponseEntity<Void> uploadJsonPartOf(@RequestBody List<Map<String, Object>> rawList) {
+        for (Map<String, Object> raw : rawList) {
+            ProductRequestDto dto = JsonProductMapper.toDto(raw);
+            productJsonUploadService.jsonUploadPartOfProduct(dto, raw);
         }
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
