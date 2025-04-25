@@ -5,6 +5,7 @@ import com.example.shinsekai.purchase.entity.PurchaseStatus;
 import com.example.shinsekai.purchase.vo.out.PurchaseResponseVo;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,6 +21,7 @@ public class PurchaseResponseDto {
     private String couponUuid;
     private Double shipmentFee;
     private Double productTotalPrice;
+    private LocalDateTime createdAt;
 
     private List<PurchaseProductListResponseDto> purchaseProductDtoList;
 
@@ -32,6 +34,7 @@ public class PurchaseResponseDto {
                 .couponUuid(couponUuid)
                 .shipmentFee(shipmentFee)
                 .productTotalPrice(productTotalPrice)
+                .createdAt(createdAt)
                 .orderProductList(purchaseProductDtoList.stream().map(PurchaseProductListResponseDto::toVo).toList())
                 .build();
     }
@@ -47,6 +50,7 @@ public class PurchaseResponseDto {
                 .shipmentFee(purchase.getShipmentFee())
                 .productTotalPrice(purchase.getProductTotalPrice())
                 .purchaseProductDtoList(purchaseProductDtoList)
+                .createdAt(purchase.getCreatedAt())
                 .build();
     }
 }
