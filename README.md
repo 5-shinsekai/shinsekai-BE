@@ -171,7 +171,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/shinsekai_db
     username: root
-    password: your_pw
+    password: ${your_pw}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   data:
@@ -182,8 +182,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: your_MAIL_USERNAME
-    password: your_MAIL_PASSWORD
+    username: ${your_MAIL_USERNAME}
+    password: ${your_MAIL_PASSWORD}
     properties:
       auth: true
       starttls: true
@@ -194,7 +194,7 @@ spring:
       client:
         registration:
           kakao:
-            client-id: your_client_id
+            client-id: ${your_client_id}
             redirect-uri: http://localhost:8080/api/v1/kakao/callback
             authorization-grant-type: authorization_code
             client-name: Kakao
@@ -209,7 +209,7 @@ spring:
             user-name-attribute: id
 
 jwt:
-  secret-key: your_secret_key
+  secret-key: ${your_secret_key}
   token:
     access-expire-time: 1800000 # 30분
     refresh-expire-time: 1209600000  # 14일
@@ -239,7 +239,6 @@ client-url: localhost:3000
 
 ### 🔔 실시간 알림 (SSE)
 - 재입고 알림 서비스 제공
-- 
 
 ### 🔐 인증/인가
 - JWT 기반 사용자 인증
@@ -254,9 +253,23 @@ client-url: localhost:3000
 
 ## 👩‍💻 개발자 정보 (Author)
 
-|김정환|이영인|이수진|배부승|
+### 🛠️ 공통 작업
+- **DB 설계**: 모든 팀원이 협력하여 테이블 구조 및 ERD 설계 진행
+
+### 👥 팀원별 역할
+
+| 이름 | GitHub | 담당 기능 |
+|:---:|:---:|---|
+| 김정환 | <a href="https://github.com/rlawjdghksdlqslek" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a> | **상품**: 상품 CRUD, 상품 필터링, 이메일 기반 재입고 알림<br>**인프라 & 데이터**: CI/CD, 데이터 삽입 |
+| 이영인 | <a href="https://github.com/LeeYeongin" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a> | **장바구니**: 장바구니 정책 설계, 장바구니 CRUD<br>**카테고리**: 카테고리 CRUD, 필터 값 조회 <br> **시즌 & 이벤트**: 시즌 CRUD, 이벤트 CRUD |
+| 이수진 | <a href="https://github.com/Sujin31" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a> | **결제**: 스타벅스 카드 결제 transaction 설계 및 구현 <br>**스타벅스 카드**: 스타벅스 카드 CRUD <br> **상품**: batch를 사용한 베스트 상품 집계 |
+| 배부승 | <a href="https://github.com/bugling" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a> | **회원**: 회원가입, 로그인, 이메일 인증, OAuth 연동 <br>**찜하기**: 찜하기 CRUD<br> **상품**: SSE 기반 실시간 알림 처리 |
+
+
+<!-- |김정환|이영인|이수진|배부승|
 |:---:|:---:|:---:|:---:|
-|<a href="https://github.com/rlawjdghksdlqslek" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>|<a href="https://github.com/LeeYeongin" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>|<a href="https://github.com/Sujin31" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>|<a href="https://github.com/bugling" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>|
+|<a href="https://github.com/rlawjdghksdlqslek" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>|<a href="https://github.com/LeeYeongin" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>|<a href="https://github.com/Sujin31" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>|<a href="https://github.com/bugling" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>| -->
+
 
 
 
