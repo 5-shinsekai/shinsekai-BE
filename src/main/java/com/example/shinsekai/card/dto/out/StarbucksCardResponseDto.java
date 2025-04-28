@@ -35,7 +35,6 @@ public class StarbucksCardResponseDto {
                 .cardNumber(cardNumber.substring(cardNumber.length() - 6))
                 .cardImageUrl(cardImageUrl)
                 .remainAmount(remainAmount)
-
                 .build();
     }
 }

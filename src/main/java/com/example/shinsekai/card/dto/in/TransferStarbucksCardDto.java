@@ -11,14 +11,14 @@ public class TransferStarbucksCardDto {
     private String sourceMemberStarbucksCardUuid;
     private String targetMemberStarbucksCardUuid;
     private Double remainAmount;
-    private String memeberUuid;
+    private String memberUuid;
 
     public static TransferStarbucksCardDto from(TransferStarbucksCardVo vo, String memberUuid) {
         return TransferStarbucksCardDto.builder()
                 .sourceMemberStarbucksCardUuid(vo.getSourceMemberStarbucksCardUuid())
                 .targetMemberStarbucksCardUuid(vo.getTargetMemberStarbucksCardUuid())
                 .remainAmount(vo.getRemainAmount())
-                .memeberUuid(memberUuid)
+                .memberUuid(memberUuid)
                 .build();
     }
 }

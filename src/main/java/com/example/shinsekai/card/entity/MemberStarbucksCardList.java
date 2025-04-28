@@ -20,8 +20,7 @@ public class MemberStarbucksCardList extends BaseEntity {
     private String memberStarbucksCardUuid;
     private String memberUuid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private StarbucksCard starbucksCard;
+    private String StarbucksCardUuid;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean active = true;
@@ -32,11 +31,11 @@ public class MemberStarbucksCardList extends BaseEntity {
     public MemberStarbucksCardList(
             String memberStarbucksCardUuid,
             String memberUuid,
-            StarbucksCard starbucksCard
+            String starbucksCardUuid
     ) {
         this.memberStarbucksCardUuid = memberStarbucksCardUuid;
         this.memberUuid = memberUuid;
-        this.starbucksCard = starbucksCard;
+        this.StarbucksCardUuid = starbucksCardUuid;
     }
 
     public void softDelete() {
