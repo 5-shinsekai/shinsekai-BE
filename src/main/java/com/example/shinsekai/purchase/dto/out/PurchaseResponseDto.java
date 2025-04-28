@@ -25,21 +25,7 @@ public class PurchaseResponseDto {
 
     private List<PurchaseProductListResponseDto> purchaseProductDtoList;
 
-    public PurchaseResponseVo toVo(){
-        return PurchaseResponseVo.builder()
-                .purchaseCode(purchaseCode)
-                .paymentCode(paymentCode)
-                .purchaseStatus(purchaseStatus)
-                .addressUuid(addressUuid)
-                .couponUuid(couponUuid)
-                .shipmentFee(shipmentFee)
-                .productTotalPrice(productTotalPrice)
-                .createdAt(createdAt)
-                .orderProductList(purchaseProductDtoList.stream().map(PurchaseProductListResponseDto::toVo).toList())
-                .build();
-    }
-
-    public static PurchaseResponseDto from(Purchase purchase, List<PurchaseProductListResponseDto> purchaseProductDtoList){
+    public static PurchaseResponseDto from(Purchase purchase, List<PurchaseProductListResponseDto> purchaseProductDtoList) {
         return PurchaseResponseDto.builder()
                 .purchaseCode(purchase.getPurchaseCode())
                 .paymentCode(purchase.getPaymentCode())
@@ -51,6 +37,20 @@ public class PurchaseResponseDto {
                 .productTotalPrice(purchase.getProductTotalPrice())
                 .purchaseProductDtoList(purchaseProductDtoList)
                 .createdAt(purchase.getCreatedAt())
+                .build();
+    }
+
+    public PurchaseResponseVo toVo() {
+        return PurchaseResponseVo.builder()
+                .purchaseCode(purchaseCode)
+                .paymentCode(paymentCode)
+                .purchaseStatus(purchaseStatus)
+                .addressUuid(addressUuid)
+                .couponUuid(couponUuid)
+                .shipmentFee(shipmentFee)
+                .productTotalPrice(productTotalPrice)
+                .createdAt(createdAt)
+                .orderProductList(purchaseProductDtoList.stream().map(PurchaseProductListResponseDto::toVo).toList())
                 .build();
     }
 }

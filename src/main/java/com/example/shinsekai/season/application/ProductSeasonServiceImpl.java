@@ -6,7 +6,6 @@ import com.example.shinsekai.season.dto.in.ProductSeasonListCreateRequestDto;
 import com.example.shinsekai.season.dto.in.ProductSeasonListUpdateRequestDto;
 import com.example.shinsekai.season.dto.out.ProductSeasonListGetResponseDto;
 import com.example.shinsekai.season.entity.ProductSeasonList;
-import com.example.shinsekai.season.entity.Season;
 import com.example.shinsekai.season.infrastructure.ProductSeasonListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

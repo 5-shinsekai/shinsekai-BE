@@ -6,7 +6,6 @@ import com.example.shinsekai.category.entity.SubCategory;
 import com.example.shinsekai.category.infrastructure.MainCategoryRepository;
 import com.example.shinsekai.category.infrastructure.ProductCategoryListRepository;
 import com.example.shinsekai.category.infrastructure.SubCategoryRepository;
-import com.example.shinsekai.common.exception.BaseException;
 import com.example.shinsekai.event.entity.ProductEventList;
 import com.example.shinsekai.event.infrastructure.ProductEventListRepository;
 import com.example.shinsekai.option.entity.OptionStatus;
@@ -31,6 +30,7 @@ import java.util.Random;
 @Slf4j
 public class ProductJsonUploadService {
 
+    private static final Random random = new Random();
     private final ProductRepository productRepository;
     private final ProductCategoryListRepository productCategoryListRepository;
     private final ProductOptionListRepository productOptionListRepository;
@@ -38,8 +38,6 @@ public class ProductJsonUploadService {
     private final ProductSeasonListRepository productSeasonListRepository;
     private final MainCategoryRepository mainCategoryRepository;
     private final SubCategoryRepository subCategoryRepository;
-
-    private static final Random random = new Random();
 
     private static long randomId() {
         return random.nextInt(5) + 1; // 1~5

@@ -46,7 +46,7 @@ public class ProductOutlineResponseDto {
                 .build();
     }
 
-    public static ProductOutlineResponseDto from(Product product,boolean isBest) {
+    public static ProductOutlineResponseDto from(Product product, boolean isBest) {
         return ProductOutlineResponseDto.builder()
                 .productCode(product.getProductCode())
                 .productName(product.getProductName())

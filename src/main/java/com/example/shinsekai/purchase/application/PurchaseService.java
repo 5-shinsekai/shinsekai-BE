@@ -11,8 +11,12 @@ import java.util.List;
 
 public interface PurchaseService {
     void createPurchase(PurchaseRequestDto purchaseRequestDto, List<PurchaseProductListRequestDto> purchaseProductListRequestDtoList);
+
     void deletePurchase(PurchaseDeleteRequestDto purchaseDeleteRequestDto);
+
     List<PurchaseResponseDto> findMemberPurchaseList(String memberUuid);
+
     List<PurchaseProductListResponseDto> findPurchaseProductListByPurchaseCode(String purchaseCode);
+
     PurchaseStatusResponseDto findPurchaseStatusByMemberUuid(String memberUuid);
 }

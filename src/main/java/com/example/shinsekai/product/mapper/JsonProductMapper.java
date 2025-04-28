@@ -52,7 +52,8 @@ public class JsonProductMapper {
             if (list != null && !list.isEmpty()) {
                 return (String) list.get(0).get("url");
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return "";
     }
 }

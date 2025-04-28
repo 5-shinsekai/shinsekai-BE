@@ -20,7 +20,7 @@ public class SeasonCreateRequestDto {
         this.endDate = endDate;
     }
 
-    public static SeasonCreateRequestDto from(SeasonCreateRequestVo vo){
+    public static SeasonCreateRequestDto from(SeasonCreateRequestVo vo) {
         return SeasonCreateRequestDto.builder()
                 .seasonName(vo.getSeasonName())
                 .startDate(vo.getStartDate())
@@ -28,7 +28,7 @@ public class SeasonCreateRequestDto {
                 .build();
     }
 
-    public Season toEntity(){
+    public Season toEntity() {
         return Season.builder()
                 .seasonName(seasonName)
                 .startDate(startDate)

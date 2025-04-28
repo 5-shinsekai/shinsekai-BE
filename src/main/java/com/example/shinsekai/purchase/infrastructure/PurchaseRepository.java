@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     Optional<Purchase> findByPurchaseCodeAndMemberUuid(String purchaseCode, String memberUuid);
+
     List<Purchase> findByMemberUuid(String memberUuid);
+
     List<Purchase> findByMemberUuidAndCreatedAtBetween(String memberUuid, LocalDateTime startDate, LocalDateTime endDate);
 
 }

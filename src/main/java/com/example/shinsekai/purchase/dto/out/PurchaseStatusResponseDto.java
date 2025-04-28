@@ -15,7 +15,7 @@ public class PurchaseStatusResponseDto {
     private Integer delivered;
     private Integer cancelled;
 
-    public PurchaseStatusResponseVo toVo(){
+    public PurchaseStatusResponseVo toVo() {
         return PurchaseStatusResponseVo.builder()
                 .paymentCompleted(this.paymentCompleted)
                 .preparing(this.preparing)

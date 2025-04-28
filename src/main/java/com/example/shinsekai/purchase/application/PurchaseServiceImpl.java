@@ -15,6 +15,7 @@ import com.example.shinsekai.purchase.infrastructure.PurchaseRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Transactional
     public void deletePurchase(PurchaseDeleteRequestDto purchaseDeleteDto) {
         purchaseRepository.findByPurchaseCodeAndMemberUuid(purchaseDeleteDto.getPurchaseCode(), purchaseDeleteDto.getMemberUuid())
-                .orElseThrow(()-> new BaseException(BaseResponseStatus.PURCHASE_NOT_FOUND))
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.PURCHASE_NOT_FOUND))
                 .cancelPurchase(purchaseDeleteDto.getCancelReason());
     }
 
