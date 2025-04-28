@@ -14,6 +14,7 @@ import com.example.shinsekai.purchase.vo.in.OrderRequestVo;
 import com.example.shinsekai.purchase.vo.out.PurchaseResponseVo;
 import com.example.shinsekai.purchase.vo.out.PurchaseStatusResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.List;
 
 
 @Slf4j
+@Tag(name = "Purchase", description = "구매 관련 API")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/purchase")
 @RestController

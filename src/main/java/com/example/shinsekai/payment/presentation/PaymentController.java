@@ -4,6 +4,7 @@ import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.payment.application.PaymentService;
 import com.example.shinsekai.payment.vo.out.PaymentResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Payment", description = "결제 관련 API")
 @RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
 @RestController
@@ -24,22 +26,4 @@ public class PaymentController {
     public PaymentResponseVo findAllPayment(HttpServletRequest request, @PathVariable String paymentCode) {
         return paymentService.findAllPayment(paymentCode, jwtTokenProvider.getAccessToken(request)).toVo();
     }
-
-//    @Operation(summary = "결제 API" , description = "간편결제 / 스타벅스 카드 결제")
-//    @PostMapping
-//    public BaseResponseEntity<Void> createPayment(HttpServletRequest request,
-//                                                  @RequestBody PaymentRequestVo paymentRequestVo) {
-//        paymentService.createPayment(
-//                PaymentRequestDto.from(paymentRequestVo, jwtTokenProvider.getAccessToken(request) )
-//        );
-//        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
-//    }
-//
-//    @Operation(summary = "결제 취소 API")
-//    @DeleteMapping
-//    public BaseResponseEntity<Void> deletePayment(HttpServletRequest request,
-//                                                  @RequestBody PaymentRequestVo paymentRequestVo) {
-//        paymentService.deletePayment(PaymentRequestDto.from(paymentRequestVo, jwtTokenProvider.getAccessToken(request)));
-//        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
-//    }
 }

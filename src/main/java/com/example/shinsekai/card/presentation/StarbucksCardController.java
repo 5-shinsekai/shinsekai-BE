@@ -24,7 +24,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "starbucksCard", description = "스타벅스 카드 API")
+@Tag(name = "StarbucksCard", description = "스타벅스 카드 API")
 @RequestMapping("/api/v1/starbucks-card")
 public class StarbucksCardController {
 

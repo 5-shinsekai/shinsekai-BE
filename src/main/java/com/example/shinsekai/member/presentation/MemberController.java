@@ -13,6 +13,7 @@ import com.example.shinsekai.member.vo.in.SignInRequestVo;
 import com.example.shinsekai.member.vo.out.SignInResponseVo;
 import com.example.shinsekai.member.vo.in.SignUpRequestVo;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
+@Tag(name = "Member", description = "회원 관련 API")
 @RequestMapping("/api/v1/member")
 @RestController
 @RequiredArgsConstructor

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "external/starbucksCard", description = "스타벅스 카드 외부 API")
+@Tag(name = "External/starbucksCard", description = "스타벅스 카드 외부 API")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/external/starbucks-card")
 @RestController
