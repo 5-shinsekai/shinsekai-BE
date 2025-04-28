@@ -18,7 +18,7 @@ public class EventGetThumbnailResponseDto {
         this.eventThumbnailImageAltText = eventThumbnailImageAltText;
     }
 
-    public EventGetThumbnailResponseVo toVo(){
+    public EventGetThumbnailResponseVo toVo() {
         return EventGetThumbnailResponseVo.builder()
                 .id(id)
                 .eventThumbnailImage(eventThumbnailImage)

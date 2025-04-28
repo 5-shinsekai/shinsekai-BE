@@ -4,7 +4,7 @@ import com.example.shinsekai.common.entity.BaseResponseStatus;
 import lombok.Getter;
 
 @Getter
-public class BaseException extends RuntimeException{
+public class BaseException extends RuntimeException {
 
     private final BaseResponseStatus status;
 

@@ -47,6 +47,7 @@ public class JwtTokenProvider {
 
     /**
      * Claims에서 원하는 claim 값 추출
+     *
      * @param token
      * @param claimsResolver jwt토큰에서 추출한 정보를 어떻게 처리할지 결정하는 함수
      * @return jwt토큰에서 모든 클레임(클레임은 토큰에 담긴 정보 의미 ) 추출한 다음 claimsResolver함수를 처리해 결과 반환
@@ -58,6 +59,7 @@ public class JwtTokenProvider {
 
     /**
      * 토큰에서 모든 claims 추출
+     *
      * @param token
      * @return jwt토큰에서 모든 클레임 추출
      */
@@ -71,6 +73,7 @@ public class JwtTokenProvider {
 
     /**
      * 토큰 생성
+     *
      * @param member, tokenType
      * @return 토큰 문자열
      */
@@ -115,6 +118,7 @@ public class JwtTokenProvider {
 
     /**
      * 토큰 발급
+     *
      * @param member
      * @return SignInResponseDto
      */
@@ -137,6 +141,7 @@ public class JwtTokenProvider {
 
     /**
      * 토큰 삭제
+     *
      * @param tokenType, memberUuid
      * @return 토큰
      */
@@ -146,6 +151,7 @@ public class JwtTokenProvider {
 
     /**
      * 특정 아이디가 Redis에 존재하는지 확인하는 메서드
+     *
      * @param token 검사할 키 (예: 로그인 아이디, 토큰)
      * @return 존재하면 true, 없으면 false
      */
@@ -158,6 +164,7 @@ public class JwtTokenProvider {
     /**
      * Access Token, Refresh Token 검증 후 재발급
      * refreshToken은 redis에 저장
+     *
      * @param refreshToken
      * @return SignInResponseDto
      */
@@ -168,7 +175,7 @@ public class JwtTokenProvider {
         try {
             memberUuid = extractAllClaims(refreshToken).getSubject();
         } catch (Exception e) {
-            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN );
+            throw new BaseException(BaseResponseStatus.WRONG_JWT_TOKEN);
         }
         String storedRefreshToken = redisProvider.getToken(TokenType.REFRESH, memberUuid);
 
@@ -191,6 +198,7 @@ public class JwtTokenProvider {
 
     /**
      * 토큰이 만료되었는지 확인
+     *
      * @param token
      * @return 유효하면 true, 만료되었으면 false
      */
@@ -204,10 +212,11 @@ public class JwtTokenProvider {
 
     /**
      * 엑세스 토큰에서 memberUuid꺼내기
+     *
      * @param request
      * @return memberUuid
      */
-    public String  getAccessToken(HttpServletRequest request) {
+    public String getAccessToken(HttpServletRequest request) {
         return request.getHeader("Authorization").substring(7);
     }
 
@@ -218,6 +227,7 @@ public class JwtTokenProvider {
     /**
      * JWT 서명을 위한 HMAC 키를 생성합니다.
      * secretKey 문자열을 바이트 배열로 변환한 후, HMAC-SHA 알고리즘에 적합한 키로 변환하여 반환합니다.
+     *
      * @return JWT 서명에 사용할 Key 객체
      */
     public Key getSignKey() {

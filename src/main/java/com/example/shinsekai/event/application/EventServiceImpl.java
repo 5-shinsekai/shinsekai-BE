@@ -9,12 +9,9 @@ import com.example.shinsekai.event.dto.out.EventGetThumbnailResponseDto;
 import com.example.shinsekai.event.dto.out.EventGetTitleResponseDto;
 import com.example.shinsekai.event.entity.Event;
 import com.example.shinsekai.event.infrastructure.EventRepository;
-import com.example.shinsekai.season.dto.out.SeasonGetResponseDto;
-import com.example.shinsekai.season.entity.Season;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

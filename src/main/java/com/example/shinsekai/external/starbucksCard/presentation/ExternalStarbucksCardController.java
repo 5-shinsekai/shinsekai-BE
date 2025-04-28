@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ExternalStarbucksCardController {
     /*
-    * Todo : 스타벅스 카드 인증 외부 모듈
-    *  실제 인증 구현 X
-    *  스타벅스 카드 등록 시 카드 금액 및 이미지 랜덤 생성용으로 사용
-    * */
+     * Todo : 스타벅스 카드 인증 외부 모듈
+     *  실제 인증 구현 X
+     *  스타벅스 카드 등록 시 카드 금액 및 이미지 랜덤 생성용으로 사용
+     * */
     private final ExternalStarbucksCardService externalStarbucksCardService;
 
     @PostMapping

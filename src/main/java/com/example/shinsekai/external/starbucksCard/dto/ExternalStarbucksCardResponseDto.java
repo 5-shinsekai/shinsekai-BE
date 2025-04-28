@@ -14,7 +14,7 @@ public class ExternalStarbucksCardResponseDto {
     private String cardImageUrl;
     private String cardDescription;
 
-    public ExternalStarbucksCardResponseVo toVo(){
+    public ExternalStarbucksCardResponseVo toVo() {
         return ExternalStarbucksCardResponseVo.builder()
                 .cardName(cardName)
                 .cardNumber(cardNumber)

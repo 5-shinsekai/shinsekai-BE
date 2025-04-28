@@ -7,7 +7,6 @@ import com.example.shinsekai.event.dto.in.ProductEventListUpdateRequestDto;
 import com.example.shinsekai.event.dto.out.ProductEventListGetResponseDto;
 import com.example.shinsekai.event.entity.ProductEventList;
 import com.example.shinsekai.event.infrastructure.ProductEventListRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class ProductEventServiceImpl implements ProductEventService{
+public class ProductEventServiceImpl implements ProductEventService {
 
     private final ProductEventListRepository productEventListRepository;
 

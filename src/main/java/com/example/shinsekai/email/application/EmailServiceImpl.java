@@ -28,7 +28,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService{
+public class EmailServiceImpl implements EmailService {
 
     private final MemberRepository memberRepository;
     private final JavaMailSender mailSender;
@@ -109,14 +109,14 @@ public class EmailServiceImpl implements EmailService{
     public void sendRestockEmail(String toEmail, String productName) {
         memberRepository.findByEmail(toEmail)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL));
-        buildAndSend(toEmail,EmailType.RESTOCK_NOTIFY, productName);
+        buildAndSend(toEmail, EmailType.RESTOCK_NOTIFY, productName);
     }
 
 
     /**
      * 이메일을 실제로 전송하며, 전송 성공 시 Redis에 인증코드를 저장
      *
-     * @param email    수신자 이메일
+     * @param email 수신자 이메일
      * @throws BaseException 이메일 전송 실패 시 예외 발생
      */
     private void buildAndSend(String email, EmailType mailType, String item) {
@@ -193,16 +193,20 @@ public class EmailServiceImpl implements EmailService{
 
         switch (mailType) {
             case SIGN_UP -> {
-                subject = "회원가입을 위한 인증코드 안내메일"; break;
+                subject = "회원가입을 위한 인증코드 안내메일";
+                break;
             }
             case FIND_LOGIN_ID -> {
-                subject = "아이디 찾기를 위한 인증코드 안내메일"; break;
+                subject = "아이디 찾기를 위한 인증코드 안내메일";
+                break;
             }
             case TEMP_PW -> {
-                subject = "임시 비밀번호 발급 안내메일"; break;
+                subject = "임시 비밀번호 발급 안내메일";
+                break;
             }
             case RESTOCK_NOTIFY -> {
-                subject = "재입고 알림 안내 메일"; break;
+                subject = "재입고 알림 안내 메일";
+                break;
             }
             default -> {
                 throw new BaseException(BaseResponseStatus.FAILED_TO_SEND_EMAIL);
@@ -225,6 +229,7 @@ public class EmailServiceImpl implements EmailService{
 
     /**
      * 8자리(영어소문자+숫자+특수문자) 랜덤 임시 비밀번호를 생성합니다.
+     *
      * @return 8자리 임시 비밀번호 문자열
      */
     private String generateTempPassword() {

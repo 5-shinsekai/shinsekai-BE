@@ -32,12 +32,12 @@ public class RedisProvider {
     }
 
     public String getEmailVerificationCodeForLoginId(String email) {
-        return redisTemplate.opsForValue().get("EMAIL_ID:"+email);
+        return redisTemplate.opsForValue().get("EMAIL_ID:" + email);
     }
 
     public void setEmailVerificationCodeForLoginId(String email, String eMailVerificationCode, long expirationTime) {
         redisTemplate.opsForValue().set(
-                "EMAIL_ID:"+email,
+                "EMAIL_ID:" + email,
                 eMailVerificationCode,
                 expirationTime,
                 TimeUnit.MILLISECONDS
@@ -45,12 +45,12 @@ public class RedisProvider {
     }
 
     public String getEmailVerificationCodeForPw(String email) {
-        return redisTemplate.opsForValue().get("EMAIL_PW:"+email);
+        return redisTemplate.opsForValue().get("EMAIL_PW:" + email);
     }
 
     public void setEmailVerificationCodeForPw(String email, String eMailVerificationCode, long expirationTime) {
         redisTemplate.opsForValue().set(
-                "EMAIL_PW:"+email,
+                "EMAIL_PW:" + email,
                 eMailVerificationCode,
                 expirationTime,
                 TimeUnit.MILLISECONDS
@@ -58,12 +58,12 @@ public class RedisProvider {
     }
 
     public String getEmailVerificationCodeForSignUp(String email) {
-        return redisTemplate.opsForValue().get("EMAIL_SU:"+email);
+        return redisTemplate.opsForValue().get("EMAIL_SU:" + email);
     }
 
     public void setEmailVerificationCodeForSignUp(String email, String eMailVerificationCode, long expirationTime) {
         redisTemplate.opsForValue().set(
-                "EMAIL_SU:"+email,
+                "EMAIL_SU:" + email,
                 eMailVerificationCode,
                 expirationTime,
                 TimeUnit.MILLISECONDS

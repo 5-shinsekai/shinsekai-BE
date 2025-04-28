@@ -8,7 +8,10 @@ import java.util.List;
 
 public interface ProductEventService {
     void createProductEventList(ProductEventListCreateRequestDto productEventListCreateRequestDto);
+
     List<ProductEventListGetResponseDto> getAllProductEventList(Integer eventId);
+
     void updateProductEventList(ProductEventListUpdateRequestDto productEventListUpdateRequestDto);
+
     void deleteProductEventList(Long id);
 }

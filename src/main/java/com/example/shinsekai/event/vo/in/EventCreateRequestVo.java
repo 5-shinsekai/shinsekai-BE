@@ -1,7 +1,5 @@
 package com.example.shinsekai.event.vo.in;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
 import lombok.Builder;
 import lombok.Getter;
 

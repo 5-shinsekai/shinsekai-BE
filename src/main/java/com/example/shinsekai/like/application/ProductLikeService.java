@@ -8,6 +8,6 @@ import java.util.List;
 public interface ProductLikeService {
 
     List<ProductLikeResponseDto> getLikeList(String memberUuid);
-    void toggleLike(ProductLikeRequestDto productLikeRequestDto);
 
+    void toggleLike(ProductLikeRequestDto productLikeRequestDto);
 }

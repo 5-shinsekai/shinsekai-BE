@@ -2,7 +2,6 @@ package com.example.shinsekai.event.dto.in;
 
 import com.example.shinsekai.event.entity.ProductEventList;
 import com.example.shinsekai.event.vo.in.ProductEventListUpdateRequestVo;
-import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Getter;
 

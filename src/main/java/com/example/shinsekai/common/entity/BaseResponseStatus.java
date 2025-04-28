@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Getter
 @AllArgsConstructor
@@ -128,12 +127,12 @@ public enum BaseResponseStatus {
      * 6000: gpt-api error
      */
     // S3
-    S3_UPLOAD_FAIL(HttpStatus.BAD_REQUEST,false,7001,"파일 업로드에 실패하였습니다."),
+    S3_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, false, 7001, "파일 업로드에 실패하였습니다."),
 
     /**
      * 결제관련 ERROR
-     *  10000 ~
-     * */
+     * 10000 ~
+     */
     //StarbucksCard
     DUPLICATED_STARBUCKS_CARD(HttpStatus.CONFLICT, false, 10001, "이미 등록된 카드 정보입니다."),
     NO_EXIST_STARBUCKS_CARD(HttpStatus.NOT_FOUND, false, 10002, "카드 정보가 존재하지 않습니다."),
