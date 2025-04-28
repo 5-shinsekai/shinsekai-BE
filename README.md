@@ -246,7 +246,7 @@ client-url: localhost:3000
 
 
 ## 📘 API 문서 (Swagger UI)
-
+서버 실행 후 아래 URL로 접속하여 확인할 수 있습니다.
 - [Swagger UI 접속하기](http://localhost:8080/swagger-ui/index.html)
 
 
