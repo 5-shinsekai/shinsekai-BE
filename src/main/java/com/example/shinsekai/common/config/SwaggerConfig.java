@@ -1,4 +1,4 @@
-package com.example.shinsekai.common;
+package com.example.shinsekai.common.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
