@@ -7,8 +7,11 @@ import com.example.shinsekai.category.dto.out.MainCategoryResponseDto;
 import java.util.List;
 
 public interface MainCategoryService {
-    List<MainCategoryResponseDto> getAllMainCategory(); // getALlCategory
+    List<MainCategoryResponseDto> getAllMainCategory();
+
     void createMainCategory(MainCategoryCreateRequestDto mainCategoryCreateRequestDto);
+
     void deleteMainCategory(Long categoryId);
+
     void updateMainCategory(MainCategoryUpdateRequestDto mainCategoryUpdateRequestDto);
 }

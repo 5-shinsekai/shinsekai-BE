@@ -14,14 +14,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class ProductCategoryListServiceImpl implements ProductCategoryListService{
+public class ProductCategoryListServiceImpl implements ProductCategoryListService {
 
     private final ProductCategoryListRepository productCategoryListRepository;
 
     @Override
     @Transactional
     public void createProductCategoryList(ProductCategoryListCreateRequestDto productCategoryListCreateRequestDto) {
-        try{
+        try {
             productCategoryListRepository.save(productCategoryListCreateRequestDto.toEntity());
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.FAILED_TO_SAVE);

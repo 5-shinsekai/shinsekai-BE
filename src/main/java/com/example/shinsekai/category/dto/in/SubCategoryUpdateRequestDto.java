@@ -19,7 +19,7 @@ public class SubCategoryUpdateRequestDto {
     }
 
     public static SubCategoryUpdateRequestDto from(
-            SubCategoryUpdateRequestVo subCategoryUpdateRequestVo){
+            SubCategoryUpdateRequestVo subCategoryUpdateRequestVo) {
         return SubCategoryUpdateRequestDto.builder()
                 .id(subCategoryUpdateRequestVo.getCategoryId())
                 .name(subCategoryUpdateRequestVo.getName())
@@ -27,7 +27,7 @@ public class SubCategoryUpdateRequestDto {
                 .build();
     }
 
-    public SubCategory toEntity(SubCategory subCategory){
+    public SubCategory toEntity(SubCategory subCategory) {
         return SubCategory.builder()
                 .id(id)
                 .name(name == null ? subCategory.getName() : name)

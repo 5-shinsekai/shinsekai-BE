@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Profile;
                 title = "STARBUCKS Service API",
                 version = "v1",
                 description = "STARBUCKS API Docs"
-        ),security = {
-                @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "Bearer Auth")
-        }
+        ), security = {
+        @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "Bearer Auth")
+}
 )
 @SecurityScheme(
         name = "Bearer Auth",
@@ -30,7 +30,7 @@ public class SwaggerConfig {
 
     @Bean
     public GroupedOpenApi publicApi() {
-        String[] paths = { "/api/v1/**" };
+        String[] paths = {"/api/v1/**"};
         return GroupedOpenApi.builder()
                 .group("public-api")
                 .pathsToMatch(paths)

@@ -29,7 +29,7 @@ public class MainCategoryResponseDto {
                 .build();
     }
 
-    public static MainCategoryResponseVo toVo(MainCategoryResponseDto dto){
+    public static MainCategoryResponseVo toVo(MainCategoryResponseDto dto) {
         return MainCategoryResponseVo.builder()
                 .code(dto.getId())
                 .name(dto.getName())

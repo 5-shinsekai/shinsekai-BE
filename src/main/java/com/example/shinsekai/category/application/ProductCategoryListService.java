@@ -6,14 +6,18 @@ import com.example.shinsekai.category.dto.out.ProductCategoryListGetResponseDto;
 import java.util.List;
 
 public interface ProductCategoryListService {
-    // ProductCategoryList
     void createProductCategoryList(ProductCategoryListCreateRequestDto productCategoryListCreateRequestDto);
+
     ProductCategoryListGetResponseDto getProductCategoryList(
             ProductCategoryListGetRequestDto productCategoryListGetRequestDto);
+
     ProductCategoryListGetResponseDto getProductCategoryListByProductCode(
             ProductCategoryListGetByProductCodeRequestDto dto);
+
     void updateProductCategoryList(ProductCategoryListUpdateRequestDto productCategoryListUpdateRequestDto);
+
     void deleteProductCategoryList(ProductCategoryListDeleteRequestDto productCategoryListDeleteRequestDto);
+
     void deleteAllProductCategoryList(
             List<ProductCategoryListDeleteRequestDto> productCategoryListDeleteRequestDtoLsit);
 }

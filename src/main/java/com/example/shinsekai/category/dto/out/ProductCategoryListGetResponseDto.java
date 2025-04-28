@@ -1,6 +1,5 @@
 package com.example.shinsekai.category.dto.out;
 
-import com.example.shinsekai.category.dto.in.ProductCategoryListGetRequestDto;
 import com.example.shinsekai.category.entity.ProductCategoryList;
 import com.example.shinsekai.category.vo.out.ProductCategoryListGetResponseVo;
 import lombok.Builder;
@@ -21,7 +20,7 @@ public class ProductCategoryListGetResponseDto {
         this.subCateogryId = subCateogryId;
     }
 
-    public static ProductCategoryListGetResponseDto from(ProductCategoryList productCategoryList){
+    public static ProductCategoryListGetResponseDto from(ProductCategoryList productCategoryList) {
         return ProductCategoryListGetResponseDto.builder()
                 .id(productCategoryList.getId())
                 .productCode(productCategoryList.getProductCode())
@@ -30,7 +29,7 @@ public class ProductCategoryListGetResponseDto {
                 .build();
     }
 
-    public ProductCategoryListGetResponseVo toVo(){
+    public ProductCategoryListGetResponseVo toVo() {
         return ProductCategoryListGetResponseVo.builder()
                 .id(id)
                 .productCode(productCode)

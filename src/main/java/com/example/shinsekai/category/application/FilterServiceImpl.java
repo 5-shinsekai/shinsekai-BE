@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class FilterServiceImpl implements FilterService{
+public class FilterServiceImpl implements FilterService {
 
     private final FilterSummaryRepository filterSummaryRepository;
     private final SeasonRepository seasonRepository;

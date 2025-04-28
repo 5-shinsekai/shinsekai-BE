@@ -1,6 +1,5 @@
 package com.example.shinsekai.category.vo.in;
 
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 

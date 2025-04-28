@@ -14,7 +14,7 @@ public class CategoryFilterResponseDto {
     private List<CommonFilterItemDto> priceRanges;
 
     @Builder
-    public CategoryFilterResponseDto(List<CommonFilterItemDto> seasons,List<CommonFilterItemDto> sizes,
+    public CategoryFilterResponseDto(List<CommonFilterItemDto> seasons, List<CommonFilterItemDto> sizes,
                                      List<CommonFilterItemDto> colors, List<CommonFilterItemDto> priceRanges) {
         this.seasons = seasons;
         this.sizes = sizes;
@@ -22,7 +22,7 @@ public class CategoryFilterResponseDto {
         this.priceRanges = priceRanges;
     }
 
-    public CategoryFilterResponseVo toVo(){
+    public CategoryFilterResponseVo toVo() {
         return CategoryFilterResponseVo.builder()
                 .seasons(seasons.stream().map(CommonFilterItemDto::toVo).toList())
                 .sizes(sizes.stream().map(CommonFilterItemDto::toVo).toList())

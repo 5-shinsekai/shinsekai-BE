@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class SubCategoryServiceImpl implements SubCategoryService{
+public class SubCategoryServiceImpl implements SubCategoryService {
 
     private final SubCategoryRepository subCategoryRepository;
     private final MainCategoryRepository mainCategoryRepository;
@@ -34,7 +34,7 @@ public class SubCategoryServiceImpl implements SubCategoryService{
     @Override
     @Transactional
     public void createSubCategory(SubCategoryCreateRequestDto subCategoryCreateRequestDto) {
-        if(!mainCategoryRepository.existsById(subCategoryCreateRequestDto.getMainCategoryId()))
+        if (!mainCategoryRepository.existsById(subCategoryCreateRequestDto.getMainCategoryId()))
             throw new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY);
 
         try {
@@ -59,16 +59,16 @@ public class SubCategoryServiceImpl implements SubCategoryService{
     public void updateSubCategory(SubCategoryUpdateRequestDto subCategoryUpdateRequestDto) {
         SubCategory subCategory = subCategoryRepository.findById(subCategoryUpdateRequestDto.getId())
                 .orElseThrow(
-                () -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY)
-        );
+                        () -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY)
+                );
 
-        if(subCategoryUpdateRequestDto.getMainCategoryId() != null
+        if (subCategoryUpdateRequestDto.getMainCategoryId() != null
                 && !mainCategoryRepository.existsById(subCategoryUpdateRequestDto.getMainCategoryId()))
             throw new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY);
 
         SubCategory updateSubCategory = subCategoryUpdateRequestDto.toEntity(subCategory);
 
-        try{
+        try {
             subCategoryRepository.save(updateSubCategory);
         } catch (Exception e) {
             throw new BaseException(BaseResponseStatus.INVALID_INPUT);

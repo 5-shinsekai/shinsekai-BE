@@ -18,7 +18,7 @@ public class ProductCategoryListCreateRequestDto {
         this.subCategoryId = subCategoryId;
     }
 
-    public static ProductCategoryListCreateRequestDto from(ProductCategoryListCreateRequestVo vo){
+    public static ProductCategoryListCreateRequestDto from(ProductCategoryListCreateRequestVo vo) {
         return ProductCategoryListCreateRequestDto.builder()
                 .productCode(vo.getProductCode())
                 .mainCategoryId(vo.getMainCategoryId())
@@ -26,7 +26,7 @@ public class ProductCategoryListCreateRequestDto {
                 .build();
     }
 
-    public ProductCategoryList toEntity(){
+    public ProductCategoryList toEntity() {
         return ProductCategoryList.builder()
                 .productCode(productCode)
                 .mainCategoryId(mainCategoryId)

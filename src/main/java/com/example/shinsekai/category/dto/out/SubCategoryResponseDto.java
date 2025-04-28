@@ -16,14 +16,14 @@ public class SubCategoryResponseDto {
         this.name = name;
     }
 
-    public static SubCategoryResponseDto from(SubCategory subCategory){
+    public static SubCategoryResponseDto from(SubCategory subCategory) {
         return SubCategoryResponseDto.builder()
                 .id(subCategory.getId())
                 .name(subCategory.getName())
                 .build();
     }
 
-    public SubCategoryResponseVo toVo(){
+    public SubCategoryResponseVo toVo() {
         return SubCategoryResponseVo.builder()
                 .code(id)
                 .name(name)

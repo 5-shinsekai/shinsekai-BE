@@ -57,6 +57,6 @@ public class MainCategoryServiceImpl implements MainCategoryService {
                         () -> new BaseException(BaseResponseStatus.NO_EXIST_CATEGORY)
                 );
 
-        mainCategoryRepository.save( mainCategoryUpdateRequestDto.toEntity(mainCategory));
+        mainCategoryRepository.save(mainCategoryUpdateRequestDto.toEntity(mainCategory));
     }
 }

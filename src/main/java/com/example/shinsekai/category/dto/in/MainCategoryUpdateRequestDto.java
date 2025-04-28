@@ -20,7 +20,7 @@ public class MainCategoryUpdateRequestDto {
         this.categoryImageAltText = categoryImageAltText;
     }
 
-    public static MainCategoryUpdateRequestDto from(MainCategoryUpdateRequestVo mainCategoryUpdateRequestVo){
+    public static MainCategoryUpdateRequestDto from(MainCategoryUpdateRequestVo mainCategoryUpdateRequestVo) {
         return MainCategoryUpdateRequestDto.builder()
                 .id(mainCategoryUpdateRequestVo.getCategoryId())
                 .name(mainCategoryUpdateRequestVo.getName())
@@ -29,7 +29,7 @@ public class MainCategoryUpdateRequestDto {
                 .build();
     }
 
-    public MainCategory toEntity(MainCategory mainCategory){
+    public MainCategory toEntity(MainCategory mainCategory) {
         return MainCategory.builder()
                 .id(id)
                 .name(name == null ? mainCategory.getName() : name)

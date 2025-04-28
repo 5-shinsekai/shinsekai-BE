@@ -76,11 +76,11 @@ public class SecurityConfig {
                                         "/error"
                                 )
                                 .permitAll()
-                               .requestMatchers("/api/v1/review/**").permitAll()
+                                .requestMatchers("/api/v1/review/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/review/**").permitAll()  // GET 요청 허용
-                               .requestMatchers(HttpMethod.POST, "/api/v1/review/**").denyAll()   // POST 요청 차단
-                               .requestMatchers(HttpMethod.PUT, "/api/v1/review/**").denyAll()    // PUT 요청 차단
-                               .requestMatchers(HttpMethod.DELETE, "/api/v1/review/**").denyAll() // DELETE 요청 차단
+                                .requestMatchers(HttpMethod.POST, "/api/v1/review/**").denyAll()   // POST 요청 차단
+                                .requestMatchers(HttpMethod.PUT, "/api/v1/review/**").denyAll()    // PUT 요청 차단
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/review/**").denyAll() // DELETE 요청 차단
                                 .anyRequest()
                                 .authenticated()
                 )

@@ -2,7 +2,6 @@ package com.example.shinsekai.category.dto.in;
 
 import com.example.shinsekai.category.entity.ProductCategoryList;
 import com.example.shinsekai.category.vo.in.ProductCategoryListUpdateRequestVo;
-import jakarta.validation.constraints.Null;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,7 +20,7 @@ public class ProductCategoryListUpdateRequestDto {
         this.subCategoryId = subCategoryId;
     }
 
-    public static ProductCategoryListUpdateRequestDto from(ProductCategoryListUpdateRequestVo vo){
+    public static ProductCategoryListUpdateRequestDto from(ProductCategoryListUpdateRequestVo vo) {
         return ProductCategoryListUpdateRequestDto.builder()
                 .id(vo.getId())
                 .mainCategoryId(vo.getMainCategoryId())

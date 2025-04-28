@@ -12,7 +12,7 @@ public class ProductCategoryListGetByProductCodeRequestDto {
         this.productCode = productCode;
     }
 
-    public static ProductCategoryListGetByProductCodeRequestDto from(String productCode){
+    public static ProductCategoryListGetByProductCodeRequestDto from(String productCode) {
         return ProductCategoryListGetByProductCodeRequestDto.builder()
                 .productCode(productCode)
                 .build();

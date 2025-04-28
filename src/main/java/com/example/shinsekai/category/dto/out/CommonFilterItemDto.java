@@ -3,8 +3,6 @@ package com.example.shinsekai.category.dto.out;
 import com.example.shinsekai.category.entity.FilterSummary;
 import com.example.shinsekai.category.entity.PriceRange;
 import com.example.shinsekai.category.vo.out.CommonFilterItemVo;
-import com.example.shinsekai.option.entity.Color;
-import com.example.shinsekai.option.entity.Size;
 import com.example.shinsekai.season.entity.Season;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,7 +39,7 @@ public class CommonFilterItemDto {
                 .build();
     }
 
-    public CommonFilterItemVo toVo(){
+    public CommonFilterItemVo toVo() {
         return CommonFilterItemVo.builder()
                 .code(id)
                 .name(name)

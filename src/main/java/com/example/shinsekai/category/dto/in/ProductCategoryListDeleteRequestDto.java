@@ -12,7 +12,7 @@ public class ProductCategoryListDeleteRequestDto {
         this.id = id;
     }
 
-    public static ProductCategoryListDeleteRequestDto from(Long id){
+    public static ProductCategoryListDeleteRequestDto from(Long id) {
         return ProductCategoryListDeleteRequestDto.builder()
                 .id(id)
                 .build();

@@ -16,14 +16,14 @@ public class SubCategoryCreateRequestDto {
         this.mainCategoryId = mainCategoryId;
     }
 
-    public static SubCategoryCreateRequestDto from(SubCategoryCreateRequestVo subCategoryCreateRequestVo){
+    public static SubCategoryCreateRequestDto from(SubCategoryCreateRequestVo subCategoryCreateRequestVo) {
         return SubCategoryCreateRequestDto.builder()
                 .name(subCategoryCreateRequestVo.getName())
                 .mainCategoryId(subCategoryCreateRequestVo.getMainCategoryId())
                 .build();
     }
 
-    public SubCategory toEntity(){
+    public SubCategory toEntity() {
         return SubCategory.builder()
                 .name(name)
                 .mainCategoryId(mainCategoryId)

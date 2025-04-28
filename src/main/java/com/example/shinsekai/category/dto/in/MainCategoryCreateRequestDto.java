@@ -18,7 +18,7 @@ public class MainCategoryCreateRequestDto {
         this.categoryImageAltText = categoryImageAltText;
     }
 
-    public static MainCategoryCreateRequestDto from(MainCategoryCreateRequestVo mainCategoryCreateRequestVo){
+    public static MainCategoryCreateRequestDto from(MainCategoryCreateRequestVo mainCategoryCreateRequestVo) {
         return MainCategoryCreateRequestDto.builder()
                 .name(mainCategoryCreateRequestVo.getName())
                 .categoryImage(mainCategoryCreateRequestVo.getCategoryImage())
@@ -26,7 +26,7 @@ public class MainCategoryCreateRequestDto {
                 .build();
     }
 
-    public MainCategory toEntity(){
+    public MainCategory toEntity() {
         return MainCategory.builder()
                 .name(name)
                 .categoryImage(categoryImage)
