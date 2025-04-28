@@ -31,24 +31,25 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
     public List<StarbucksCardResponseDto> getActiveStarbucksCards(String memberUuid) {
         return memberStarbucksListRepository.findMemberStarbucksCardListByMemberUuidAndActiveIsTrue(memberUuid).stream()
                 .map(memberStarbucksCardLists -> StarbucksCardResponseDto.from(
-                                memberStarbucksCardLists.getStarbucksCard(),
-                                memberStarbucksCardLists.getMemberStarbucksCardUuid()
+                            starbucksCardRepository.findByCardUuid(memberStarbucksCardLists.getStarbucksCardUuid())
+                                    .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)),
+                            memberStarbucksCardLists.getMemberStarbucksCardUuid()
                         )
                 ).toList();
     }
 
     //활성화된 단일 카드 조회
-
-
     @Override
     public StarbucksCardResponseDto getStarbucksCard(MemberStarbucksListDto dto) {
 
+        MemberStarbucksCardList memberStarbucksCardList = memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+                dto.getMemberStarbucksCardUuid(), dto.getMemberUuid()
+        ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD));
+
         return StarbucksCardResponseDto.from(
-                memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
-                                dto.getMemberStarbucksCardUuid(), dto.getMemberUuid()
-                        ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD))
-                        .getStarbucksCard(), dto.getMemberStarbucksCardUuid()
-        );
+                starbucksCardRepository.findByCardUuid(memberStarbucksCardList.getStarbucksCardUuid())
+                        .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD))
+                , dto.getMemberStarbucksCardUuid());
     }
 
     @Override
@@ -57,7 +58,7 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
         memberStarbucksListRepository.save(MemberStarbucksListDto.builder()
                 .memberUuid(starbucksCardDto.getMemberUuid())
                 .build()
-                .toEntity(starbucksCardRepository.save(starbucksCardDto.toEntity()))
+                .toEntity(starbucksCardRepository.save(starbucksCardDto.toEntity()).getCardUuid())
         );
     }
 
@@ -70,7 +71,8 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
                 ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_DELETE_STARBUCKS_CARD));
 
         //잔액 존재하는지 검사
-        if (memberStarbucksCardList.getStarbucksCard().getRemainAmount() > 0)
+        if (starbucksCardRepository.findByCardUuid(memberStarbucksCardList.getStarbucksCardUuid())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getRemainAmount() > 0)
             throw new BaseException(BaseResponseStatus.NO_DELETE_STARBUCKS_CARD);
 
         memberStarbucksCardList.softDelete();
@@ -90,9 +92,12 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
         if (useStarbucksCardRequestDto.getPrice() < 0)
             throw new BaseException(BaseResponseStatus.INVALID_INPUT);
 
-        StarbucksCard starbucksCard = memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+        MemberStarbucksCardList memberStarbucksList =  memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
                 useStarbucksCardRequestDto.getMemberStarbucksCardUuid(), useStarbucksCardRequestDto.getMemberUuid()
-        ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getStarbucksCard();
+        ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD));
+
+        StarbucksCard starbucksCard = starbucksCardRepository.findByCardUuid(memberStarbucksList.getStarbucksCardUuid())
+                                    .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD));
 
 
         //잔액 2차 검증
@@ -110,24 +115,31 @@ public class StarbucksCardServiceImpl implements StarbucksCardService {
         if (useStarbucksCardRequestDto.getPrice() < 1000)
             throw new BaseException(BaseResponseStatus.NO_CHARGE_STARBUCKS_CARD);
 
-        memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+        MemberStarbucksCardList memberStarbucksCardList = memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
                         useStarbucksCardRequestDto.getMemberStarbucksCardUuid(), useStarbucksCardRequestDto.getMemberUuid()
-                ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD))
-                .getStarbucksCard().chargeRemainAmount(useStarbucksCardRequestDto.getPrice());
+                ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD));
+
+        StarbucksCard starbucksCard = starbucksCardRepository.findByCardUuid(memberStarbucksCardList.getStarbucksCardUuid())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD));
+
+        starbucksCard.chargeRemainAmount(useStarbucksCardRequestDto.getPrice());
     }
 
     @Override
     @Transactional
     public void transferRemainAmount(TransferStarbucksCardDto dto) {
-        StarbucksCard source =
-                memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
-                        dto.getSourceMemberStarbucksCardUuid(), dto.getMemeberUuid()
-                ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getStarbucksCard();
+        StarbucksCard source = starbucksCardRepository.findByCardUuid(
+            memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+                dto.getSourceMemberStarbucksCardUuid(), dto.getMemberUuid()
+            ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getStarbucksCardUuid()
+        ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD));
 
-        StarbucksCard target =
-                memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
-                        dto.getTargetMemberStarbucksCardUuid(), dto.getMemeberUuid()
-                ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getStarbucksCard();
+
+        StarbucksCard target = starbucksCardRepository.findByCardUuid(
+            memberStarbucksListRepository.findByMemberStarbucksCardUuidAndMemberUuidAndActiveIsTrue(
+                    dto.getTargetMemberStarbucksCardUuid(), dto.getMemberUuid()
+            ).orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD)).getStarbucksCardUuid()
+        ).orElseThrow(()-> new BaseException(BaseResponseStatus.NO_EXIST_STARBUCKS_CARD));
 
         //이전 할 잔액 유효성 검사
         if (source.getRemainAmount() < dto.getRemainAmount())
