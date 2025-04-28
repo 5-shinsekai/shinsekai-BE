@@ -12,17 +12,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
-import java.util.Comparator;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AddressServiceImpl implements AddressService{
+public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
 
@@ -41,12 +38,12 @@ public class AddressServiceImpl implements AddressService{
     public AddressResponseDto getMainAddress(String memberUuid) {
         return AddressResponseDto.from(addressRepository.findByMemberUuidAndIsMainAddressIsTrue(memberUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS)
-        ));
+                ));
     }
 
     @Override
     public AddressResponseDto getAddress(String memberUuid, String addressUuid) {
-        return AddressResponseDto.from( addressRepository.findByMemberUuidAndAddressUuid(memberUuid, addressUuid)
+        return AddressResponseDto.from(addressRepository.findByMemberUuidAndAddressUuid(memberUuid, addressUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXIST_ADDRESS)));
     }
 
@@ -60,7 +57,7 @@ public class AddressServiceImpl implements AddressService{
         // 최초 등록인 경우
         if (activeAddressCount == 0) {
             isMainAddress = true;
-        } 
+        }
         // 최초 등록이 아닌 경우
         else if (activeAddressCount > 0 && activeAddressCount < 10) {
 
@@ -69,7 +66,7 @@ public class AddressServiceImpl implements AddressService{
             if (requestedDtoIsMain) {
                 Address prevMainAddress =
                         addressRepository.findByMemberUuidAndIsMainAddressIsTrue(addressCreateRequestDto.getMemberUuid())
-                        .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_SAVE_ADDRESS));
+                                .orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_SAVE_ADDRESS));
 
                 prevMainAddress.clearMainAddress();                 // 기존 주소의 메인주소지 해제
                 isMainAddress = true;
@@ -110,7 +107,7 @@ public class AddressServiceImpl implements AddressService{
                 isMainAddress = true;
             }
 
-        } 
+        }
         // 기본 배송지가 없다면
         else {
             // 저장할 객체를 메인 주소지로 지정

@@ -23,7 +23,7 @@ public class CartUpdateRequestDto {
         this.productOptionListId = productOptionListId;
     }
 
-    public static CartUpdateRequestDto from(String memberUuid, CartUpdateRequestVo vo){
+    public static CartUpdateRequestDto from(String memberUuid, CartUpdateRequestVo vo) {
         return CartUpdateRequestDto.builder()
                 .memberUuid(memberUuid)
                 .cartUuid(vo.getCartUuid())
@@ -33,7 +33,7 @@ public class CartUpdateRequestDto {
                 .build();
     }
 
-    public Cart toEntity(Cart cart){
+    public Cart toEntity(Cart cart) {
         return Cart.builder()
                 .id(cart.getId())
                 .cartUuid(cartUuid)

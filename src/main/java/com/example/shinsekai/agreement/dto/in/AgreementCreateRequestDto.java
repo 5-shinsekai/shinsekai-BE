@@ -4,7 +4,6 @@ import com.example.shinsekai.agreement.entity.Agreement;
 import com.example.shinsekai.agreement.vo.in.AgreementCreateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter

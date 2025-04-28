@@ -15,5 +15,4 @@ public class CronEntity {
     private String jobName;
     private String cronExpression;
 
-    // Getter, Setter
 }

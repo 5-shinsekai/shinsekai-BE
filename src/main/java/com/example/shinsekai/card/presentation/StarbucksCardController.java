@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Slf4j
@@ -53,7 +54,7 @@ public class StarbucksCardController {
     @PostMapping
     public BaseResponseEntity<Void> createStarbucksCard(@RequestBody StarbucksCardRequestVo starbucksCardRequestVo) {
         starbucksCardService.createStarbucksCard(
-                StarbucksCardRequestDto.from( starbucksCardRequestVo,jwtTokenProvider.getMemberUuid())
+                StarbucksCardRequestDto.from(starbucksCardRequestVo, jwtTokenProvider.getMemberUuid())
         );
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
@@ -71,7 +72,7 @@ public class StarbucksCardController {
 
     @Operation(summary = "스타벅스 카드 충전")
     @PutMapping("/charge")
-    public  BaseResponseEntity<Void> chargeStarbucksCard(@RequestBody ChargeStarbucksCardVo starbucksCardRequestVo) {
+    public BaseResponseEntity<Void> chargeStarbucksCard(@RequestBody ChargeStarbucksCardVo starbucksCardRequestVo) {
         starbucksCardService.chargeRemainAmount(
                 UseStarbucksCardRequestDto.builder()
                         .memberStarbucksCardUuid(starbucksCardRequestVo.getMemberStarbucksCardUuid())

@@ -66,7 +66,7 @@ public class AddressController {
         addressService.updateAddress(AddressUpdateRequestDto.of(addressRequestVo, jwtTokenProvider.getMemberUuid()));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
-    
+
     @Operation(summary = "배송지 삭제")
     @DeleteMapping("/{addressUuid}")
     public BaseResponseEntity<Void> deleteAddress(@PathVariable String addressUuid) {

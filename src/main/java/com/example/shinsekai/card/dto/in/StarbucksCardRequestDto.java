@@ -36,7 +36,7 @@ public class StarbucksCardRequestDto {
                 .build();
     }
 
-    public static StarbucksCardRequestDto from(StarbucksCardRequestVo starbucksCardRequestVo, String memberUuid){
+    public static StarbucksCardRequestDto from(StarbucksCardRequestVo starbucksCardRequestVo, String memberUuid) {
         return StarbucksCardRequestDto.builder()
                 .memberUuid(memberUuid)
                 .cardName(starbucksCardRequestVo.getCardName())

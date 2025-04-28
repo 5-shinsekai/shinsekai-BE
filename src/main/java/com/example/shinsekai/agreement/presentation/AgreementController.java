@@ -10,6 +10,7 @@ import com.example.shinsekai.agreement.vo.out.AgreementResponseVo;
 import com.example.shinsekai.common.entity.BaseResponseEntity;
 import com.example.shinsekai.common.entity.BaseResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RequestMapping("/api/v1/agreement")
 @RestController
+@Tag(name = "Agreement", description = "약관 동의 관련 API")
 @RequiredArgsConstructor
 @Slf4j
 public class AgreementController {
@@ -51,7 +53,7 @@ public class AgreementController {
     @Operation(summary = "약관 수정")
     @PutMapping
     public BaseResponseEntity<Void> updateAgreement(@Valid @RequestBody AgreementUpdateRequestVo
-                                                                agreementUpdateRequestVo) {
+                                                            agreementUpdateRequestVo) {
         agreementService.updateAgreement(AgreementUpdateRequestDto.from(agreementUpdateRequestVo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }

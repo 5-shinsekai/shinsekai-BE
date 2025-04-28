@@ -9,11 +9,16 @@ import java.util.List;
 public interface AgreementService {
 
     List<AgreementResponseDto> getAllAgreements();
+
     AgreementResponseDto getAgreement(Long agreementId);
+
     void createAgreement(AgreementCreateRequestDto agreementCreateRequestDto);
+
     void updateAgreement(AgreementUpdateRequestDto agreementUpdateRequestDto);
+
     void deleteAgreement(Long agreementId);
 
     List<AgreementResponseDto> getAgreementByMemberUuid(String memberUuid);
+
     AgreementResponseDto getAgreementByMemberUuidAndAgreementId(String memberUuid, Long agreementId);
 }

@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Entity
@@ -24,7 +22,7 @@ public class Cart extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String memberUuid;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
     private Long productOptionListId;
 
     @Column(nullable = false, length = 50)
@@ -74,7 +72,7 @@ public class Cart extends BaseEntity {
         return isDeleted;
     }
 
-    public void setDeleted(){
+    public void setDeleted() {
         this.isDeleted = true;
     }
 }

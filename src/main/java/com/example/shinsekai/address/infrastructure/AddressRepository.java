@@ -1,7 +1,6 @@
 package com.example.shinsekai.address.infrastructure;
 
 
-import com.example.shinsekai.address.dto.out.AddressResponseDto;
 import com.example.shinsekai.address.entity.Address;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AddressRepository extends JpaRepository<Address,Long> {
+public interface AddressRepository extends JpaRepository<Address, Long> {
 
     @Query("SELECT COUNT(a) FROM Address a WHERE a.memberUuid = :memberUuid AND (a.isDeleted = false OR a.isDeleted IS NULL)")
     int countActiveByMemberUuid(@Param("memberUuid") String memberUuid);

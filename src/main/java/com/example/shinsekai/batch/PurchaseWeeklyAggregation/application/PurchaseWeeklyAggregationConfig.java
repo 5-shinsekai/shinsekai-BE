@@ -47,7 +47,7 @@ public class PurchaseWeeklyAggregationConfig {
     public Step purchaseWeeklyAggregationStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("purchaseWeeklyAggregationStep", jobRepository)
                 .<PurchaseDailyAggregation, PurchaseWeeklyAggregation>chunk(chunkSize, transactionManager)
-                .reader(purchaseWeeklyAggregationReader(null,null)) // ItemReader 설정
+                .reader(purchaseWeeklyAggregationReader(null, null)) // ItemReader 설정
                 .processor(purchaseWeeklyAggregationProcessor(null, null))
                 .writer(purchaseWeeklyAggregationWriter()) // ItemWriter 설정
                 .transactionManager(transactionManager)

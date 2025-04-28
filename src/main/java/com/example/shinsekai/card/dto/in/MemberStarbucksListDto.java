@@ -15,7 +15,7 @@ public class MemberStarbucksListDto {
     private String memberStarbucksCardUuid;
     private String memberUuid;
 
-    public MemberStarbucksCardList toEntity(StarbucksCard starbucksCard){
+    public MemberStarbucksCardList toEntity(StarbucksCard starbucksCard) {
         return MemberStarbucksCardList.builder()
                 .memberStarbucksCardUuid(generateMemberStarbucksCardCode())
                 .starbucksCard(starbucksCard)

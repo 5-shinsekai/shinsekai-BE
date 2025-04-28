@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -50,7 +51,7 @@ public class AddressCreateRequestDto {
                 .build();
     }
 
-    public Address toEntity(boolean isMainAddress){
+    public Address toEntity(boolean isMainAddress) {
         return Address.builder()
                 .addressUuid(addressUuid)
                 .memberUuid(memberUuid)

@@ -35,18 +35,18 @@ public class BestProductStepConfig {
         JdbcCursorItemReader<BestProduct> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(dataSource);
         reader.setSql("""
-            SELECT * FROM (
                 SELECT * FROM (
-                    SELECT ps.main_category_id, ps.product_code,
-                           ROW_NUMBER() OVER (PARTITION BY ps.main_category_id ORDER BY ps.product_score DESC, p.created_at DESC) AS product_rank,
-                           ps.calculation_at
-                    FROM product_score ps
-                    JOIN product p ON p.product_code = ps.product_code
-                    WHERE ps.calculation_at = ? AND p.is_deleted = 0
-                ) ranked
-                WHERE product_rank <= ?
-            ) final
-            """);
+                    SELECT * FROM (
+                        SELECT ps.main_category_id, ps.product_code,
+                               ROW_NUMBER() OVER (PARTITION BY ps.main_category_id ORDER BY ps.product_score DESC, p.created_at DESC) AS product_rank,
+                               ps.calculation_at
+                        FROM product_score ps
+                        JOIN product p ON p.product_code = ps.product_code
+                        WHERE ps.calculation_at = ? AND p.is_deleted = 0
+                    ) ranked
+                    WHERE product_rank <= ?
+                ) final
+                """);
         reader.setPreparedStatementSetter((ps) -> {
             ps.setObject(1, rankDate);
             ps.setInt(2, RANK_SIZE);

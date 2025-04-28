@@ -36,7 +36,7 @@ public class CartGetResponseDto {
                 .build();
     }
 
-    public CartGetResponseVo toVo(){
+    public CartGetResponseVo toVo() {
         return CartGetResponseVo.builder()
                 .cartUuid(cartUuid)
                 .productCode(productCode)

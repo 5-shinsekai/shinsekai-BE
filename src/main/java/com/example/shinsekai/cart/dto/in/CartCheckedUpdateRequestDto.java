@@ -18,7 +18,7 @@ public class CartCheckedUpdateRequestDto {
         this.checked = checked;
     }
 
-    public static CartCheckedUpdateRequestDto from(String memberUuid, CartCheckedUpdateRequestVo vo){
+    public static CartCheckedUpdateRequestDto from(String memberUuid, CartCheckedUpdateRequestVo vo) {
         return CartCheckedUpdateRequestDto.builder()
                 .memberUuid(memberUuid)
                 .itemType(vo.getItemType())

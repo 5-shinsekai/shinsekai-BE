@@ -12,13 +12,22 @@ import java.util.List;
 
 public interface CartService {
     CartGroupedByProductTypeDto getAllCarts(String memberUuid);
+
     CartUuidGroupedByProductTypeDto getAllCartsUuid(String memberUuid);
+
     CartGetResponseDto getAllCartsDetail(String memberUuid);
+
     void createCart(CartCreateRequestDto cartCreateRequestDto);
+
     void updateCart(CartUpdateRequestDto cartUpdateRequestDto);
+
     void deleteAllCart(String memberUuid);
-    void deleteSelectedAllCart (String memberUuid, List<CartDeleteRequestDto> cartDeleRequestDtoList); // deleteAllCartById
+
+    void deleteSelectedAllCart(String memberUuid, List<CartDeleteRequestDto> cartDeleRequestDtoList); // deleteAllCartById
+
     void deleteCart(String memberUuid, CartDeleteRequestDto cartDeleteRequestDto);// 단일 삭제
+
     CartGroupedByProductTypeDto getAllCheckedCarts(String memberUuid);
+
     void updateAllCartChecked(CartCheckedUpdateRequestDto cartCheckedUpdateRequestDto);
 }

@@ -55,7 +55,7 @@ public class PurchaseDailyAggregationConfig {
     @StepScope
     public JpaCursorItemReader<PurchaseDailyAggregation> purchaseDailyAggregationReader(
             @Value("#{jobParameters['aggregationDate']}") LocalDate aggregationDate
-            ) {
+    ) {
 
         LocalDateTime startDate = aggregationDate.atStartOfDay();
         LocalDateTime endDate = aggregationDate.plusDays(1).atStartOfDay();

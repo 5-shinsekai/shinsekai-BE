@@ -13,6 +13,7 @@ public class AgreementUpdateRequestVo {
     private Long agreementId;
     private String agreementTitle;
     private String agreementContent;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate storedExpiredDate;
 }

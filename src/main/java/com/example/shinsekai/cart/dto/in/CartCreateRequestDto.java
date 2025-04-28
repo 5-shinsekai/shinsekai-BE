@@ -30,7 +30,7 @@ public class CartCreateRequestDto {
         this.isFrozen = isFrozen;
     }
 
-    public static CartCreateRequestDto from(String memberUuid, CartCreateRequestVo cartCreateRequestVo){
+    public static CartCreateRequestDto from(String memberUuid, CartCreateRequestVo cartCreateRequestVo) {
         return CartCreateRequestDto.builder()
                 .memberUuid(memberUuid)
                 .productOptionListId(cartCreateRequestVo.getProductOptionListId())
@@ -41,7 +41,7 @@ public class CartCreateRequestDto {
                 .build();
     }
 
-    public Cart toEntity(){
+    public Cart toEntity() {
         return Cart.builder()
                 .cartUuid(generateCartCode())
                 .memberUuid(memberUuid)

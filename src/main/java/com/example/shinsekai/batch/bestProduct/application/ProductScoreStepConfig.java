@@ -33,19 +33,19 @@ public class ProductScoreStepConfig {
         JdbcCursorItemReader<ProductScore> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(dataSource);
         reader.setSql("""
-        SELECT pwa.main_category_id, pwa.product_code, pwa.product_name,
-               SUM(pwa.quantity) AS total_quantity,
-               COUNT(pl.product_code) AS total_like,
-               (SUM(pwa.quantity) * 2 + COUNT(pl.product_code)) AS product_score,
-               pwa.aggregate_at_end
-        FROM purchase_weekly_aggregation pwa
-        LEFT JOIN product_like pl ON pl.product_code = pwa.product_code
-        WHERE pwa.aggregate_at_end = ?
-        GROUP BY pwa.main_category_id, pwa.product_code, pwa.product_name, pwa.aggregate_at_end
-        ORDER BY pwa.aggregate_at_end, pwa.main_category_id, pwa.product_code
-        """);
+                SELECT pwa.main_category_id, pwa.product_code, pwa.product_name,
+                       SUM(pwa.quantity) AS total_quantity,
+                       COUNT(pl.product_code) AS total_like,
+                       (SUM(pwa.quantity) * 2 + COUNT(pl.product_code)) AS product_score,
+                       pwa.aggregate_at_end
+                FROM purchase_weekly_aggregation pwa
+                LEFT JOIN product_like pl ON pl.product_code = pwa.product_code
+                WHERE pwa.aggregate_at_end = ?
+                GROUP BY pwa.main_category_id, pwa.product_code, pwa.product_name, pwa.aggregate_at_end
+                ORDER BY pwa.aggregate_at_end, pwa.main_category_id, pwa.product_code
+                """);
 
-        reader.setPreparedStatementSetter(new ArgumentPreparedStatementSetter(new Object[] { rankDate }));
+        reader.setPreparedStatementSetter(new ArgumentPreparedStatementSetter(new Object[]{rankDate}));
         reader.setRowMapper(new ProductScoreStepConfig.ProductScoreRowMapper());
         reader.setVerifyCursorPosition(false);
         reader.setName("jdbcCursorItemReader");

@@ -33,5 +33,8 @@ public class StarbucksCard extends BaseEntity {
     public void useRemainAmount(Double price) {
         this.remainAmount -= price;
     }
-    public void chargeRemainAmount(Double price) {this.remainAmount += price;}
+
+    public void chargeRemainAmount(Double price) {
+        this.remainAmount += price;
+    }
 }

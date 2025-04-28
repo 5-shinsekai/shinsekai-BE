@@ -1,11 +1,9 @@
 package com.example.shinsekai.agreement.dto.in;
 
 import com.example.shinsekai.agreement.entity.Agreement;
-import com.example.shinsekai.agreement.vo.in.AgreementCreateRequestVo;
 import com.example.shinsekai.agreement.vo.in.AgreementUpdateRequestVo;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;

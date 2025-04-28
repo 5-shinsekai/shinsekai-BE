@@ -33,13 +33,13 @@ public class MemberStarbucksCardList extends BaseEntity {
             String memberStarbucksCardUuid,
             String memberUuid,
             StarbucksCard starbucksCard
-    ){
+    ) {
         this.memberStarbucksCardUuid = memberStarbucksCardUuid;
         this.memberUuid = memberUuid;
         this.starbucksCard = starbucksCard;
     }
 
-    public void softDelete(){
+    public void softDelete() {
         this.active = false;
         this.deletedAt = LocalDateTime.now();
     }

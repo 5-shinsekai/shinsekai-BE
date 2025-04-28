@@ -14,12 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AgreementServiceImpl implements AgreementService{
+public class AgreementServiceImpl implements AgreementService {
 
     private final AgreementRepository agreementRepository;
     private final MemberAgreementListRepository memberAgreementListRepository;

@@ -16,10 +16,11 @@ public class AgreementResponseVo {
     private LocalDate storedExpiredDate;
 
     @Builder
-    public AgreementResponseVo(Long agreementId,
-                               String agreementTitle,
-                               String agreementContent,
-                               LocalDate storedExpiredDate) {
+    public AgreementResponseVo(
+            Long agreementId,
+            String agreementTitle,
+            String agreementContent,
+            LocalDate storedExpiredDate) {
         this.agreementId = agreementId;
         this.agreementTitle = agreementTitle;
         this.agreementContent = agreementContent;

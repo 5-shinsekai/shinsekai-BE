@@ -17,7 +17,7 @@ public class StarbucksCardResponseDto {
     private Double remainAmount;
     private Boolean agreed;
 
-    public static StarbucksCardResponseDto from(StarbucksCard starbucksCard, String memberStarbucksCardListUuid){
+    public static StarbucksCardResponseDto from(StarbucksCard starbucksCard, String memberStarbucksCardListUuid) {
         return StarbucksCardResponseDto.builder()
                 .memberStarbucksCardListUuid(memberStarbucksCardListUuid)
                 .cardName(starbucksCard.getCardName())
@@ -28,7 +28,7 @@ public class StarbucksCardResponseDto {
                 .build();
     }
 
-    public StarbucksCardResponseVo toVo(){
+    public StarbucksCardResponseVo toVo() {
         return StarbucksCardResponseVo.builder()
                 .memberStarbucksCardListUuid(memberStarbucksCardListUuid)
                 .cardName(cardName)

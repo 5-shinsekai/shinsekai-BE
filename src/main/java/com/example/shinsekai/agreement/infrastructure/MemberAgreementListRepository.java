@@ -12,7 +12,9 @@ import java.util.Optional;
 public interface MemberAgreementListRepository extends JpaRepository<MemberAgreementList, Long> {
 
     List<MemberAgreementList> findMemberAgreementListByMemberUuidAndIsAgreeTrue(String memberUuid);
+
     Optional<MemberAgreementList> findMemberAgreementListByMemberUuidAndAgreementIdAndIsAgreeTrue(String memberUuid,
                                                                                                   Long agreementId);
+
     List<MemberAgreementList> findByAgreement(Agreement agreement);
 }
