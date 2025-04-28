@@ -21,11 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.UUID;
@@ -47,13 +45,17 @@ public class KakaoAuthController {
     private String redirectUri;
 
 
+    @Value("${client-url}")
+    private String clientBaseUrl;
+
+
     private final KakaoAuthService kakaoAuthService;
     private final RedisProvider redisProvider;
 
     @Operation(summary = "카카오 로그인 요청")
     @GetMapping("/login")
     public  BaseResponseEntity<KakaoAuthUrlVo> requestSocialLogin(@RequestParam String callbackUrl) {
-        String rawState = UUID.randomUUID() + "|" + callbackUrl;
+        String rawState = UUID.randomUUID() + "|" + clientBaseUrl + callbackUrl;
         String encodedState = URLEncoder.encode(rawState, StandardCharsets.UTF_8);
 
         String clientId = this.clientId;
