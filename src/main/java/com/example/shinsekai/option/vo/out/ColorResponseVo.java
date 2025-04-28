@@ -1,7 +1,5 @@
 package com.example.shinsekai.option.vo.out;
 
-import com.example.shinsekai.option.entity.Color;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 

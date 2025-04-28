@@ -2,7 +2,6 @@ package com.example.shinsekai.option.dto.out;
 
 import com.example.shinsekai.option.entity.Color;
 import com.example.shinsekai.option.vo.out.ColorResponseVo;
-import com.example.shinsekai.option.vo.out.SizeResponseVo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -19,7 +19,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -81,7 +80,7 @@ public class RestockNotificationServiceImpl implements RestockNotificationServic
             notice.markAsMailNotified();
 
             // memberUuid로 서버 접속 여부 체크
-            if(sseService.isUserConnected(member.getMemberUuid())) {
+            if (sseService.isUserConnected(member.getMemberUuid())) {
                 // 접속해 있는 회원에게 sse로 재입고 알림을 보냄(DB에 sse보냄 체크 로직도 포함)
                 sseService.sendToMember(notice.getMemberUuid(), productOptionId, product.getProductCode(), product.getProductName());
             }

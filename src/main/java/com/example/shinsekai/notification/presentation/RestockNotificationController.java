@@ -36,7 +36,7 @@ public class RestockNotificationController {
 
     @Operation(summary = "재입고 알림 신청")
     @PostMapping("/notify")
-    public BaseResponseEntity<Void> requestRestock(@RequestBody RestockNotificationRequestVo vo){
+    public BaseResponseEntity<Void> requestRestock(@RequestBody RestockNotificationRequestVo vo) {
         String memberUuid = jwtTokenProvider.getMemberUuid();
         restockNotificationService.register(memberUuid, RestockNotificationRequestDto.from(vo));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);

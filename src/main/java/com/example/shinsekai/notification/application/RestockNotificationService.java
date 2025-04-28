@@ -9,7 +9,7 @@ public interface RestockNotificationService {
 
     List<RestockNotificationResponseDto> findMyMemberUuid(String memberUuid);
 
-    void register(String memberUuid,RestockNotificationRequestDto dto);
+    void register(String memberUuid, RestockNotificationRequestDto dto);
 
     void notifyForRestockedOption(Long productOptionId);
 }

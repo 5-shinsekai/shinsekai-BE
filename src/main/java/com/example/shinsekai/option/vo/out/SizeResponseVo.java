@@ -1,9 +1,7 @@
 package com.example.shinsekai.option.vo.out;
 
-import com.example.shinsekai.option.entity.Size;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class SizeResponseVo {
