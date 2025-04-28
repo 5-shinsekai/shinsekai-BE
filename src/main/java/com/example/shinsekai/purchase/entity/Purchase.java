@@ -20,7 +20,7 @@ public class Purchase extends BaseEntity {
     @Column(unique = true, nullable = false, updatable = false)
     private String paymentCode;
 
-    @Column( nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private String memberUuid;
 
     @Enumerated(EnumType.STRING)

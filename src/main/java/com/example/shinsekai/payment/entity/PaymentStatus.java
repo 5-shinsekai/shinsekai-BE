@@ -1,4 +1,5 @@
 package com.example.shinsekai.payment.entity;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

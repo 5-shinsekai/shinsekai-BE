@@ -5,7 +5,9 @@ import com.example.shinsekai.common.entity.BaseResponseStatus;
 import com.example.shinsekai.common.jwt.JwtTokenProvider;
 import com.example.shinsekai.purchase.application.OrderService;
 import com.example.shinsekai.purchase.application.PurchaseService;
-import com.example.shinsekai.purchase.dto.in.*;
+import com.example.shinsekai.purchase.dto.in.CancelOrderRequestDto;
+import com.example.shinsekai.purchase.dto.in.OrderRequestDto;
+import com.example.shinsekai.purchase.dto.in.PurchaseProductListRequestDto;
 import com.example.shinsekai.purchase.dto.out.PurchaseResponseDto;
 import com.example.shinsekai.purchase.vo.in.CancelOrderRequestVo;
 import com.example.shinsekai.purchase.vo.in.OrderRequestVo;
@@ -32,14 +34,14 @@ public class PurchaseController {
 
     @Operation(summary = "회원 구매 정보 조회")
     @GetMapping
-    public List<PurchaseResponseVo> findPurchase(){
+    public List<PurchaseResponseVo> findPurchase() {
         return purchaseService.findMemberPurchaseList(jwtTokenProvider.getMemberUuid())
                 .stream().map(PurchaseResponseDto::toVo).toList();
     }
 
     @Operation(summary = "회원별 주문/배송 현황 조회")
     @GetMapping("/status")
-    public BaseResponseEntity<PurchaseStatusResponseVo> findPurchaseStatusByMemberUuid(){
+    public BaseResponseEntity<PurchaseStatusResponseVo> findPurchaseStatusByMemberUuid() {
         return new BaseResponseEntity<>(purchaseService.findPurchaseStatusByMemberUuid(jwtTokenProvider.getMemberUuid()).toVo());
     }
 
@@ -48,8 +50,8 @@ public class PurchaseController {
     public BaseResponseEntity<Boolean> createPurchase(@RequestBody OrderRequestVo orderRequestVo) {
         OrderRequestDto orderDto = OrderRequestDto.from(orderRequestVo, jwtTokenProvider.getMemberUuid());
         orderService.createOrder(orderDto, orderRequestVo.getOrderProductList().stream()
-                        .map(listVo->PurchaseProductListRequestDto.from(listVo,orderDto.getPurchaseCode()))
-                        .toList()
+                .map(listVo -> PurchaseProductListRequestDto.from(listVo, orderDto.getPurchaseCode()))
+                .toList()
         );
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
@@ -57,7 +59,7 @@ public class PurchaseController {
     @Operation(summary = "구매 환불")
     @DeleteMapping
     public BaseResponseEntity<Boolean> cancelPurchase(@RequestBody CancelOrderRequestVo cancelOrderRequestVo) {
-        orderService.deleteOrder(CancelOrderRequestDto.from(cancelOrderRequestVo,jwtTokenProvider.getMemberUuid()));
+        orderService.deleteOrder(CancelOrderRequestDto.from(cancelOrderRequestVo, jwtTokenProvider.getMemberUuid()));
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS);
     }
 }

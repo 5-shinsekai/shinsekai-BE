@@ -35,7 +35,7 @@ public class OrderRequestDto {
     //스타벅스 카드
     private String memberStarbucksCardUuid;
 
-    public static OrderRequestDto from(OrderRequestVo vo, String memberUuid){
+    public static OrderRequestDto from(OrderRequestVo vo, String memberUuid) {
         return OrderRequestDto.builder()
                 .purchaseCode(generateOrderCode())
                 .memberUuid(memberUuid)
@@ -57,6 +57,7 @@ public class OrderRequestDto {
                 .memberStarbucksCardUuid(vo.getMemberStarbucksCardUuid())
                 .build();
     }
+
     public static String generateOrderCode() {
         String prefix = "O";
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));

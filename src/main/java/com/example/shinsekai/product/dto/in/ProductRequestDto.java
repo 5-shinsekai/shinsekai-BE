@@ -56,22 +56,6 @@ public class ProductRequestDto {
         this.discountRate = discountRate;
     }
 
-    public Product toEntity() {
-        return Product.builder()
-                .productCode(generateProductCode())
-                .productName(this.productName)
-                .productPrice(this.productPrice)
-                .productStatus(this.productStatus)
-                .productSummary(this.productSummary)
-                .contentImages(this.contentImages)
-                .thumbnailUrl(this.thumbnailUrl)
-                .userPurchaseLimit(this.userPurchaseLimit)
-                .isFrozen(this.isFrozen)
-                .isEngraving(this.isEngraving)
-                .discountRate(this.discountRate)
-                .build();
-    }
-
     public static ProductRequestDto from(ProductRequestVo productRequestVo) {
         return ProductRequestDto.builder()
                 .productCode(productRequestVo.getProductCode())
@@ -94,6 +78,22 @@ public class ProductRequestDto {
         String uuidPart = UUID.randomUUID().toString().substring(0, 8);
 
         return prefix + date + "-" + uuidPart;
+    }
+
+    public Product toEntity() {
+        return Product.builder()
+                .productCode(generateProductCode())
+                .productName(this.productName)
+                .productPrice(this.productPrice)
+                .productStatus(this.productStatus)
+                .productSummary(this.productSummary)
+                .contentImages(this.contentImages)
+                .thumbnailUrl(this.thumbnailUrl)
+                .userPurchaseLimit(this.userPurchaseLimit)
+                .isFrozen(this.isFrozen)
+                .isEngraving(this.isEngraving)
+                .discountRate(this.discountRate)
+                .build();
     }
 
 }

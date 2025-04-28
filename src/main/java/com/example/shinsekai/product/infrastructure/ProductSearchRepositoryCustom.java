@@ -5,5 +5,4 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductSearchRepositoryCustom {
     Page<String> searchByProductName(String keyword, Pageable pageable);
-
 }

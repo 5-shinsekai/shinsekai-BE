@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ProductFilterService {
-
     Page<String> filterProducts(Long mainCategoryId, List<Long> subCategoryIds, List<Integer> seasonIds,
                                 List<Long> sizeIds, List<Long> colorIds, Integer priceRangeId, Pageable pageable);
 }

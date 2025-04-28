@@ -4,8 +4,6 @@ import com.example.shinsekai.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Builder
@@ -35,7 +33,6 @@ public class Payment extends BaseEntity {
 
     private String receiptUrl;
 
-    //스타벅스 카드 uuid
     private String starbucksCardUuid;
 
 

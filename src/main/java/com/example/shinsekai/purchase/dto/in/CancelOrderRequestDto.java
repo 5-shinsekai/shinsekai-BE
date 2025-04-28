@@ -15,7 +15,7 @@ public class CancelOrderRequestDto {
     private String cancelReason;
     private Double refundAmount;
 
-    public static CancelOrderRequestDto from(CancelOrderRequestVo vo, String memberUuid){
+    public static CancelOrderRequestDto from(CancelOrderRequestVo vo, String memberUuid) {
         return CancelOrderRequestDto.builder()
                 .purchaseCode(vo.getPurchaseCode())
                 .paymentCode(vo.getPaymentCode())

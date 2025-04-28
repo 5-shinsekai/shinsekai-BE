@@ -17,19 +17,7 @@ public class PurchaseProductListResponseDto {
     private String productImageUrl;
     private String productImageDescription;
 
-    public PurchaseProductResponseVo toVo(){
-        return PurchaseProductResponseVo.builder()
-                .productOptionId(productOptionId)
-                .productCode(productCode)
-                .productName(productName)
-                .productPrice(productPrice)
-                .quantity(quantity)
-                .productImageUrl(productImageUrl)
-                .productImageDescription(productImageDescription)
-                .build();
-    }
-
-    public static PurchaseProductListResponseDto from(PurchaseProductList purchaseProductList){
+    public static PurchaseProductListResponseDto from(PurchaseProductList purchaseProductList) {
         return PurchaseProductListResponseDto.builder()
                 .productCode(purchaseProductList.getProductCode())
                 .productOptionId(purchaseProductList.getProductOptionId())
@@ -38,6 +26,18 @@ public class PurchaseProductListResponseDto {
                 .quantity(purchaseProductList.getQuantity())
                 .productImageUrl(purchaseProductList.getProductImageUrl())
                 .productImageDescription(purchaseProductList.getProductImageDescription())
+                .build();
+    }
+
+    public PurchaseProductResponseVo toVo() {
+        return PurchaseProductResponseVo.builder()
+                .productOptionId(productOptionId)
+                .productCode(productCode)
+                .productName(productName)
+                .productPrice(productPrice)
+                .quantity(quantity)
+                .productImageUrl(productImageUrl)
+                .productImageDescription(productImageDescription)
                 .build();
     }
 }

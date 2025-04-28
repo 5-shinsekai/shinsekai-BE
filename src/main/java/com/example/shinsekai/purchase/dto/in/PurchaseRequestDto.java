@@ -20,21 +20,7 @@ public class PurchaseRequestDto {
     private Double shipmentFee;
     private Double productTotalPrice;
 
-    public Purchase toEntity(){
-        return Purchase.builder()
-                .purchaseCode(this.purchaseCode)
-                .paymentCode(this.paymentCode)
-                .memberUuid(this.memberUuid)
-                .purchaseStatus(this.purchaseStatus)
-                .addressUuid(this.addressUuid)
-                .giftCertificateUuid(this.giftCertificationUuid)
-                .couponUuid(this.couponUuid)
-                .shipmentFee(this.shipmentFee)
-                .productTotalPrice(this.productTotalPrice)
-                .build();
-    }
-
-    public static PurchaseRequestDto fromOrder(OrderRequestDto orderRequestDto, String paymentCode){
+    public static PurchaseRequestDto fromOrder(OrderRequestDto orderRequestDto, String paymentCode) {
         return PurchaseRequestDto.builder()
                 .purchaseCode(orderRequestDto.getPurchaseCode())
                 .paymentCode(paymentCode)
@@ -45,6 +31,20 @@ public class PurchaseRequestDto {
                 .couponUuid(orderRequestDto.getCouponUuid())
                 .shipmentFee(orderRequestDto.getShipmentFee())
                 .productTotalPrice(orderRequestDto.getProductTotalPrice())
+                .build();
+    }
+
+    public Purchase toEntity() {
+        return Purchase.builder()
+                .purchaseCode(this.purchaseCode)
+                .paymentCode(this.paymentCode)
+                .memberUuid(this.memberUuid)
+                .purchaseStatus(this.purchaseStatus)
+                .addressUuid(this.addressUuid)
+                .giftCertificateUuid(this.giftCertificationUuid)
+                .couponUuid(this.couponUuid)
+                .shipmentFee(this.shipmentFee)
+                .productTotalPrice(this.productTotalPrice)
                 .build();
     }
 }

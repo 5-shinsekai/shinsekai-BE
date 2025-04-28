@@ -18,7 +18,6 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepositoryCusto
 
     private final JPAQueryFactory queryFactory;
 
-
     @Override
     public Page<String> searchByProductName(String keyword, Pageable pageable) {
         QProduct product = QProduct.product;

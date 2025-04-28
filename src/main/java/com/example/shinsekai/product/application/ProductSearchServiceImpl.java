@@ -14,6 +14,6 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 
     @Override
     public Page<String> searchByKeyword(String keyword, Pageable pageable) {
-        return productSearchRepository.searchByProductName(keyword,pageable);
+        return productSearchRepository.searchByProductName(keyword, pageable);
     }
 }

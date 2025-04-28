@@ -11,12 +11,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
     private final PaymentService paymentService;
     private final StarbucksCardService starbucksCardService;
@@ -42,7 +43,7 @@ public class OrderServiceImpl implements OrderService{
 
         //재고 차감
         /*Todo: 재고는 실시간 관리가 어렵다고 함 (동시성 등).
-        *  배치를 사용해 한번에 재고 처리를 할 수도 있지만 이번 1차 플젝에서는 일단 제외
+         *  배치를 사용해 한번에 재고 처리를 할 수도 있지만 이번 1차 플젝에서는 일단 제외
          */
         purchaseProductList.forEach(dto
                 -> productOptionService.decreaseOptionStock(dto.getProductOptionId(), dto.getQuantity())
@@ -55,7 +56,7 @@ public class OrderServiceImpl implements OrderService{
     public void deleteOrder(CancelOrderRequestDto cancelOrderRequestDto) {
         //결제 취소
         paymentService.deletePayment(PaymentDeleteRequestDto.from(cancelOrderRequestDto.getPaymentCode()
-                , cancelOrderRequestDto.getRefundAmount(),cancelOrderRequestDto.getMemberUuid()));
+                , cancelOrderRequestDto.getRefundAmount(), cancelOrderRequestDto.getMemberUuid()));
 
         //스타벅스 잔액 충전
         starbucksCardService.chargeRemainAmount(UseStarbucksCardRequestDto.builder()
@@ -72,6 +73,6 @@ public class OrderServiceImpl implements OrderService{
         purchaseService.findPurchaseProductListByPurchaseCode(cancelOrderRequestDto.getPurchaseCode())
                 .forEach(entity -> {
                     productOptionService.increaseOptionStock(entity.getProductOptionId(), entity.getQuantity());
-                }); 
+                });
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class SeasonServiceImpl implements SeasonService {
     private final SeasonRepository seasonRepository;
-    
+
     @Override
     public void createSeason(SeasonCreateRequestDto seasonCreateRequestDto) {
         seasonRepository.save(seasonCreateRequestDto.toEntity());

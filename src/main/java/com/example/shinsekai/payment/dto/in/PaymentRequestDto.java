@@ -6,7 +6,6 @@ import com.example.shinsekai.purchase.dto.in.OrderRequestDto;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -27,21 +26,7 @@ public class PaymentRequestDto {
     //스타벅스 카드
     private String memberStarbucksCardUuid;
 
-    public Payment toEntity(){
-        return Payment.builder()
-//                .paymentKey(paymentKey)
-                .paymentCode(paymentCode)
-                .memberUuid(memberUuid)
-                .purchaseName(purchaseName)
-                .paymentPrice(paymentPrice)
-                .paymentMethod(paymentMethod)
-                .status(status)
-                .receiptUrl(receiptUrl)
-                .starbucksCardUuid(memberStarbucksCardUuid)
-                .build();
-    }
-
-    public static PaymentRequestDto fromOrder(OrderRequestDto orderRequestDto){
+    public static PaymentRequestDto fromOrder(OrderRequestDto orderRequestDto) {
         return PaymentRequestDto.builder()
                 .memberUuid(orderRequestDto.getMemberUuid())
                 .paymentCode(generatePaymentCode())
@@ -60,5 +45,19 @@ public class PaymentRequestDto {
         String uuidPart = UUID.randomUUID().toString().substring(0, 8);
 
         return prefix + date + "-" + uuidPart;
+    }
+
+    public Payment toEntity() {
+        return Payment.builder()
+//                .paymentKey(paymentKey)
+                .paymentCode(paymentCode)
+                .memberUuid(memberUuid)
+                .purchaseName(purchaseName)
+                .paymentPrice(paymentPrice)
+                .paymentMethod(paymentMethod)
+                .status(status)
+                .receiptUrl(receiptUrl)
+                .starbucksCardUuid(memberStarbucksCardUuid)
+                .build();
     }
 }

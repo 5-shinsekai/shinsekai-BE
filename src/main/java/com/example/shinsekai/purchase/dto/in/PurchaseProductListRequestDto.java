@@ -19,20 +19,8 @@ public class PurchaseProductListRequestDto {
     private String productImageUrl;
     private String productImageDescription;
 
-    public PurchaseProductList toEntity(){
-        return PurchaseProductList.builder()
-                .productOptionId(productOptionId)
-                .purchaseCode(purchaseCode)
-                .productCode(productCode)
-                .productName(productName)
-                .productPrice(productPrice)
-                .quantity(quantity)
-                .productImageUrl(productImageUrl)
-                .productImageDescription(productImageDescription)
-                .build();
-    }
-
-    public static PurchaseProductListRequestDto from(PurchaseProductRequestVo purchaseProductRequestVo, String purchaseCode){
+    public static PurchaseProductListRequestDto from(PurchaseProductRequestVo purchaseProductRequestVo,
+                                                     String purchaseCode) {
         return PurchaseProductListRequestDto.builder()
                 .productOptionId(purchaseProductRequestVo.getProductOptionId())
                 .purchaseCode(purchaseCode)
@@ -42,6 +30,19 @@ public class PurchaseProductListRequestDto {
                 .quantity(purchaseProductRequestVo.getQuantity())
                 .productImageUrl(purchaseProductRequestVo.getProductImageUrl())
                 .productImageDescription(purchaseProductRequestVo.getProductImageDescription())
+                .build();
+    }
+
+    public PurchaseProductList toEntity() {
+        return PurchaseProductList.builder()
+                .productOptionId(productOptionId)
+                .purchaseCode(purchaseCode)
+                .productCode(productCode)
+                .productName(productName)
+                .productPrice(productPrice)
+                .quantity(quantity)
+                .productImageUrl(productImageUrl)
+                .productImageDescription(productImageDescription)
                 .build();
     }
 }
