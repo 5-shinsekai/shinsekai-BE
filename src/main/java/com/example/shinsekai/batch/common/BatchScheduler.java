@@ -22,14 +22,11 @@ public class BatchScheduler {
     private final Job bestProductJob;
     private final @Lazy Job cartSoftDeleteJob;
 
-
-//    @Scheduled(cron = "0/10 * * * * *")
-//    @Scheduled(cron = "0 0 10 * * *")
     public void runPurchaseDailyAggregationJob() {
         try {
             log.info("일일 집계 배치 실행 시작");
             LocalDate aggregationDate = LocalDate.now().minusDays(1); // 집계할 날짜
-            String time = LocalDateTime.now().toString(); // 집계하는 날짜
+            String time = LocalDateTime.now().toLocalDate().toString(); // 집계하는 날짜
 
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("time", time)
@@ -43,14 +40,12 @@ public class BatchScheduler {
         }
     }
 
-//    @Scheduled(cron = "0/15 * * * * *")
-//    @Scheduled(cron = "0 20 10 * * *")
     public void runPurchaseWeeklyAggregationJob() {
         try {
             log.info("주간 집계 배치 실행 시작");
             LocalDate startDate = LocalDate.now().minusDays(7); // 집계할 날짜
             LocalDate endDate = LocalDate.now().minusDays(1); // 집계할 날짜
-            String time = LocalDateTime.now().toString(); // 집계하는 날짜
+            String time = LocalDateTime.now().toLocalDate().toString(); // 집계하는 날짜
 
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("time", time)
@@ -65,13 +60,11 @@ public class BatchScheduler {
         }
     }
 
-//    @Scheduled(cron = "0/30 * * * * *")
-//    @Scheduled(cron = "0 40 10 * * *")
     public void runBestProductJob() {
         try {
             log.info("베스트 상품 배치 실행 시작");
             LocalDate rankDate = LocalDate.now().minusDays(1); // 집계할 날짜
-            String time = LocalDateTime.now().toString(); // 집계하는 날짜
+            String time = LocalDateTime.now().toLocalDate().toString(); // 집계하는 날짜
 
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("time", time)
@@ -90,7 +83,7 @@ public class BatchScheduler {
      * */
 //    @Scheduled(cron = "0 0 04 * * *")
     public void runCartSoftDeleteJob() {
-        String time = LocalDateTime.now().toString();
+        String time = LocalDateTime.now().toLocalDate().toString();
         try {
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("time", time)
